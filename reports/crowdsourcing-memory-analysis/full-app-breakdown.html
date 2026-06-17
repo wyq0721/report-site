@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>全应用内存子系统归因</title>
+<style>
+body{margin:0;background:#fff;color:#202124;font:14px/1.6 "Roboto",-apple-system,"PingFang SC",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 26px 64px}
+h1{font-size:21px;font-weight:600;margin:0 0 5px}h2{font-size:16px;font-weight:600;margin:28px 0 10px;padding-bottom:8px;border-bottom:1px solid #e8eaed}
+.sub{color:#5f6368;font-size:13px;margin-bottom:16px}.sub code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.kpi{border:1px solid #dadce0;border-radius:8px;padding:14px 16px;box-shadow:0 1px 2px rgba(60,64,67,.1)}
+.kpi .v{font-size:21px;font-weight:600}.kpi .l{color:#5f6368;font-size:11.5px;margin-top:3px}
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid #dadce0;margin:8px 0}
+.seg{height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:11.5px;color:#5f6368}.lg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}.lg b{color:#202124;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 10px;border-bottom:1px solid #e8eaed;text-align:left}
+th{color:#5f6368;font-weight:500;font-size:11.5px;background:#f8f9fa}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}td{color:#3c4043}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.card{border:1px solid #dadce0;border-radius:8px;padding:14px 18px;box-shadow:0 1px 2px rgba(60,64,67,.1);margin:10px 0}
+.note{background:#f8f9fa;border-left:3px solid #1a73e8;padding:11px 15px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12.5px;color:#3c4043}
+.note.r{border-color:#ea4335}.note.g{border-color:#34a853}
+.foot{color:#5f6368;font-size:11.5px;margin-top:28px;border-top:1px solid #e8eaed;padding-top:14px}.foot code{background:#f1f3f4;padding:0 4px;border-radius:3px}
+ul{margin:6px 0;padding-left:20px}li{margin:5px 0;font-size:12.5px;color:#3c4043}
+</style></head><body><div class="wrap">
+<h1>全应用内存子系统归因 · 哪块最值得优化</h1>
+<div class="sub">com.meituan.banma.hmcrowdsource · 按 /proc/&lt;pid&gt;/smaps 映射名归因(Pss)· 总 1289 MB(smaps)· 2026-06-17 10:40 · 离线自包含</div>
+<div class="kpis">
+  <div class="kpi"><div class="v" style="color:#ea4335">684 MB</div><div class="l">native heap(jemalloc 混合池)· 53% — 最大,需原生堆剖析</div></div>
+  <div class="kpi"><div class="v" style="color:#a142f4">304 MB</div><div class="l">ArkTS 引擎堆+框架 · 24%</div></div>
+  <div class="kpi"><div class="v" style="color:#1a73e8">79 MB</div><div class="l">RN 直接可归因(JS堆+RN .so)· 6%(原生部分另在 jemalloc)</div></div>
+  <div class="kpi"><div class="v" style="color:#34a853">103 MB</div><div class="l">Cangjie · 8%(modal 优化天花板小)</div></div>
+</div>
+<h2>子系统占比(条形)</h2>
+<div class="bar"><div class="seg" style="width:53.05%;background:#ea4335" title="native heap (jemalloc 混合池): 684MB (53.1%)"></div><div class="seg" style="width:22.53%;background:#a142f4" title="ArkTS 引擎堆 (ArkUI/JS): 290MB (22.5%)"></div><div class="seg" style="width:8.03%;background:#34a853" title="Cangjie (堆+运行时): 103MB (8.0%)"></div><div class="seg" style="width:5.85%;background:#1a73e8" title="RN · JS 堆 (V8/JSVM): 75MB (5.9%)"></div><div class="seg" style="width:5.46%;background:#9aa0a6" title="其它系统/三方 .so: 70MB (5.5%)"></div><div class="seg" style="width:1.88%;background:#cfd8dc" title="其它匿名: 24MB (1.9%)"></div><div class="seg" style="width:1.06%;background:#c27ba0" title="ArkTS/ArkUI 框架 (.so): 14MB (1.1%)"></div><div class="seg" style="width:0.87%;background:#f9ab00" title="ArkWeb 内嵌浏览器: 11MB (0.9%)"></div><div class="seg" style="width:0.31%;background:#795548" title="字体: 4MB (0.3%)"></div><div class="seg" style="width:0.27%;background:#e0e0e0" title="其它: 4MB (0.3%)"></div><div class="seg" style="width:0.26%;background:#4285f4" title="RN · 原生代码 (.so): 3MB (0.3%)"></div><div class="seg" style="width:0.18%;background:#bdbdbd" title="HAP/字节码/资源: 2MB (0.2%)"></div><div class="seg" style="width:0.12%;background:#00897b" title="图形/GPU (.so): 2MB (0.1%)"></div><div class="seg" style="width:0.11%;background:#9e9d24" title="CPython: 1MB (0.1%)"></div></div>
+<div class="legend"><span class="lg"><i style="background:#ea4335"></i>native heap (jemalloc 混合池) <b>684MB · 53%</b></span><span class="lg"><i style="background:#a142f4"></i>ArkTS 引擎堆 (ArkUI/JS) <b>290MB · 23%</b></span><span class="lg"><i style="background:#34a853"></i>Cangjie (堆+运行时) <b>103MB · 8%</b></span><span class="lg"><i style="background:#1a73e8"></i>RN · JS 堆 (V8/JSVM) <b>75MB · 6%</b></span><span class="lg"><i style="background:#9aa0a6"></i>其它系统/三方 .so <b>70MB · 5%</b></span><span class="lg"><i style="background:#cfd8dc"></i>其它匿名 <b>24MB · 2%</b></span><span class="lg"><i style="background:#c27ba0"></i>ArkTS/ArkUI 框架 (.so) <b>14MB · 1%</b></span><span class="lg"><i style="background:#f9ab00"></i>ArkWeb 内嵌浏览器 <b>11MB · 1%</b></span></div>
+<h2>明细表</h2>
+<div class="card"><table><thead><tr><th>子系统</th><th class="n">PSS</th><th class="n">占比</th></tr></thead><tbody><tr><td><span class="dot" style="background:#ea4335"></span>native heap (jemalloc 混合池)</td><td class="n">683.8 MB</td><td class="n">53.1%</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkTS 引擎堆 (ArkUI/JS)</td><td class="n">290.4 MB</td><td class="n">22.5%</td></tr><tr><td><span class="dot" style="background:#34a853"></span>Cangjie (堆+运行时)</td><td class="n">103.5 MB</td><td class="n">8.0%</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>RN · JS 堆 (V8/JSVM)</td><td class="n">75.4 MB</td><td class="n">5.9%</td></tr><tr><td><span class="dot" style="background:#9aa0a6"></span>其它系统/三方 .so</td><td class="n">70.4 MB</td><td class="n">5.5%</td></tr><tr><td><span class="dot" style="background:#cfd8dc"></span>其它匿名</td><td class="n">24.3 MB</td><td class="n">1.9%</td></tr><tr><td><span class="dot" style="background:#c27ba0"></span>ArkTS/ArkUI 框架 (.so)</td><td class="n">13.7 MB</td><td class="n">1.1%</td></tr><tr><td><span class="dot" style="background:#f9ab00"></span>ArkWeb 内嵌浏览器</td><td class="n">11.2 MB</td><td class="n">0.9%</td></tr><tr><td><span class="dot" style="background:#795548"></span>字体</td><td class="n">4.0 MB</td><td class="n">0.3%</td></tr><tr><td><span class="dot" style="background:#e0e0e0"></span>其它</td><td class="n">3.5 MB</td><td class="n">0.3%</td></tr><tr><td><span class="dot" style="background:#4285f4"></span>RN · 原生代码 (.so)</td><td class="n">3.4 MB</td><td class="n">0.3%</td></tr><tr><td><span class="dot" style="background:#bdbdbd"></span>HAP/字节码/资源</td><td class="n">2.4 MB</td><td class="n">0.2%</td></tr><tr><td><span class="dot" style="background:#00897b"></span>图形/GPU (.so)</td><td class="n">1.5 MB</td><td class="n">0.1%</td></tr><tr><td><span class="dot" style="background:#9e9d24"></span>CPython</td><td class="n">1.5 MB</td><td class="n">0.1%</td></tr></tbody></table></div>
+<h2>哪块最值得投入(结论)</h2>
+<div class="note r"><b>① native heap(jemalloc)≈ 684 MB / 53% —— 最大头,但 smaps 无法细分。</b>它是所有 C/C++ <code>malloc</code> 的混合池:RN 原生(folly/jsi/react_render C++、V8 堆外)、Cangjie C++ 运行时、图片/解码缓冲、系统库都混在里面(jemalloc Free 仅 ~38MB,说明基本是真实占用,非保留)。<b>要知道"谁占的",必须做原生堆剖析</b>(DevEco Profiler 的 Native Memory / malloc hook / hiprofiler nativehook,按调用栈归因)。这是投入产出最高的下一步。</div>
+<div class="note"><b>② ArkTS 引擎堆 ≈ 304 MB / 24% —— 第二大。</b>HarmonyOS 原生 ArkUI/ArkTS 的 JS 堆。若 App 有大量 ArkUI 原生页面/长列表/未释放的 @State,这里有空间(JS 对象、组件树、图片缓存)。</div>
+<div class="note"><b>③ RN(React Native)≈ 直接可归因 79 MB / 6%,真实更大。</b>JS 堆(75MB,<code>JSVM_V8_HEAP_*_RNOH_JS</code>)可见;但 RN 的原生 C++(libreact_render*/folly/jsi/V8 堆外)<b>都 malloc 进了上面的 jemalloc 池,smaps 看不到</b>。RN 的真实总占用要靠①的原生剖析才能切出——很可能是最大的"产品可归因"消耗。</div>
+<div class="note g"><b>④ Cangjie ≈ 103 MB / 8% —— 占比小,modal 天花板有限。</b>与此前结论一致:modal 削峰约 2–5% 应用内存。<b>若目标是整机内存大盘,Cangjie/modal 不是主战场;主战场是 native heap 与 ArkTS 堆。</b>modal 的价值在削峰(抗 LMK)与降 GC,而非降总量。</div>
+<h2>口径与边界</h2>
+<div class="card"><ul>
+<li><b>native heap 不可由 smaps 细分</b>:jemalloc 是单一池,RN/Cangjie/系统的 malloc 混在一起。归因需 malloc 级原生剖析。</li>
+<li><b>GPU 内存(GL+Graph ≈ 77MB)不在 smaps</b>:hidumper Total(1460MB)≈ smaps(1289MB)+ GPU + 采样漂移。本报告子系统基于 smaps(可归因常驻集)。</li>
+<li><b>交叉校验</b>:hidumper native heap=683MB / ark ts heap=290MB,与 smaps 归因一致。</li>
+<li>.so 为文件页 Pss(共享按比例),代码段占比天然偏小;subsystem 的 .so 行只反映代码/只读数据,运行时数据在各自堆/jemalloc。</li>
+</ul></div>
+<div class="foot">数据 <code>smaps.txt</code> + <code>hidumper_mem.txt</code> · 归因规则见 <code>gen_breakdown_report.py</code> 的 subsystem() · RN=React Native OpenHarmony(librnoh/libreact*/libmtv8)· 下一步建议:DevEco Profiler「Native Memory」对 native heap 按调用栈归因</div>
+</div></body></html>

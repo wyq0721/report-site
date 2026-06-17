@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>仓颉堆时序对比 · 前台刷单 vs 锁屏待机</title>
+<style>
+:root{--fg:#202124;--fg2:#3c4043;--mut:#5f6368;--line:#dadce0;--line2:#e8eaed;--acc:#1a73e8;--yes:#188038;--shadow:0 1px 2px rgba(60,64,67,.1),0 1px 3px rgba(60,64,67,.06)}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--fg);font:14px/1.6 "Roboto",-apple-system,"PingFang SC",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:32px 26px 70px}
+h1{font-size:22px;font-weight:600;margin:0 0 5px}.sub{color:var(--mut);font-size:13px;margin-bottom:16px}.sub code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .v{font-size:23px;font-weight:600}.kpi .v.g{color:var(--yes)}.kpi .v.b{color:var(--acc)}.kpi .l{color:var(--mut);font-size:12px;margin-top:4px}
+.chart{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin:14px 0;box-shadow:var(--shadow)}
+.ct{font-size:14px;font-weight:600;margin-bottom:6px}.ax{fill:#5f6368;font-size:11px}
+.legend{display:flex;gap:18px;margin-top:8px;font-size:12px;color:var(--mut)}.lg i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 12px;border-bottom:1px solid var(--line2);text-align:left}
+th{color:var(--mut);font-weight:500;font-size:11.5px;background:#f8f9fa}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}td{color:var(--fg2)}
+.note{background:#f8f9fa;border-left:3px solid var(--acc);padding:12px 15px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12.5px;color:var(--fg2)}.note.g{border-color:var(--yes)}
+.card{border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin:14px 0;box-shadow:var(--shadow)}
+.foot{color:var(--mut);font-size:11.5px;margin-top:30px;border-top:1px solid var(--line2);padding-top:14px}.foot code{background:#f1f3f4;padding:0 4px;border-radius:3px}
+</style></head><body><div class="wrap">
+<h1>仓颉堆时序对比 · 前台刷订单 vs 锁屏待机(实测)</h1>
+<div class="sub">com.meituan.banma.hmcrowdsource(上线中)· 前台经 <code>uinput</code> 自动点击「刷新列表」45 次/150s · 对照为锁屏待机(屏幕上锁,应用仍是最前台应用,系统因不可见标记为 BACKGROUND;非刷订单) · 2026-06-15 17:01 · 离线自包含</div>
+<div class="kpis">
+  <div class="kpi"><div class="v g">≈ 107 MB</div><div class="l">削峰空间(峰−地板,几乎全为瞬时);其中 ~30% 可 region 化 ≈ 32 MB —— <b>内存收益</b></div></div>
+  <div class="kpi"><div class="v b">8 : 1</div><div class="l">GC 回收次数 150s(前台 : 锁屏)→ region 化减少 GC 次数与拷贝 —— <b>CPU/jank 收益</b></div></div>
+  <div class="kpi"><div class="v">43 MB</div><div class="l">真·存活地板(GC 后)—— modal 够不着的下限,反衬瞬时空间</div></div>
+</div>
+<div class="chart"><div class="ct">仓颉堆 [anon:cangjie_heap] 物理驻留 · 前台刷单 vs 锁屏待机(同 150s)</div><svg viewBox="0 0 1040 320" width="100%" preserveAspectRatio="xMidYMid meet"><rect x="52" y="52" width="936" height="216" fill="#fff" stroke="#dadce0"/><line x1="52" y1="268.0" x2="988" y2="268.0" stroke="#e8eaed"/><line x1="52" y1="214.0" x2="988" y2="214.0" stroke="#e8eaed"/><line x1="52" y1="160.0" x2="988" y2="160.0" stroke="#e8eaed"/><line x1="52" y1="106.0" x2="988" y2="106.0" stroke="#e8eaed"/><line x1="52" y1="52.0" x2="988" y2="52.0" stroke="#e8eaed"/><polyline points="52.0,176.3 90.5,153.2 128.9,99.3 167.4,196.2 205.9,133.0 244.3,105.5 289.2,202.9 327.7,160.0 366.1,120.3 398.2,213.5 436.7,172.7 475.1,148.7 513.6,203.6 552.1,168.9 603.3,122.8 641.8,209.5 680.3,161.6 718.7,110.3 757.2,194.2 795.7,149.2 834.1,111.4 872.6,193.3 911.1,123.9 949.5,219.8 988.0,182.5" fill="none" stroke="#1a73e8" stroke-width="2.2"/><polyline points="52.0,89.3 90.5,77.6 128.9,73.3 167.4,68.0 212.3,228.8 250.7,228.8 289.2,216.8 327.7,200.1 366.1,194.8 404.6,191.6 443.1,184.3 481.5,175.5 520.0,172.3 558.5,167.1 596.9,163.4 635.4,160.2 673.9,147.5 712.3,140.6 750.8,134.8 789.3,131.5 827.7,128.3 866.2,116.7 904.7,112.5 943.1,107.2 981.6,104.0" fill="none" stroke="#9aa0a6" stroke-width="2.2"/><text x="44" y="272.0" text-anchor="end" class="ax">0</text><text x="44" y="218.0" text-anchor="end" class="ax">48</text><text x="44" y="164.0" text-anchor="end" class="ax">96</text><text x="44" y="110.0" text-anchor="end" class="ax">143</text><text x="44" y="56.0" text-anchor="end" class="ax">191</text><text x="52.0" y="286" text-anchor="middle" class="ax">0s</text><text x="239.2" y="286" text-anchor="middle" class="ax">29s</text><text x="426.4" y="286" text-anchor="middle" class="ax">58s</text><text x="613.6" y="286" text-anchor="middle" class="ax">88s</text><text x="800.8" y="286" text-anchor="middle" class="ax">117s</text><text x="988.0" y="286" text-anchor="middle" class="ax">146s</text><text x="14" y="160.0" transform="rotate(-90 14 160.0)" text-anchor="middle" class="ax">MB</text></svg><div class="legend"><span class="lg"><i style="background:#1a73e8"></i>前台·刷订单(cj_heap)</span> <span class="lg"><i style="background:#9aa0a6"></i>锁屏待机(cj_heap)</span></div></div>
+<div class="note g"><b>读图:</b>蓝线(前台刷单)呈密集锯齿——每 ~18s 一次 GC,每次回收 ~77MB 瞬时;灰线(锁屏待机)150s 内仅 ~1 次大回收。<b>刷订单把瞬时 JSON churn 拉高到「8 倍 GC 频率」</b>,正是 modal 要消除的负载。</div>
+<h2 style="font-size:16px;font-weight:600;margin:26px 0 10px;border-bottom:1px solid var(--line2);padding-bottom:8px">关键指标对比</h2>
+<div class="card"><table><thead><tr><th>指标</th><th class="n">前台·刷订单</th><th class="n">锁屏待机</th></tr></thead><tbody><tr><td>仓颉堆区间(谷→峰)</td><td class="n">43 → 149 MB</td><td class="n">35 → 177 MB</td></tr><tr><td>GC 回收次数 / 150s</td><td class="n">≈ 8 次</td><td class="n">≈ 1 次</td></tr><tr><td>GC 频率</td><td class="n">约每 18s 一次</td><td class="n">约每 145s 一次</td></tr><tr><td>每次回收瞬时量(均值)</td><td class="n">≈ 77 MB</td><td class="n">≈ 142 MB</td></tr><tr><td>应用总 PSS 区间</td><td class="n">939–1051 MB</td><td class="n">742–885 MB</td></tr></tbody></table></div>
+<div class="note"><b>读"谷→峰"前,先看口径(否则会误读):</b>峰 ≈ <b>GC 前高水位</b>、谷 ≈ <b>GC 后存活地板</b>,均为 6s 采样近似(真实峰更高、谷更低)。<b>不要跨场景直接比峰值</b>:前台峰(149)反而低于锁屏峰(177),并非前台更省 —— 而是前台分配快、GC 频繁把堆压住;锁屏分配慢、长时间不触发 GC,垃圾堆成陈旧高水位(177)直到锁屏 trim。两场景<b>存活地板相近</b>(43 / 35MB),差异在 GC 触发节奏,不在真实用量。</div>
+<div class="note"><b>modal 收益(两类,分清楚):</b><br>
+① <b>内存收益(削峰)</b>:峰−谷(107MB 前台 / 142MB 锁屏)几乎全是瞬时;其中 ~30% 为可 region 化的 JSON/DataModel(C1+C2,见 <code>mem_report.html</code> 拆解)→ 每周期可压 ~23MB,AnonPage/PSS 同步 → 降整机峰值 RSS,对抗 LMK。<br>
+② <b>CPU 收益(降 GC)</b>:前台每 ~18s 一次 GC 由瞬时 churn 触发;region 化后这些对象不进 GC 堆 → GC 次数与拷贝开销下降(jank 收益)。<br>
+③ <b>空闲不囤垃圾</b>:锁屏 177MB 高水位大部分是没被回收的瞬时垃圾;modal 在作用域退出即释放,空闲不会坐在这堆垃圾上。</div>
+<div class="foot">采集 <code>capture_mem_timeseries.sh</code>(只读)+ <code>uinput</code> 自动刷新 · 解析 <code>parse_raw_to_csv.py</code> · 数据 <code>mem_ts_foreground.csv</code> / <code>mem_ts_locked.csv</code><br>
+口径:① 采样实际间隔 ≈6s(受 hidumper --mem 在 ~1GB 进程上耗时主导,非设定的 2s;刷新点击循环为每 3s 一次)→ 峰/谷为采样近似,真实峰可能更高、谷更低。② GC 次数 = cj_heap 相邻点跌幅 &gt;30MB 计数(近似,小周期可能漏算)。</div>
+</div></body></html>

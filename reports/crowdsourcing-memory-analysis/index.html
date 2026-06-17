@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>众包内存分析报告</title>
+  <style>
+    :root {
+      --ink: #17212b;
+      --muted: #5d6875;
+      --line: #d9e1e8;
+      --paper: #f7f9fb;
+      --panel: #ffffff;
+      --teal: #0f7b7b;
+      --red: #b34b42;
+      --gold: #b27716;
+      --blue: #286fb4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 22px 56px;
+    }
+
+    .top {
+      display: inline-flex;
+      margin-bottom: 18px;
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    header {
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 850px;
+      margin: 18px 0 0;
+      color: #3d4854;
+      font-size: 18px;
+    }
+
+    section {
+      margin-top: 32px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 25px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      min-height: 176px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--panel);
+      box-shadow: 0 8px 22px rgba(33, 45, 58, .05);
+      text-decoration: none;
+      color: inherit;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #e0b8b4;
+      box-shadow: 0 12px 28px rgba(33, 45, 58, .08);
+    }
+
+    .tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: #f8eeee;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .card b {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .card span:last-child {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+      color: #445160;
+    }
+
+    .panel ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    .panel li {
+      margin: 6px 0;
+    }
+
+    code {
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #edf2f5;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <a class="top" href="../../">返回报告中心</a>
+    <header>
+      <p class="eyebrow">Crowdsourcing memory analysis</p>
+      <h1>众包内存分析报告</h1>
+      <p class="lead">
+        汇总 HarmonyOS 众包应用相关内存分析报告，覆盖仓颉堆、native heap、刷新频率、前后台状态、全应用子系统拆分和 modal 收益空间。
+      </p>
+    </header>
+
+    <section>
+      <h2>核心报告</h2>
+      <div class="grid">
+        <a class="card" href="./modal-benefit-report.html">
+          <span class="tag">Heap</span>
+          <b>modal 收益空间 · 仓颉堆拆解</b>
+          <span>按场景拆解仓颉堆构成、可优化比例和收益性质。</span>
+        </a>
+        <a class="card" href="./cjprof-heap-report.html">
+          <span class="tag">cjprof</span>
+          <b>cjprof 堆内存分析 · modal 特性收益评估</b>
+          <span>基于支配树、浅堆和深堆 retained 的类型级分析。</span>
+        </a>
+        <a class="card" href="./refresh-frequency-compare.html">
+          <span class="tag">GC</span>
+          <b>刷新频率 vs 仓颉堆 GC 行为</b>
+          <span>对比不同刷新频率下仓颉堆锯齿和应用整体 PSS。</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>时序与场景对比</h2>
+      <div class="grid">
+        <a class="card" href="./foreground-vs-locked.html">
+          <span class="tag">Compare</span>
+          <b>前台刷订单 vs 锁屏待机</b>
+          <span>对比前后台场景下仓颉堆时序表现。</span>
+        </a>
+        <a class="card" href="./timeseries-foreground.html">
+          <span class="tag">Timeline</span>
+          <b>仓颉内存动态分布 · 前台时序</b>
+          <span>观察前台运行中的仓颉内存动态分布。</span>
+        </a>
+        <a class="card" href="./timeseries-locked.html">
+          <span class="tag">Timeline</span>
+          <b>仓颉内存动态分布 · 锁屏时序</b>
+          <span>观察锁屏待机场景下的内存分布。</span>
+        </a>
+        <a class="card" href="./heap-fine-1hz.html">
+          <span class="tag">1Hz</span>
+          <b>仓颉堆高频锯齿 · 1Hz 刷新订单</b>
+          <span>高频采样展示刷新订单带来的堆波动。</span>
+        </a>
+        <a class="card" href="./peak-refresh-compare.html">
+          <span class="tag">Peak</span>
+          <b>刷新频率峰值对比 · 第一组</b>
+          <span>峰值场景下刷新频率与 GC 行为对比。</span>
+        </a>
+        <a class="card" href="./peak2-refresh-compare.html">
+          <span class="tag">Peak</span>
+          <b>刷新频率峰值对比 · 第二组</b>
+          <span>第二组峰值刷新实验结果。</span>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>归因拆分</h2>
+      <div class="grid">
+        <a class="card" href="./full-app-breakdown.html">
+          <span class="tag">Breakdown</span>
+          <b>全应用内存子系统归因</b>
+          <span>按子系统归因，定位最值得优化的内存部分。</span>
+        </a>
+        <a class="card" href="./native-heap-split.html">
+          <span class="tag">Native</span>
+          <b>native heap 属主拆分</b>
+          <span>基于全量 malloc-hook 的 jemalloc 属主拆分。</span>
+        </a>
+        <a class="card" href="./stock-breakdown.html">
+          <span class="tag">Stock</span>
+          <b>库存场景全应用内存子系统归因</b>
+          <span>库存相关操作场景的内存归因分析。</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>维护说明</h2>
+      <ul>
+        <li>本分类仅发布轻量 HTML 报告，不发布原始 <code>htrace</code>、数据库、截图和大体积采样文件。</li>
+        <li>新增报告时，把 HTML 放到本目录，并在本页补一张卡片即可。</li>
+        <li>如果报告依赖图片或脚本，需要同时放入同级资源目录，并使用相对路径引用。</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

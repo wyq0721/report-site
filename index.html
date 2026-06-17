@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>仓颉语言在特定领域的优势分析报告</title>
+  <title>报告中心</title>
   <style>
     :root {
       --ink: #17212b;
@@ -32,13 +32,13 @@
     }
 
     .page {
-      max-width: 1180px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 28px 22px 56px;
+      padding: 34px 22px 60px;
     }
 
     header {
-      padding: 34px 0 26px;
+      padding: 34px 0 28px;
       border-bottom: 1px solid var(--line);
     }
 
@@ -53,14 +53,13 @@
 
     h1 {
       margin: 0;
-      max-width: 900px;
-      font-size: clamp(32px, 5vw, 56px);
-      line-height: 1.08;
+      font-size: clamp(34px, 6vw, 62px);
+      line-height: 1.06;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 860px;
+      max-width: 820px;
       margin: 20px 0 0;
       color: #3d4854;
       font-size: 19px;
@@ -95,7 +94,7 @@
 
     h3 {
       margin: 0 0 10px;
-      font-size: 18px;
+      font-size: 20px;
       line-height: 1.3;
       letter-spacing: 0;
     }
@@ -104,217 +103,132 @@
       margin: 0 0 12px;
     }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     .grid {
       display: grid;
-      gap: 16px;
-    }
-
-    .grid.two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
     }
 
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .panel,
-    .domain,
-    .note {
+    .card,
+    .panel {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 18px;
+      padding: 20px;
       box-shadow: 0 8px 22px rgba(33, 45, 58, .05);
     }
 
-    .callout {
-      display: grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .verdict {
-      background: #eef8f6;
-      border: 1px solid #b9dcd5;
-      border-radius: 8px;
-      padding: 22px;
-    }
-
-    .verdict strong {
-      color: #075f5f;
-    }
-
-    .scorebox {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-    }
-
-    .score {
-      display: grid;
-      grid-template-columns: 112px 1fr 36px;
-      gap: 10px;
-      align-items: center;
-      margin: 10px 0;
-      font-size: 14px;
-    }
-
-    .bar {
-      height: 9px;
-      border-radius: 999px;
-      background: #e7edf2;
-      overflow: hidden;
-    }
-
-    .bar span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: var(--teal);
-    }
-
-    .domain {
-      min-height: 265px;
+    .card {
       display: flex;
+      min-height: 255px;
       flex-direction: column;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
     }
 
-    .domain .tag {
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #aad3cc;
+      box-shadow: 0 12px 28px rgba(33, 45, 58, .08);
+    }
+
+    .tag {
       width: fit-content;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       border-radius: 999px;
-      padding: 4px 9px;
+      padding: 4px 10px;
       color: #fff;
       font-size: 12px;
       font-weight: 700;
     }
 
-    .tag.native { background: var(--teal); }
-    .tag.model { background: var(--green); }
-    .tag.concurrent { background: var(--blue); }
-    .tag.interop { background: var(--gold); }
-    .tag.safety { background: var(--red); }
-    .tag.tooling { background: var(--slate); }
+    .tag.language {
+      background: var(--teal);
+    }
 
-    .domain ul,
+    .tag.memory {
+      background: var(--red);
+    }
+
+    .card p {
+      color: #445160;
+    }
+
+    .card ul,
     .panel ul {
       margin: 8px 0 0 20px;
       padding: 0;
+      color: #445160;
     }
 
-    .domain li,
+    .card li,
     .panel li {
       margin: 6px 0;
     }
 
-    .examples {
-      margin-top: 13px;
-      border: 1px solid #d8e7e3;
-      border-radius: 7px;
-      background: #f3faf8;
-      padding: 12px 13px;
-    }
-
-    .examples b {
-      display: block;
-      margin-bottom: 5px;
-      color: #075f5f;
-      font-size: 14px;
-    }
-
-    .examples ul {
-      margin-top: 0;
-      font-size: 14px;
-    }
-
-    .fit {
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-top: auto;
-      padding-top: 12px;
-      color: var(--muted);
-      font-size: 14px;
+      padding-top: 18px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border: 1px solid var(--line);
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      border: 1px solid #b9dcd5;
       border-radius: 8px;
-      overflow: hidden;
-      display: table;
+      padding: 7px 12px;
+      background: #eef8f6;
+      color: #075f5f;
+      font-weight: 700;
     }
 
-    th,
-    td {
-      border-bottom: 1px solid var(--line);
-      padding: 12px 13px;
-      text-align: left;
-      vertical-align: top;
+    .button.secondary {
+      border-color: var(--line);
+      background: #fff;
+      color: #34495e;
     }
 
-    th {
-      background: #eef3f7;
-      color: #263545;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .axis {
+    .report-list {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
     }
 
-    .axis-item {
-      border-left: 4px solid var(--teal);
-      background: #fff;
-      border-radius: 6px;
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
       padding: 14px;
+      background: #fff;
     }
 
-    .axis-item:nth-child(2) { border-left-color: var(--green); }
-    .axis-item:nth-child(3) { border-left-color: var(--blue); }
-    .axis-item:nth-child(4) { border-left-color: var(--gold); }
+    .mini b {
+      display: block;
+      margin-bottom: 4px;
+    }
 
-    .source-list {
+    .mini span {
       color: var(--muted);
       font-size: 14px;
     }
 
-    code {
-      padding: 1px 5px;
-      border-radius: 4px;
-      background: #edf2f5;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: .92em;
-    }
-
-    .small {
+    .footer {
+      margin-top: 34px;
       color: var(--muted);
       font-size: 14px;
     }
 
     @media (max-width: 880px) {
-      .grid.two,
-      .grid.three,
-      .callout,
-      .axis {
+      .grid,
+      .report-list {
         grid-template-columns: 1fr;
-      }
-
-      .score {
-        grid-template-columns: 92px 1fr 30px;
-      }
-
-      table {
-        display: block;
-        overflow-x: auto;
       }
     }
   </style>
@@ -322,368 +236,85 @@
 <body>
   <main class="page">
     <header>
-      <p class="eyebrow">Cangjie language domain report</p>
-      <h1>仓颉语言在特定领域的优势分析报告</h1>
+      <p class="eyebrow">Report center</p>
+      <h1>报告中心</h1>
       <p class="lead">
-        本报告聚焦一个问题：在 Harmony 生态和 AI 辅助开发逐渐常态化的背景下，仓颉最值得投入的领域在哪里。
-        结论不是“仓颉替代 ArkTS”，而是“仓颉承担更硬的核心逻辑、性能边界与跨语言连接，ArkTS 继续承担 UI 与应用交付效率”。
+        面向团队共享的在线报告入口。当前收录两类内容：仓颉语言分析、众包内存分析。
+        后续新增报告时，可以继续按分类扩展，不再把所有内容堆在首页。
       </p>
       <div class="meta">
-        <span class="pill">分析对象：仓颉 / ArkTS / Kotlin / Swift</span>
-        <span class="pill">视角：语言设计 + Harmony 工程落地</span>
-        <span class="pill">日期：2026-06-16</span>
+        <span class="pill">GitHub Pages 托管</span>
+        <span class="pill">静态 HTML 报告</span>
+        <span class="pill">分类导航入口</span>
       </div>
     </header>
 
-    <section class="callout">
-      <div class="verdict">
-        <h2>核心判断</h2>
-        <p>
-          <strong>仓颉的最佳位置不是页面层，而是 Harmony 应用与系统能力之间的“核心语言层”。</strong>
-          它适合承载领域模型、并发任务、算法计算、设备能力封装、C/ArkTS 互操作、SDK 与基础库代码。
-        </p>
-        <p>
-          AI 可以降低语法学习和样板代码成本，但不能替代语言本身提供的类型约束、错误边界、运行时模型和工具链。
-          因此，AI 时代的语言竞争更像“谁能让人和 AI 更少写出不可验证的代码”。
-        </p>
-      </div>
-
-      <aside class="scorebox">
-        <h3>仓颉适配度雷达</h3>
-        <div class="score"><span>核心逻辑</span><div class="bar"><span style="width: 92%"></span></div><b>高</b></div>
-        <div class="score"><span>性能边界</span><div class="bar"><span style="width: 88%"></span></div><b>高</b></div>
-        <div class="score"><span>并发任务</span><div class="bar"><span style="width: 84%"></span></div><b>高</b></div>
-        <div class="score"><span>UI 页面</span><div class="bar"><span style="width: 48%"></span></div><b>中</b></div>
-        <div class="score"><span>生态成熟</span><div class="bar"><span style="width: 58%"></span></div><b>中</b></div>
-      </aside>
-    </section>
-
     <section>
-      <h2>六个高价值领域</h2>
-      <div class="grid three">
-        <article class="domain">
-          <span class="tag native">Native Core</span>
-          <h3>1. Harmony Native 核心逻辑</h3>
+      <h2>报告分类</h2>
+      <div class="grid">
+        <a class="card" href="./reports/cangjie-language-analysis/">
+          <span class="tag language">Cangjie Language</span>
+          <h3>仓颉语言分析</h3>
           <p>
-            仓颉适合把业务中最稳定、最复杂、最需要长期维护的逻辑从页面层抽出来，例如账号、支付、权限、设备状态、同步协议和离线计算。
+            讨论 AI 时代编程语言价值、仓颉在 Harmony 场景下的定位，以及和 ArkTS、Kotlin、Swift 的语言设计对照。
           </p>
           <ul>
-            <li><code>struct</code> 值语义适合表达不可随意共享的业务数据。</li>
-            <li><code>enum</code> 与穷尽 <code>match</code> 适合表达状态机。</li>
-            <li><code>Option</code> 避免“可能为空”在对象属性中漂移。</li>
+            <li>语言设计优势</li>
+            <li>Harmony 场景适配</li>
+            <li>ArkTS/Kotlin/Swift 对比</li>
           </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>智能家居 App 中，把“设备离线、配网中、已连接、固件升级中、故障”建成明确状态机。</li>
-              <li>支付或订阅模块中，把订单、优惠、退款、风控校验沉淀为稳定核心库，供多个页面复用。</li>
-              <li>车机或穿戴设备中，把传感器数据清洗、阈值判定、告警策略从 UI 线程移出。</li>
-            </ul>
+          <div class="actions">
+            <span class="button">进入分类</span>
           </div>
-          <p class="fit">适合：SDK 核心层、业务规则引擎、设备状态模型。</p>
-        </article>
+        </a>
 
-        <article class="domain">
-          <span class="tag model">Domain Model</span>
-          <h3>2. 高可靠领域建模</h3>
+        <a class="card" href="./reports/crowdsourcing-memory-analysis/">
+          <span class="tag memory">Memory Analysis</span>
+          <h3>众包内存分析</h3>
           <p>
-            AI 生成代码时最容易犯的错误不是语法，而是漏掉边界情况。仓颉的类型系统可以把很多业务约束提前放进编译期。
+            汇总众包应用在 HarmonyOS 场景下的仓颉堆、native heap、刷新频率、前后台状态和 modal 收益空间分析。
           </p>
           <ul>
-            <li><code>?T</code> 把缺失值显式化。</li>
-            <li>模式匹配要求覆盖所有可能分支。</li>
-            <li>泛型约束和接口让通用逻辑更可检查。</li>
+            <li>仓颉堆拆解与收益评估</li>
+            <li>刷新频率与 GC 行为</li>
+            <li>native heap 属主拆分</li>
           </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>医疗随访系统中，区分“未采集、采集失败、采集成功但异常、正常”而不是用空字符串或魔法数。</li>
-              <li>金融风控中，把“通过、拒绝、人工复核、补材料”设计为封闭结果类型，避免漏处理。</li>
-              <li>工业控制中，把设备指令响应建模为成功、超时、协议错误、设备忙等可穷尽分支。</li>
-            </ul>
+          <div class="actions">
+            <span class="button">进入分类</span>
           </div>
-          <p class="fit">适合：金融、IoT、车机、医疗、工业控制中的规则代码。</p>
-        </article>
-
-        <article class="domain">
-          <span class="tag concurrent">Concurrency</span>
-          <h3>3. 并发与后台任务</h3>
-          <p>
-            仓颉提供语言级线程抽象，底层采用 M:N 模型，适合将复杂后台任务组织成更自然的并发结构。
-          </p>
-          <ul>
-            <li><code>spawn</code>、<code>Future</code>、锁和条件变量覆盖常见并发场景。</li>
-            <li>语言线程比直接面对 OS 线程更友好。</li>
-            <li>适合处理多设备、多连接、多任务调度。</li>
-          </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>多设备协同中，同时处理手机、平板、音箱的连接心跳、状态同步和重连策略。</li>
-              <li>离线优先应用中，前台编辑数据，后台分批同步、冲突检测、失败重试。</li>
-              <li>边缘 AI 场景中，把数据采集、预处理、推理调用、结果上报拆成并发流水线。</li>
-            </ul>
-          </div>
-          <p class="fit">适合：同步服务、边缘计算、设备协同、后台计算。</p>
-        </article>
-
-        <article class="domain">
-          <span class="tag interop">Interop</span>
-          <h3>4. ArkTS / C 互操作胶水层</h3>
-          <p>
-            仓颉文档提供 HLE 工具，可从 ArkTS 声明或 C 头文件生成互操作代码模板。这让仓颉更适合成为跨语言能力的聚合层。
-          </p>
-          <ul>
-            <li>ArkTS 继续负责 UI、声明式页面和应用层体验。</li>
-            <li>仓颉负责沉淀可复用核心能力。</li>
-            <li>C FFI 支持复用既有 native 库。</li>
-          </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>ArkTS 页面调用仓颉封装的蓝牙配网 SDK，页面只关心进度和结果。</li>
-              <li>复用已有 C/C++ 加密、音频降噪、图像处理库，由仓颉统一包装成稳定接口。</li>
-              <li>将三方 ArkTS 声明文件生成仓颉绑定，减少手写胶水代码和类型不一致。</li>
-            </ul>
-          </div>
-          <p class="fit">适合：三方库绑定、设备能力封装、已有 C/C++ 能力迁移。</p>
-        </article>
-
-        <article class="domain">
-          <span class="tag safety">Safety</span>
-          <h3>5. 显式安全边界</h3>
-          <p>
-            仓颉调用 C 侧能力时需要通过 <code>foreign</code>、<code>CFunc</code>、<code>unsafe</code> 等机制标识风险边界。
-            这对大型工程很重要，因为危险代码能被集中识别和审查。
-          </p>
-          <ul>
-            <li>跨 C 调用的风险不会伪装成普通业务函数。</li>
-            <li>审查工具可以围绕 <code>unsafe</code> 形成规则。</li>
-            <li>适合和 AI 代码审查结合。</li>
-          </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>把摄像头、麦克风、定位等敏感 native 能力集中封装，形成可审计的权限边界。</li>
-              <li>对 C 库传入指针、回调和生命周期做统一包装，减少页面层直接接触不安全接口。</li>
-              <li>CI 中扫描 <code>unsafe</code> 调用点，要求补充边界检查、资源释放和异常路径测试。</li>
-            </ul>
-          </div>
-          <p class="fit">适合：安全敏感 SDK、系统服务、native 能力封装。</p>
-        </article>
-
-        <article class="domain">
-          <span class="tag tooling">Tooling</span>
-          <h3>6. 平台定向优化与工具链</h3>
-          <p>
-            仓颉支持 OpenHarmony 条件编译，并在工具链中覆盖构建、包管理、LSP、格式化、调试等能力。
-            这使它具备成为 Harmony 长期基础设施语言的条件。
-          </p>
-          <ul>
-            <li><code>@When[env == "ohos"]</code> 可隔离平台差异。</li>
-            <li>OpenHarmony 目标支持给平台适配留出空间。</li>
-            <li>工具链成熟度会决定企业采用速度。</li>
-          </ul>
-          <div class="examples">
-            <b>场景示例</b>
-            <ul>
-              <li>同一基础库在 OpenHarmony、Android、iOS 上复用核心逻辑，仅隔离平台能力调用。</li>
-              <li>在 Harmony 设备上启用特定优化路径，在其他平台走通用实现。</li>
-              <li>通过 cjpm、LSP、格式化和调试工具建立企业内部仓颉 SDK 工程规范。</li>
-            </ul>
-          </div>
-          <p class="fit">适合：跨端基础库、平台 SDK、系统能力适配层。</p>
-        </article>
+        </a>
       </div>
     </section>
 
     <section>
-      <h2>和 ArkTS 的分工</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>维度</th>
-            <th>ArkTS 更适合</th>
-            <th>仓颉更适合</th>
-            <th>建议分工</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>UI 与交互</td>
-            <td>声明式页面、状态绑定、ArkUI 组件、快速迭代。</td>
-            <td>不应作为主战场，除非平台提供更高层 UI 框架。</td>
-            <td>ArkTS 写页面，仓颉提供核心服务。</td>
-          </tr>
-          <tr>
-            <td>业务核心</td>
-            <td>轻量业务编排、页面相关逻辑。</td>
-            <td>稳定领域模型、状态机、规则引擎、协议解析。</td>
-            <td>将复杂规则下沉到仓颉，减少页面代码膨胀。</td>
-          </tr>
-          <tr>
-            <td>性能敏感代码</td>
-            <td>普通应用逻辑足够高效。</td>
-            <td>算法、音视频、图像处理、数据编解码、设备能力封装。</td>
-            <td>热点路径用仓颉或仓颉+C 组合实现。</td>
-          </tr>
-          <tr>
-            <td>跨语言生态</td>
-            <td>JS/TS 生态与 UI 生态迁移成本低。</td>
-            <td>通过 HLE、C FFI 承接 ArkTS/C 能力边界。</td>
-            <td>ArkTS 面向上层生态，仓颉沉淀稳定接口。</td>
-          </tr>
-          <tr>
-            <td>AI 协作</td>
-            <td>AI 容易生成页面与胶水代码。</td>
-            <td>强类型、穷尽匹配、显式 unsafe 更利于机器校验。</td>
-            <td>AI 写 ArkTS 快速交付，仓颉承接可验证核心。</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h2>借鉴 Kotlin 与 Swift 的路线</h2>
-      <div class="grid two">
-        <div class="panel">
-          <h3>Kotlin 给仓颉的启示</h3>
-          <p>
-            Kotlin 在 Android 成功，不只是因为语法现代，而是因为它能渐进接入 Java 生态，同时用空安全、协程、数据类等能力解决真实痛点。
-          </p>
-          <p>
-            仓颉也应避免“要求开发者重写一切”。更合理的路线是：从高价值模块切入，通过互操作和工具链降低试点成本。
-          </p>
-        </div>
-        <div class="panel">
-          <h3>Swift 给仓颉的启示</h3>
-          <p>
-            Swift 的价值来自语言、编译器、平台 API、运行时、工具链共同演进。它不是孤立语言，而是 Apple 平台能力的表达方式。
-          </p>
-          <p>
-            仓颉如果在 Harmony 中形成一等工具链、平台 API 和性能优势，其长期角色会更接近 Swift，而不是普通三方语言。
-          </p>
-        </div>
+      <h2>最近报告</h2>
+      <div class="report-list">
+        <a class="mini" href="./reports/cangjie-language-analysis/">
+          <b>仓颉语言在特定领域的优势分析报告</b>
+          <span>语言设计 / Harmony / ArkTS 对比</span>
+        </a>
+        <a class="mini" href="./reports/crowdsourcing-memory-analysis/modal-benefit-report.html">
+          <b>modal 收益空间 · 仓颉堆拆解</b>
+          <span>众包内存 / 仓颉堆 / 优化收益</span>
+        </a>
+        <a class="mini" href="./reports/crowdsourcing-memory-analysis/refresh-frequency-compare.html">
+          <b>刷新频率 vs 仓颉堆 GC 行为</b>
+          <span>刷新场景 / GC 锯齿 / PSS</span>
+        </a>
       </div>
     </section>
 
-    <section>
-      <h2>语言设计优势拆解</h2>
-      <div class="axis">
-        <div class="axis-item">
-          <h3>可验证性</h3>
-          <p><code>Option</code>、穷尽 <code>match</code>、泛型约束使错误更早暴露，适合 AI 生成代码后的编译期校验。</p>
-        </div>
-        <div class="axis-item">
-          <h3>性能表达力</h3>
-          <p><code>struct</code> 值类型、C 互操作、平台条件编译让仓颉更靠近 native 能力边界。</p>
-        </div>
-        <div class="axis-item">
-          <h3>并发抽象</h3>
-          <p>M:N 语言线程、<code>spawn</code>、同步原语和 <code>Future</code> 支撑后台任务与设备协同。</p>
-        </div>
-        <div class="axis-item">
-          <h3>生态桥接</h3>
-          <p>HLE 面向 ArkTS/C 的绑定生成，说明仓颉被设计为 Harmony 多语言栈中的连接层。</p>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>落地建议</h2>
-      <div class="grid two">
-        <div class="panel">
-          <h3>优先试点模块</h3>
-          <ul>
-            <li>复杂状态机：设备连接、登录授权、支付流程、蓝牙/Wi-Fi 配网。</li>
-            <li>性能热点：压缩、编解码、加密摘要、图像/音频处理。</li>
-            <li>跨语言 SDK：ArkTS 页面调用仓颉核心，仓颉再绑定 C 库。</li>
-            <li>高可靠规则：权限、风控、离线同步、数据一致性校验。</li>
-          </ul>
-        </div>
-        <div class="panel">
-          <h3>不建议优先投入</h3>
-          <ul>
-            <li>纯 UI 页面和快速活动页，ArkTS 的效率更高。</li>
-            <li>强依赖 JS/TS 三方库的业务，迁移收益可能不足。</li>
-            <li>需求频繁变化且核心模型未稳定的模块。</li>
-            <li>缺少构建、调试、灰度和监控闭环的团队试点。</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>推荐架构</h2>
-      <div class="panel">
-        <table>
-          <thead>
-            <tr>
-              <th>层级</th>
-              <th>推荐语言</th>
-              <th>职责</th>
-              <th>价值</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>UI / 页面编排</td>
-              <td>ArkTS</td>
-              <td>ArkUI、页面状态、交互、路由、轻业务编排。</td>
-              <td>交付快，生态贴近 Harmony 应用层。</td>
-            </tr>
-            <tr>
-              <td>核心业务层</td>
-              <td>仓颉</td>
-              <td>领域模型、状态机、规则、错误处理、并发任务。</td>
-              <td>可维护、可验证、适合长期沉淀。</td>
-            </tr>
-            <tr>
-              <td>平台能力层</td>
-              <td>仓颉 + C/C++</td>
-              <td>native 库绑定、设备能力、性能热点、平台适配。</td>
-              <td>兼顾性能与安全边界。</td>
-            </tr>
-            <tr>
-              <td>构建与接口层</td>
-              <td>HLE / cjpm / LSP</td>
-              <td>生成绑定、管理包、构建调试、IDE 支持。</td>
-              <td>降低多语言工程复杂度。</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section>
-      <h2>最终结论</h2>
-      <div class="note">
-        <p>
-          仓颉在 Harmony 场景下的机会，不在于和 ArkTS 抢页面开发，而在于成为面向高可靠、高性能、跨语言和平台能力封装的核心工程语言。
-          如果把 ArkTS 看作 Harmony 应用的“体验层语言”，仓颉更适合成为“能力层语言”。
-        </p>
-        <p>
-          对企业团队而言，最务实的采用路径是小步试点：先选一个稳定、复杂、性能或可靠性收益明确的模块，用仓颉沉淀核心逻辑，
-          再通过 ArkTS 调用它。这样既不打断现有应用开发节奏，也能逐步验证仓颉的真实收益。
-        </p>
-      </div>
-    </section>
-
-    <section class="source-list">
-      <h2>资料依据</h2>
-      <p>本报告主要依据工作区内仓颉开发者文档和语言特性说明整理：</p>
+    <section class="panel">
+      <h2>扩展方式</h2>
+      <p>后续新增报告时，建议按这个结构维护：</p>
       <ul>
-        <li><code>cangjie_docs/README_zh.md</code>：仓颉定位为面向全场景应用开发的通用语言，兼顾开发效率与运行性能。</li>
-        <li><code>docs/dev-guide/source_zh_cn/enum_and_pattern_match/option_type.md</code>：<code>Option&lt;T&gt;</code> 与 <code>?T</code>。</li>
-        <li><code>docs/dev-guide/source_zh_cn/enum_and_pattern_match/match.md</code>：穷尽性 <code>match</code>。</li>
-        <li><code>docs/dev-guide/source_zh_cn/struct/define_struct.md</code>：<code>struct</code> 值类型、构造与成员规则。</li>
-        <li><code>docs/dev-guide/source_zh_cn/concurrency/concurrency_overview.md</code>：M:N 语言线程模型。</li>
-        <li><code>docs/dev-guide/source_zh_cn/FFI/cangjie-c.md</code>：C 互操作、<code>foreign</code>、<code>CFunc</code>、<code>unsafe</code>。</li>
-        <li><code>docs/tools/source_zh_cn/cmd-tools/HLE_manual.md</code>：ArkTS/C 互操作代码模板生成工具。</li>
-        <li><code>docs/dev-guide/source_zh_cn/compile_and_build/conditional_compilation.md</code>：OpenHarmony 条件编译。</li>
+        <li><code>reports/cangjie-language-analysis/</code>：仓颉语言、生态和工具链分析。</li>
+        <li><code>reports/crowdsourcing-memory-analysis/</code>：众包内存、GC、native heap、优化收益分析。</li>
+        <li>新增类别时，在首页补一个分类卡片，并在对应目录放一个 <code>index.html</code> 作为分类页。</li>
       </ul>
-      <p class="small">注：适配度评分为分析性判断，用于表达相对适用场景，不代表官方量化指标。</p>
     </section>
+
+    <p class="footer">最后更新：2026-06-17</p>
   </main>
 </body>
 </html>

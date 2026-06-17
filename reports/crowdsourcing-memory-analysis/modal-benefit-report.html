@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>modal 收益空间 · 仓颉堆拆解(美团众包 HarmonyOS)</title>
+<style>
+:root{--bg:#fff;--card:#fff;--c2:#f1f3f4;--fg:#202124;--fg2:#3c4043;--mut:#5f6368;--line:#dadce0;--line2:#e8eaed;
+--acc:#1a73e8;--yes:#188038;--part:#b06000;--no:#80868b;--shadow:0 1px 2px rgba(60,64,67,.1),0 1px 3px rgba(60,64,67,.06)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 "Roboto",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:32px 26px 72px}
+h1{font-size:22px;font-weight:600;margin:0 0 5px;letter-spacing:-.2px}
+.purpose{color:var(--mut);font-size:13px;margin-bottom:6px}
+.purpose code{background:var(--c2);padding:1px 6px;border-radius:4px;color:var(--fg2)}
+.legend-note{color:var(--mut);font-size:12.5px;margin:0 0 18px}.legend-note b{color:var(--fg2)}
+h2{font-size:16px;font-weight:600;margin:30px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line2);color:var(--fg)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 4px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .v{font-size:26px;font-weight:600}.kpi .v.g{color:var(--yes)}.kpi .v.a{color:var(--part)}.kpi .v.b{color:var(--acc)}
+.kpi .l{color:var(--mut);font-size:12px;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.brow{display:grid;grid-template-columns:152px 1fr 116px;align-items:center;gap:14px;margin:11px 0}
+.blabel{font-size:13px;font-weight:600;color:var(--fg2)}.blabel .bsz{display:block;color:var(--mut);font-weight:400;font-size:11px;margin-top:1px}
+.track{width:100%}
+.barwrap{display:flex;height:24px;border-radius:4px;overflow:hidden}
+.seg{height:100%}
+.bopt{font-size:12px;color:var(--mut);white-space:nowrap;text-align:right}.bopt b{color:var(--yes);font-size:15px;font-weight:600}.bopt .full{margin-left:5px;font-size:11px}
+.scale{color:var(--mut);font-size:11px;margin-top:10px;padding-top:8px;border-top:1px solid var(--line2)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line2);text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:500;font-size:11.5px;background:#f8f9fa}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td{color:var(--fg2)}
+.pc{display:block;color:var(--mut);font-size:10.5px}
+.mem{color:var(--mut);font-size:11px;font-family:ui-monospace,Menlo,monospace;margin-top:3px;word-break:break-all}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.vd{font-weight:600;text-align:center}.vd.yes{color:var(--yes)}.vd.part{color:var(--part)}.vd.no{color:var(--no)}
+.rs{font-size:12px;color:var(--fg2);max-width:400px;line-height:1.55}.rs code{background:var(--c2);padding:0 4px;border-radius:3px;font-size:11px}
+td.yes{color:var(--yes)}td.part{color:var(--part)}
+.note{background:#f8f9fa;border-left:3px solid var(--acc);padding:11px 15px;border-radius:0 6px 6px 0;margin:10px 0;font-size:12.5px;color:var(--fg2)}
+.note.g{border-color:var(--yes)}.note code{background:#fff;border:1px solid var(--line2);padding:0 4px;border-radius:4px}
+.foot{color:var(--mut);font-size:11.5px;margin-top:34px;border-top:1px solid var(--line2);padding-top:14px}.foot code{background:var(--c2);padding:0 4px;border-radius:3px}
+ul{margin:6px 0;padding-left:20px}li{margin:5px 0;font-size:12.5px;color:var(--fg2)}
+@media(max-width:900px){.kpis{grid-template-columns:1fr}.rs{max-width:none}.brow{grid-template-columns:120px 1fr 96px;gap:10px}}
+</style></head><body><div class="wrap">
+
+<h1>modal 收益空间 · 仓颉堆拆解</h1>
+<div class="purpose">美团众包 HarmonyOS 应用(com.meituan.banma.hmcrowdsource)· 基于 <code>cjprof heap</code> 类型拆解 + <code>--show-reference</code> 逃逸验证 · 2026-06-15 · 离线自包含</div>
+<div class="legend-note"><b>两个场景:</b><b>下线状态</b> = 骑手未上线(空闲);<b>上线状态(可接单)</b> = 骑手在线接单中(业务活跃)。每场景各采 3 次 cjheap,取最小=基线、最大=峰值。</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v g">26–33%</div><div class="l">仓颉堆中 modal <b>高置信可优化</b>(C1+C2 纯瞬时 JSON/DataModel 树)</div></div>
+  <div class="kpi"><div class="v a">37–45%</div><div class="l">计入字符串/字节底层瞬时部分后的<b>上界</b></div></div>
+  <div class="kpi"><div class="v">~3–6%</div><div class="l">折算到<b>全应用 PSS</b>(仓颉堆仅占 app ~8–10%)</div></div>
+</div>
+
+<h2>各场景:仓颉堆构成与可优化占比(条长 ∝ 堆大小)</h2>
+<div class="card">
+  <div class="brow">
+      <div class="blabel">下线状态·基线<span class="bsz">63 MB</span></div>
+      <div class="track"><div class="barwrap" style="width:45.1%"><div class="seg" style="width:21.75%;background:#34a853" title="C1 JSON 解析骨架: 13.8MB"></div><div class="seg" style="width:7.27%;background:#81c995" title="C2 序列化 DataModel 树: 4.6MB"></div><div class="seg" style="width:17.35%;background:#f9ab00" title="C3 字符串 / 字节底层: 11.0MB"></div><div class="seg" style="width:0.39%;background:#ffd43b" title="C4 AnyType 动态 JSON: 0.2MB"></div><div class="seg" style="width:13.90%;background:#9aa0a6" title="C5 UI 状态 / JS 桥: 8.8MB"></div><div class="seg" style="width:39.33%;background:#5f6368" title="C6 运行时 / 集合 / 基础数组 / 业务 bean: 24.9MB"></div></div></div>
+      <div class="bopt">可优化 <b>29%</b><span class="full">~40%</span></div>
+    </div><div class="brow">
+      <div class="blabel">下线状态·峰值<span class="bsz">140 MB</span></div>
+      <div class="track"><div class="barwrap" style="width:100.0%"><div class="seg" style="width:24.48%;background:#34a853" title="C1 JSON 解析骨架: 34.4MB"></div><div class="seg" style="width:8.62%;background:#81c995" title="C2 序列化 DataModel 树: 12.1MB"></div><div class="seg" style="width:19.25%;background:#f9ab00" title="C3 字符串 / 字节底层: 27.0MB"></div><div class="seg" style="width:0.39%;background:#ffd43b" title="C4 AnyType 动态 JSON: 0.5MB"></div><div class="seg" style="width:14.07%;background:#9aa0a6" title="C5 UI 状态 / JS 桥: 19.8MB"></div><div class="seg" style="width:33.19%;background:#5f6368" title="C6 运行时 / 集合 / 基础数组 / 业务 bean: 46.6MB"></div></div></div>
+      <div class="bopt">可优化 <b>33%</b><span class="full">~45%</span></div>
+    </div><div class="brow">
+      <div class="blabel">上线(可接单)·基线<span class="bsz">54 MB</span></div>
+      <div class="track"><div class="barwrap" style="width:38.2%"><div class="seg" style="width:18.43%;background:#34a853" title="C1 JSON 解析骨架: 9.9MB"></div><div class="seg" style="width:7.16%;background:#81c995" title="C2 序列化 DataModel 树: 3.8MB"></div><div class="seg" style="width:19.18%;background:#f9ab00" title="C3 字符串 / 字节底层: 10.3MB"></div><div class="seg" style="width:0.49%;background:#ffd43b" title="C4 AnyType 动态 JSON: 0.3MB"></div><div class="seg" style="width:8.61%;background:#9aa0a6" title="C5 UI 状态 / JS 桥: 4.6MB"></div><div class="seg" style="width:46.13%;background:#5f6368" title="C6 运行时 / 集合 / 基础数组 / 业务 bean: 24.8MB"></div></div></div>
+      <div class="bopt">可优化 <b>26%</b><span class="full">~37%</span></div>
+    </div><div class="brow">
+      <div class="blabel">上线(可接单)·峰值<span class="bsz">84 MB</span></div>
+      <div class="track"><div class="barwrap" style="width:59.6%"><div class="seg" style="width:21.62%;background:#34a853" title="C1 JSON 解析骨架: 18.1MB"></div><div class="seg" style="width:7.91%;background:#81c995" title="C2 序列化 DataModel 树: 6.6MB"></div><div class="seg" style="width:13.57%;background:#f9ab00" title="C3 字符串 / 字节底层: 11.4MB"></div><div class="seg" style="width:0.02%;background:#ffd43b" title="C4 AnyType 动态 JSON: 0.0MB"></div><div class="seg" style="width:18.30%;background:#9aa0a6" title="C5 UI 状态 / JS 桥: 15.3MB"></div><div class="seg" style="width:38.59%;background:#5f6368" title="C6 运行时 / 集合 / 基础数组 / 业务 bean: 32.3MB"></div></div></div>
+      <div class="bopt">可优化 <b>30%</b><span class="full">~38%</span></div>
+    </div>
+  <div class="scale">绿=可优化(C1·C2) · 黄=部分(C3·C4) · 灰=不可优化(C5·C6) · 最长条 = 140 MB</div>
+</div>
+
+<h2>仓颉堆 6 类拆解 · 是否可被 modal 优化 · 理由</h2>
+<div class="card" style="overflow-x:auto">
+<table>
+<thead><tr><th>类别(主要成员)</th><th class="n">下线状态<br>基线</th><th class="n">下线状态<br>峰值</th><th class="n">上线(可接单)<br>基线</th><th class="n">上线(可接单)<br>峰值</th><th class="vd">可优化</th><th>理由(cjprof 证据)</th></tr></thead>
+<tbody><tr>
+      <td><span class="dot" style="background:#34a853"></span><b>C1</b> JSON 解析骨架<div class="mem">JsonParser / RawArray&lt;JsonValue&gt; / HashMap&lt;String,JsonValue&gt; / JsonObject·Int·Bool·Null</div></td>
+      <td class="n">13.8<span class="pc">22%</span></td><td class="n">34.4<span class="pc">24%</span></td><td class="n">9.9<span class="pc">18%</span></td><td class="n">18.1<span class="pc">22%</span></td>
+      <td class="vd yes">是</td>
+      <td class="rs">cjprof incoming-reference 验证:<code>&lt;String,JsonValue&gt;</code> 共 ~30MB,<b>仅 0.06MB 被 <code>[ROOT GLOBAL]</code> 持有</b>(路由配置缓存,KB 级),其余 99.8% 浮动/局部根 = 瞬时解析产物;JsonParser 自身钉着树+输入缓冲,解析完即死。</td></tr><tr>
+      <td><span class="dot" style="background:#81c995"></span><b>C2</b> 序列化 DataModel 树<div class="mem">DataModelStruct·Seq·Int / Field / ArrayList·RawArray&lt;Field·DataModel&gt;</div></td>
+      <td class="n">4.6<span class="pc">7%</span></td><td class="n">12.1<span class="pc">9%</span></td><td class="n">3.8<span class="pc">7%</span></td><td class="n">6.6<span class="pc">8%</span></td>
+      <td class="vd yes">是</td>
+      <td class="rs">对 DataModelStruct 做 incoming-reference:<b>多数树顶层无任何 retainer</b>(已死待 GC),仅极少被监控 bean 锚定。DataModel 是反序列化中间态,抽出定型对象后即弃。</td></tr><tr>
+      <td><span class="dot" style="background:#f9ab00"></span><b>C3</b> 字符串 / 字节底层<div class="mem">String / RawArray&lt;Byte&gt;[] / JsonString / ArrayList&lt;UInt8&gt;</div></td>
+      <td class="n">11.0<span class="pc">17%</span></td><td class="n">27.0<span class="pc">19%</span></td><td class="n">10.3<span class="pc">19%</span></td><td class="n">11.4<span class="pc">14%</span></td>
+      <td class="vd part">部分</td>
+      <td class="rs"><code>RawArray&lt;Byte&gt;[]</code> 混装:JSON 键、parser 输入缓冲、StringBuilder 缓冲(瞬时)+ 抽出的字符串值(逃逸进 bean)。按类型切不开,估 30–60% 瞬时。</td></tr><tr>
+      <td><span class="dot" style="background:#ffd43b"></span><b>C4</b> AnyType 动态 JSON<div class="mem">cjjson::AnyType / Tuple·Option&lt;String,AnyType&gt;</div></td>
+      <td class="n">0.2<span class="pc">0%</span></td><td class="n">0.5<span class="pc">0%</span></td><td class="n">0.3<span class="pc">0%</span></td><td class="n">0.0<span class="pc">0%</span></td>
+      <td class="vd part">部分</td>
+      <td class="rs">中间 AnyType map 死、入 DaBaiBean 监控的逃逸。本应用各场景几乎为 0。</td></tr><tr>
+      <td><span class="dot" style="background:#9aa0a6"></span><b>C5</b> UI 状态 / JS 桥<div class="mem">ohos.state_manage / ark_interop / component</div></td>
+      <td class="n">8.8<span class="pc">14%</span></td><td class="n">19.8<span class="pc">14%</span></td><td class="n">4.6<span class="pc">9%</span></td><td class="n">15.3<span class="pc">18%</span></td>
+      <td class="vd no">否</td>
+      <td class="rs">cjprof 显示由 <code>[ROOT GLOBAL]</code> 持有的响应式 UI 状态(ObservedProperty/Observer)与 JS 互操作对象,<b>常驻设计</b>,无作用域可 region 化。</td></tr><tr>
+      <td><span class="dot" style="background:#5f6368"></span><b>C6</b> 运行时 / 集合 / 基础数组 / 业务 bean<div class="mem">RawArray&lt;DWord&gt;[] / HashSet&lt;Int64&gt; / Mutex·Timer·Future / 各业务 Bean</div></td>
+      <td class="n">24.9<span class="pc">39%</span></td><td class="n">46.6<span class="pc">33%</span></td><td class="n">24.8<span class="pc">46%</span></td><td class="n">32.3<span class="pc">39%</span></td>
+      <td class="vd no">否</td>
+      <td class="rs">逃逸进长生命对象或本身常驻,不在 parse→丢弃的干净作用域里。</td></tr></tbody>
+</table>
+<div class="note" style="margin-top:14px">单元格为 <b>MB</b> 与 <b>占该快照堆比例</b>。可优化判定:<span class="vd yes" style="font-weight:800">是</span> = cjprof 证明瞬时/无外部 retainer;<span class="vd part" style="font-weight:800">部分</span> = 键/中间体瞬时但抽出的值逃逸;<span class="vd no" style="font-weight:800">否</span> = <code>[ROOT GLOBAL]</code> 持有或长生命。</div>
+</div>
+
+<h2>收益汇总</h2>
+<div class="card">
+<table>
+<thead><tr><th>场景</th><th class="n">仓颉 live 堆</th><th class="n">高置信可优化(C1+C2)</th><th class="n">含部分(+C3/C4)</th></tr></thead>
+<tbody><tr><td>下线状态·基线</td><td class="n">63 MB</td>
+      <td class="n yes">18 MB · 29%</td>
+      <td class="n part">22–25 MB · 34–40%</td></tr><tr><td>下线状态·峰值</td><td class="n">140 MB</td>
+      <td class="n yes">46 MB · 33%</td>
+      <td class="n part">55–63 MB · 39–45%</td></tr><tr><td>上线(可接单)·基线</td><td class="n">54 MB</td>
+      <td class="n yes">14 MB · 26%</td>
+      <td class="n part">17–20 MB · 31–37%</td></tr><tr><td>上线(可接单)·峰值</td><td class="n">84 MB</td>
+      <td class="n yes">25 MB · 30%</td>
+      <td class="n part">28–32 MB · 34–38%</td></tr></tbody>
+</table>
+</div>
+
+<h2>收益性质(评委关注点)</h2>
+<div class="card">
+<div class="note g"><b>① 削峰 &gt; 降均值。</b> 仓颉 live 堆在同场景内剧烈摆动(下线 63→140MB);峰值由"已死待 GC 的 JSON 瞬时树"撑起。modal 在作用域退出即时释放,<b>把峰压向基线</b>——直接降低 HarmonyOS 低内存查杀(LMK)风险。mobile 看峰值不看均值。</div>
+<div class="note"><b>② 降 GC 开销。</b> 这 ~30–46MB 瞬时不再进 GC 堆,非分代 copying collector 就不必逐字节 evacuate 它 → GC 更少更便宜(CPU/停顿收益)。</div>
+<div class="note"><b>③ 堵泄漏面。</b> 本 dump 取自 memory_leak 可靠性路径;JsonParser 钉树、解析树无 retainer 正是"瞬时被意外存活"现场,modal 从语言层消除该隐患。</div>
+</div>
+
+<h2>口径与边界</h2>
+<div class="card">
+<ul>
+<li><b>仓颉堆在 --mem 里的归属:</b> 是命名匿名映射 <code>[anon:cangjie_heap]</code>(源码 <code>RegionSpace.cpp:92</code>),计入 <b>AnonPage other</b>,<u>不在 native heap</u>(那是 malloc 家族)。占全应用 PSS ~8–10%(下线 711MB / 上线 889MB 总 PSS)。</li>
+<li><b>live ≠ 物理足迹:</b> cjprof 测存活对象字节;已 commit 的 region(含 copying 的 from/to 预留、碎片)更大。"可优化 MB"是逻辑对象量。</li>
+<li><b>判定依据:</b> 类型聚合(cjprof 类型表)+ 逐类型逃逸抽查(<code>--show-reference --incoming-reference</code> 的 <code>[ROOT GLOBAL]</code> 标注);非逐实例全量逃逸分析。C3/C4 系数 0.3–0.6 为工程估计。</li>
+<li><b>采样:</b> 每场景 3 次 cjheap,取最小=基线、最大=峰值;<code>--mem</code> 与 cjheap 非同时采集,故不做配对。</li>
+</ul>
+</div>
+
+<div class="foot">cjprof 1.2.0-alpha.22 · 可复现脚本 <code>decompose_heap.py</code>(本拆解)/ <code>classify_modal.py</code>(逃逸分桶)/ <code>analyze_mem.py</code>(全应用 PSS)· 离线自包含,可直接归档分享</div>
+</div></body></html>

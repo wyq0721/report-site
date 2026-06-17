@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cjprof 堆内存分析 · modal 收益评估</title>
+<style>
+:root{--bg:#0f1115;--card:#1a1d24;--card2:#21252e;--fg:#e6e8eb;--muted:#9aa0aa;--line:#2b303b;
+--accent:#4dabf7;--warn:#ffd43b;--good:#69db7c;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px}
+h1{font-size:24px;margin:0 0 4px}
+h2{font-size:19px;margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:15px;margin:22px 0 8px;color:var(--accent)}
+.sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+.sub code{background:var(--card2);padding:1px 6px;border-radius:4px;color:#cdd3dc}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.kpi .v{font-size:24px;font-weight:700}
+.kpi .l{color:var(--muted);font-size:12px;margin-top:2px}
+.kpi.hot .v{color:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t th{color:var(--muted);font-weight:600;font-size:12px;text-transform:none}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.g,th.g{width:200px}
+td.ty{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all}
+td.muted{color:var(--muted)}
+tr.fam td.ty{color:var(--warn)}
+.bar{background:var(--card2);border-radius:4px;height:9px;overflow:hidden;display:inline-block;width:150px;vertical-align:middle}
+.bar .fill{height:100%;border-radius:4px}
+.pc{margin-left:8px;color:var(--muted);font-size:11px;vertical-align:middle}
+.note{background:var(--card2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:6px;margin:12px 0;font-size:13px}
+.note.warn{border-color:var(--warn)}
+.note.good{border-color:var(--good)}
+.rank{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;
+background:var(--accent);color:#06121f;font-weight:700;font-size:12px;margin-right:8px}
+.op{margin:14px 0}
+.op .h{font-weight:700;font-size:15px;margin-bottom:4px}
+ul{margin:6px 0 6px 0;padding-left:20px}
+li{margin:3px 0}
+.tag{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:20px;
+padding:2px 10px;font-size:11px;color:var(--muted);margin-right:6px}
+.foot{color:var(--muted);font-size:12px;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+code{font-family:ui-monospace,Menlo,monospace}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}}
+</style></head><body><div class="wrap">
+
+<h1>cjprof 堆内存分析 · modal 特性收益评估</h1>
+<div class="sub">
+源文件 <code>hidumper-cjheap-13515-1781314251702</code> · 美团众包 HarmonyOS 应用 (PID 13515) ·
+采集自 <code>/data/log/reliability/resource_leak/memory_leak</code> ·
+生成于 2026-06-13 10:53 · cjprof 1.2.0-alpha.22 · <b>离线自包含报告 (无需联网/无需后端)</b>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">62.9 MB</div><div class="l">总浅堆 (used 62.9 MB)</div></div>
+  <div class="kpi"><div class="v">1,019,857</div><div class="l">存活对象数 / 5,561 种类型</div></div>
+  <div class="kpi hot"><div class="v">40%</div><div class="l">JSON+序列化瞬时图占全堆</div></div>
+  <div class="kpi"><div class="v">12.28%</div><div class="l">堆利用率 (limit 512.0 MB)</div></div>
+</div>
+
+<div class="note warn">
+<b>核心结论:</b> 全堆体积最大、对象数最多的单一来源,是 “JSON 文本 → 解析树 → DataModel/AnyType 树 → 抽取字段” 这条管线
+(<b>25.1 MB, 40.0%</b> 浅堆;叠加其字符串/Byte 底层后约占半个堆)。
+这正是 modal/<code>@local</code> region-scoped 分配要打的靶心 —— 把整棵瞬时树限定在函数 region 内,
+exclave 仅逃逸出抽取后的小结果,树随 region 确定性 bulk-free,既不进共享 GC 堆,也消掉拷贝式 GC 每轮对这片深图的 trace+evacuate 开销。
+</div>
+
+<h2>① 内存构成:按家族</h2>
+<div class="card">
+<table class="t"><thead><tr><th>家族</th><th class="n">对象数</th><th class="n">浅堆</th><th class="n">占比</th><th class="g"></th></tr></thead>
+<tbody><tr><td class="ty">stdx.encoding.json + stdx.serialization (解析树 + DataModel)</td><td class="n">311,175</td><td class="n">15.5 MB</td><td class="n">24.6%</td><td class="g"><div class="bar"><div class="fill" style="width:84.78%;background:#e8590c"></div></div></td></tr>
+<tr><td class="ty">cjjson::AnyType (监控/网络动态 JSON)</td><td class="n">224,877</td><td class="n">9.6 MB</td><td class="n">15.3%</td><td class="g"><div class="bar"><div class="fill" style="width:52.73%;background:#d6336c"></div></div></td></tr>
+<tr><td class="ty">RawArray&lt;Byte&gt;[] (字符串/缓冲底层, 含大量 JSON 文本)</td><td class="n">141,031</td><td class="n">18.3 MB</td><td class="n">29.1%</td><td class="g"><div class="bar"><div class="fill" style="width:100.00%;background:#f08c00"></div></div></td></tr>
+<tr><td class="ty">std.core::String</td><td class="n">79,042</td><td class="n">1.8 MB</td><td class="n">2.9%</td><td class="g"><div class="bar"><div class="fill" style="width:9.90%;background:#9c36b5"></div></div></td></tr>
+<tr><td class="ty">StringBuilder</td><td class="n">5,432</td><td class="n">0.2 MB</td><td class="n">0.3%</td><td class="g"><div class="bar"><div class="fill" style="width:1.13%;background:#7048e8"></div></div></td></tr>
+<tr><td class="ty">其它 (UI / 状态管理 / 集合 / runtime …)</td><td class="n">258,300</td><td class="n">17.4 MB</td><td class="n">27.7%</td><td class="g"><div class="bar"><div class="fill" style="width:95.45%;background:#adb5bd"></div></div></td></tr></tbody></table>
+</div>
+
+<h2>② Top 深堆支配对象 (retained,来自支配树)</h2>
+<div class="card">
+<div class="note">深堆 = 该对象被回收后可连带释放的全部对象浅堆之和。下表 Top10 全部是 JSON/序列化树根 —— 即单个对象就拽住整棵子树。</div>
+<table class="t"><thead><tr><th>#</th><th>类型</th><th class="n">深堆</th><th class="n">占全堆</th><th class="g"></th></tr></thead>
+<tbody><tr><td class="muted">1</td><td class="ty">stdx.serialization.serialization::DataModelSeq</td><td class="n">1.1 MB</td><td class="n">1.76%</td><td class="g"><div class="bar"><div class="fill" style="width:1.76%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">2</td><td class="ty">std.collection::ArrayList&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">1.1 MB</td><td class="n">1.76%</td><td class="g"><div class="bar"><div class="fill" style="width:1.76%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">3</td><td class="ty">RawArray&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">1.1 MB</td><td class="n">1.76%</td><td class="g"><div class="bar"><div class="fill" style="width:1.76%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">4</td><td class="ty">stdx.encoding.json::JsonArray</td><td class="n">1.0 MB</td><td class="n">1.65%</td><td class="g"><div class="bar"><div class="fill" style="width:1.65%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">5</td><td class="ty">std.collection::ArrayList&lt;stdx.encoding.json::JsonValue&gt;</td><td class="n">1.0 MB</td><td class="n">1.65%</td><td class="g"><div class="bar"><div class="fill" style="width:1.65%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">6</td><td class="ty">RawArray&lt;stdx.encoding.json::JsonValue&gt;</td><td class="n">1.0 MB</td><td class="n">1.65%</td><td class="g"><div class="bar"><div class="fill" style="width:1.65%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">7</td><td class="ty">stdx.serialization.serialization::DataModelSeq</td><td class="n">0.6 MB</td><td class="n">0.92%</td><td class="g"><div class="bar"><div class="fill" style="width:0.92%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">8</td><td class="ty">std.collection::ArrayList&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">0.6 MB</td><td class="n">0.92%</td><td class="g"><div class="bar"><div class="fill" style="width:0.92%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">9</td><td class="ty">RawArray&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">0.6 MB</td><td class="n">0.92%</td><td class="g"><div class="bar"><div class="fill" style="width:0.92%;background:#1c7ed6"></div></div></td></tr>
+<tr><td class="muted">10</td><td class="ty">stdx.encoding.json::JsonArray</td><td class="n">0.5 MB</td><td class="n">0.86%</td><td class="g"><div class="bar"><div class="fill" style="width:0.86%;background:#1c7ed6"></div></div></td></tr></tbody></table>
+</div>
+
+<h2>③ modal 落地点 (按收益排序)</h2>
+
+<div class="card">
+<div class="op"><div class="h"><span class="rank">1</span>JSON 解析 → DataModel 瞬时树 (最大、最干净)</div>
+<span class="tag">stdx.encoding.json</span><span class="tag">stdx.serialization</span><span class="tag">~15.5 MB</span>
+<ul>
+<li>证据:<code>DataModelStruct</code> 8,879 · <code>JsonObject</code> 9,768 · <code>HashMap&lt;String,JsonValue&gt;</code> 9,769 · <code>Field</code> 55,244 —— 整套指针密集嵌套树。</li>
+<li>对 <code>DataModelStruct</code> 做 incoming-reference:<b>绝大多数树顶层无任何外部引用</b>,唯一 retainer 是树内自环 (Field→RawArray→ArrayList→自己)。<code>--show-thread</code> 显示所有线程都 parked、无一帧在解析中。</li>
+<li>=&gt; 这片是<b>已死、GC 尚未回收的瞬时树</b>。在非分代 + copying collector 下,存活到 GC 时刻者要按字节 evacuation memcpy,瞬时分配并不免费。</li>
+<li><b>收益:</b>region 化 <code>parse→遍历→抽取→exclave 小结果</code>,~15.5 MB 结构 + 其 Byte 底层从 GC 托管堆移除,并消掉每轮 GC 对深图的 trace+evacuate。</li>
+</ul></div>
+
+<div class="op"><div class="h"><span class="rank">2</span>JsonParser 钉住 输入缓冲 + 解析树 (设计性泄漏)</div>
+<span class="tag">7,849 个存活 JsonParser</span><span class="tag">retained 5.87 MB</span>
+<ul>
+<li>outgoing-reference:单个 <code>JsonParser</code> <b>同时持有</b> <code>RawArray&lt;JsonValue&gt;</code>(输出树)<b>与</b> <code>ArrayList&lt;UInt8&gt;/RawArray&lt;Byte&gt;</code>(输入字节缓冲)。</li>
+<li>=&gt; 只要一个 parser 引用被(哪怕间接)存住,整棵 JSON 树 + 源文本就跟着不死。</li>
+<li><b>收益:</b>在 region 内构造 parser,仅抽取后的小值经 exclave 逃逸,parser 与输入缓冲随 region 销毁 —— 从语言层消除 “parser 寿命 = 树寿命” 的隐患。</li>
+</ul></div>
+
+<div class="op"><div class="h"><span class="rank">3</span>监控/上报 bean 构造路径 (部分契合)</div>
+<span class="tag">cjjson::AnyType ~9.6 MB</span><span class="tag">DaBaiBean 1,352</span>
+<ul>
+<li><code>cjjson::AnyType</code> 家族主锚定者是 <code>com_meituan_banma_nativecore.monitor.bean::DaBaiBean</code>(5,500+ 条引用)与 <code>ohos.ark_interop::JSObject/JSValue</code>(JS 互操作桥)。</li>
+<li><b>会逃逸的部分:</b>bean 进了上报队列 (<code>LinkedBlockingQueue&lt;Message&gt;</code>) —— modal 不能回收,属 “flush 速率 &lt; 生产速率” 的积压,另案处理。</li>
+<li><b>可 region 化的部分:</b>构造 bean = “解析整个入参 JSON map → 只抽几个字段”,中间 AnyType map 会死、只有小 bean 逃逸 —— modal 收编这个中间体。</li>
+</ul></div>
+</div>
+
+<h2>④ 收益空间 (量级,非假精度)</h2>
+<div class="card">
+<div class="cols">
+<div>
+<div class="note good"><b>可直接 region 化 / 净移出 GC 堆</b><br>
+① JSON/DataModel 瞬时图 ≈ 15.5 MB 结构 + 其 Byte 底层大部分,叠加 ② parser 输入缓冲。
+保守看 <b>全堆约 1/4 ~ 1/3 (~15–20 MB) 是 region-scopable 的纯瞬时</b>。</div>
+<div class="note"><b>额外收益</b><br>消掉这片深指针图每轮 GC 的 trace+copy → 降低 GC 频率/停顿;
+并从语言层堵死 ②/③ 的 “瞬时对象被意外存活” 泄漏面(本 dump 出自 memory_leak 可靠性路径,本身即堆积现场)。</div>
+</div>
+<div>
+<div class="note warn"><b>modal 不解决</b><br>真正逃逸进上报队列的 DaBaiBean payload —— flush 速率问题,需另案处理 (扩大 flush 频率 / 背压 / 采样)。</div>
+<div class="note"><b>实施顺序</b><br>需先有 Tier-0 (<code>String</code>/<code>Array</code>/<code>StringBuilder</code>) 的 <code>@local!</code> 构造器,
+再到集合 (<code>ArrayList</code>/<code>HashMap</code>),JSON 树才能整棵进 region。改造靶点落在
+<code>stdx.encoding.json</code>(JsonParser/解析入口)与 <code>stdx.serialization</code>(<code>DataModel.fromJson</code> 的 buildDMStruct/buildDMSeq 递归)。</div>
+</div>
+</div>
+</div>
+
+<h2>⑤ 明细:Top 25 类型 (按浅堆)</h2>
+<div class="card"><table class="t"><thead><tr><th>#</th><th>类型</th><th class="n">对象数</th><th class="n">浅堆</th><th class="n">深堆(retained)</th><th class="g">占比(浅堆)</th></tr></thead><tbody>
+<tr class=""><td class="muted">1</td><td class="ty">RawArray&lt;Byte&gt;[]</td><td class="n">141,031</td><td class="n">18.3 MB</td><td class="n">18.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:29.07%;background:#e8590c"></div></div><span class="pc">29.1%</span></td></tr>
+<tr class="fam"><td class="muted">2</td><td class="ty">std.core::Option&lt;Tuple&lt;std.core::String,cjjson::AnyType&gt;&gt;</td><td class="n">114,708</td><td class="n">4.4 MB</td><td class="n">4.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:6.96%;background:#e8590c"></div></div><span class="pc">7.0%</span></td></tr>
+<tr class="fam"><td class="muted">3</td><td class="ty">RawArray&lt;stdx.encoding.json::JsonValue&gt;</td><td class="n">8,881</td><td class="n">3.6 MB</td><td class="n">5.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:5.78%;background:#e8590c"></div></div><span class="pc">5.8%</span></td></tr>
+<tr class=""><td class="muted">4</td><td class="ty">RawArray&lt;DWord&gt;[]</td><td class="n">22,234</td><td class="n">3.4 MB</td><td class="n">3.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:5.42%;background:#e8590c"></div></div><span class="pc">5.4%</span></td></tr>
+<tr class="fam"><td class="muted">5</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,stdx.encoding.json::JsonValue&gt;&gt;</td><td class="n">9,770</td><td class="n">2.3 MB</td><td class="n">4.2 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.72%;background:#e8590c"></div></div><span class="pc">3.7%</span></td></tr>
+<tr class="fam"><td class="muted">6</td><td class="ty">RawArray&lt;stdx.serialization.serialization::Field&gt;</td><td class="n">8,879</td><td class="n">2.3 MB</td><td class="n">5.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.66%;background:#e8590c"></div></div><span class="pc">3.7%</span></td></tr>
+<tr class="fam"><td class="muted">7</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,cjjson::AnyType&gt;&gt;</td><td class="n">3,320</td><td class="n">2.1 MB</td><td class="n">2.1 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.30%;background:#e8590c"></div></div><span class="pc">3.3%</span></td></tr>
+<tr class="fam"><td class="muted">8</td><td class="ty">Tuple&lt;std.core::String,cjjson::AnyType&gt;</td><td class="n">59,322</td><td class="n">1.8 MB</td><td class="n">1.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.88%;background:#e8590c"></div></div><span class="pc">2.9%</span></td></tr>
+<tr class=""><td class="muted">9</td><td class="ty">std.core::String</td><td class="n">79,042</td><td class="n">1.8 MB</td><td class="n">1.9 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.88%;background:#e8590c"></div></div><span class="pc">2.9%</span></td></tr>
+<tr class="fam"><td class="muted">10</td><td class="ty">stdx.serialization.serialization::Field</td><td class="n">55,244</td><td class="n">1.7 MB</td><td class="n">4.2 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.68%;background:#e8590c"></div></div><span class="pc">2.7%</span></td></tr>
+<tr class="fam"><td class="muted">11</td><td class="ty">std.collection::HashMap&lt;std.core::String,stdx.encoding.json::JsonValue&gt;</td><td class="n">9,769</td><td class="n">0.8 MB</td><td class="n">5.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.30%;background:#e8590c"></div></div><span class="pc">1.3%</span></td></tr>
+<tr class="fam"><td class="muted">12</td><td class="ty">stdx.encoding.json::JsonString</td><td class="n">34,448</td><td class="n">0.8 MB</td><td class="n">0.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.25%;background:#e8590c"></div></div><span class="pc">1.3%</span></td></tr>
+<tr class=""><td class="muted">13</td><td class="ty">ohos.labels::APILevel</td><td class="n">14,833</td><td class="n">0.7 MB</td><td class="n">0.7 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.08%;background:#e8590c"></div></div><span class="pc">1.1%</span></td></tr>
+<tr class="fam"><td class="muted">14</td><td class="ty">stdx.encoding.json::JsonParser</td><td class="n">7,849</td><td class="n">0.7 MB</td><td class="n">5.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.05%;background:#e8590c"></div></div><span class="pc">1.0%</span></td></tr>
+<tr class="fam"><td class="muted">15</td><td class="ty">stdx.encoding.json::JsonInt</td><td class="n">42,032</td><td class="n">0.6 MB</td><td class="n">0.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.02%;background:#e8590c"></div></div><span class="pc">1.0%</span></td></tr>
+<tr class=""><td class="muted">16</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,std.collection::ArrayList&lt;Int64&gt;&gt;&gt;</td><td class="n">1,019</td><td class="n">0.6 MB</td><td class="n">0.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.01%;background:#e8590c"></div></div><span class="pc">1.0%</span></td></tr>
+<tr class=""><td class="muted">17</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;Int64,Unit&gt;&gt;</td><td class="n">1,301</td><td class="n">0.5 MB</td><td class="n">0.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.79%;background:#e8590c"></div></div><span class="pc">0.8%</span></td></tr>
+<tr class="fam"><td class="muted">18</td><td class="ty">std.collection::HashMapEntry&lt;std.core::String,cjjson::AnyType&gt;</td><td class="n">10,770</td><td class="n">0.5 MB</td><td class="n">0.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.78%;background:#e8590c"></div></div><span class="pc">0.8%</span></td></tr>
+<tr class="fam"><td class="muted">19</td><td class="ty">stdx.serialization.serialization::DataModelInt</td><td class="n">32,203</td><td class="n">0.5 MB</td><td class="n">0.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.78%;background:#e8590c"></div></div><span class="pc">0.8%</span></td></tr>
+<tr class=""><td class="muted">20</td><td class="ty">std.sync::Mutex</td><td class="n">2,958</td><td class="n">0.5 MB</td><td class="n">0.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.75%;background:#e8590c"></div></div><span class="pc">0.8%</span></td></tr>
+<tr class="fam"><td class="muted">21</td><td class="ty">std.collection::ArrayList&lt;stdx.serialization.serialization::Field&gt;</td><td class="n">8,879</td><td class="n">0.4 MB</td><td class="n">5.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.65%;background:#e8590c"></div></div><span class="pc">0.6%</span></td></tr>
+<tr class=""><td class="muted">22</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,ohos.state_manage::ObservedPropertyAbstract&gt;&gt;</td><td class="n">413</td><td class="n">0.4 MB</td><td class="n">0.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.60%;background:#e8590c"></div></div><span class="pc">0.6%</span></td></tr>
+<tr class=""><td class="muted">23</td><td class="ty">std.collection::ArrayList&lt;UInt8&gt;</td><td class="n">7,850</td><td class="n">0.4 MB</td><td class="n">0.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.57%;background:#e8590c"></div></div><span class="pc">0.6%</span></td></tr>
+<tr class="fam"><td class="muted">24</td><td class="ty">stdx.serialization.serialization::DataModelString</td><td class="n">15,132</td><td class="n">0.3 MB</td><td class="n">0.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.55%;background:#e8590c"></div></div><span class="pc">0.6%</span></td></tr>
+<tr class="fam"><td class="muted">25</td><td class="ty">stdx.encoding.json::$ClN18stdx.encoding.json17checkNumberSystemHNNY_12NumberSystemEEL1_E$0</td><td class="n">12,772</td><td class="n">0.3 MB</td><td class="n">0.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.46%;background:#e8590c"></div></div><span class="pc">0.5%</span></td></tr>
+</tbody></table>
+<div class="note" style="margin-top:14px">高亮行 = JSON/序列化/DataModel/AnyType 家族成员。</div></div>
+
+<h2>⑥ 明细:Top 25 类型 (按深堆 retained)</h2>
+<div class="card"><table class="t"><thead><tr><th>#</th><th>类型</th><th class="n">对象数</th><th class="n">浅堆</th><th class="n">深堆(retained)</th><th class="g">占比(浅堆)</th></tr></thead><tbody>
+<tr class=""><td class="muted">1</td><td class="ty">RawArray&lt;Byte&gt;[]</td><td class="n">141,031</td><td class="n">18.3 MB</td><td class="n">18.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:29.07%;background:#1c7ed6"></div></div><span class="pc">29.1%</span></td></tr>
+<tr class="fam"><td class="muted">2</td><td class="ty">stdx.encoding.json::JsonParser</td><td class="n">7,849</td><td class="n">0.7 MB</td><td class="n">5.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.05%;background:#1c7ed6"></div></div><span class="pc">1.0%</span></td></tr>
+<tr class="fam"><td class="muted">3</td><td class="ty">RawArray&lt;stdx.encoding.json::JsonValue&gt;</td><td class="n">8,881</td><td class="n">3.6 MB</td><td class="n">5.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:5.78%;background:#1c7ed6"></div></div><span class="pc">5.8%</span></td></tr>
+<tr class="fam"><td class="muted">4</td><td class="ty">stdx.serialization.serialization::DataModelStruct</td><td class="n">8,879</td><td class="n">0.1 MB</td><td class="n">5.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.2%</span></td></tr>
+<tr class="fam"><td class="muted">5</td><td class="ty">stdx.encoding.json::JsonObject</td><td class="n">9,768</td><td class="n">0.1 MB</td><td class="n">5.5 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.2%</span></td></tr>
+<tr class="fam"><td class="muted">6</td><td class="ty">std.collection::ArrayList&lt;stdx.serialization.serialization::Field&gt;</td><td class="n">8,879</td><td class="n">0.4 MB</td><td class="n">5.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.65%;background:#1c7ed6"></div></div><span class="pc">0.6%</span></td></tr>
+<tr class="fam"><td class="muted">7</td><td class="ty">std.collection::HashMap&lt;std.core::String,stdx.encoding.json::JsonValue&gt;</td><td class="n">9,769</td><td class="n">0.8 MB</td><td class="n">5.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.30%;background:#1c7ed6"></div></div><span class="pc">1.3%</span></td></tr>
+<tr class="fam"><td class="muted">8</td><td class="ty">RawArray&lt;stdx.serialization.serialization::Field&gt;</td><td class="n">8,879</td><td class="n">2.3 MB</td><td class="n">5.3 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.66%;background:#1c7ed6"></div></div><span class="pc">3.7%</span></td></tr>
+<tr class="fam"><td class="muted">9</td><td class="ty">std.core::Option&lt;Tuple&lt;std.core::String,cjjson::AnyType&gt;&gt;</td><td class="n">114,708</td><td class="n">4.4 MB</td><td class="n">4.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:6.96%;background:#1c7ed6"></div></div><span class="pc">7.0%</span></td></tr>
+<tr class="fam"><td class="muted">10</td><td class="ty">stdx.serialization.serialization::Field</td><td class="n">55,244</td><td class="n">1.7 MB</td><td class="n">4.2 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.68%;background:#1c7ed6"></div></div><span class="pc">2.7%</span></td></tr>
+<tr class="fam"><td class="muted">11</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,stdx.encoding.json::JsonValue&gt;&gt;</td><td class="n">9,770</td><td class="n">2.3 MB</td><td class="n">4.2 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.72%;background:#1c7ed6"></div></div><span class="pc">3.7%</span></td></tr>
+<tr class=""><td class="muted">12</td><td class="ty">RawArray&lt;DWord&gt;[]</td><td class="n">22,234</td><td class="n">3.4 MB</td><td class="n">3.4 MB</td><td class="g"><div class="bar"><div class="fill" style="width:5.42%;background:#1c7ed6"></div></div><span class="pc">5.4%</span></td></tr>
+<tr class="fam"><td class="muted">13</td><td class="ty">std.collection::HashMap&lt;std.core::String,cjjson::AnyType&gt;</td><td class="n">3,320</td><td class="n">0.3 MB</td><td class="n">2.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.44%;background:#1c7ed6"></div></div><span class="pc">0.4%</span></td></tr>
+<tr class=""><td class="muted">14</td><td class="ty">std.core::StringBuilder</td><td class="n">5,432</td><td class="n">0.2 MB</td><td class="n">2.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.33%;background:#1c7ed6"></div></div><span class="pc">0.3%</span></td></tr>
+<tr class="fam"><td class="muted">15</td><td class="ty">RawArray&lt;std.collection::HashMapEntry&lt;std.core::String,cjjson::AnyType&gt;&gt;</td><td class="n">3,320</td><td class="n">2.1 MB</td><td class="n">2.1 MB</td><td class="g"><div class="bar"><div class="fill" style="width:3.30%;background:#1c7ed6"></div></div><span class="pc">3.3%</span></td></tr>
+<tr class=""><td class="muted">16</td><td class="ty">std.core::String</td><td class="n">79,042</td><td class="n">1.8 MB</td><td class="n">1.9 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.88%;background:#1c7ed6"></div></div><span class="pc">2.9%</span></td></tr>
+<tr class="fam"><td class="muted">17</td><td class="ty">Tuple&lt;std.core::String,cjjson::AnyType&gt;</td><td class="n">59,322</td><td class="n">1.8 MB</td><td class="n">1.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:2.88%;background:#1c7ed6"></div></div><span class="pc">2.9%</span></td></tr>
+<tr class="fam"><td class="muted">18</td><td class="ty">stdx.serialization.serialization::DataModelSeq</td><td class="n">1,027</td><td class="n">0.0 MB</td><td class="n">1.7 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.0%</span></td></tr>
+<tr class="fam"><td class="muted">19</td><td class="ty">std.collection::ArrayList&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">1,027</td><td class="n">0.0 MB</td><td class="n">1.7 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.1%</span></td></tr>
+<tr class="fam"><td class="muted">20</td><td class="ty">RawArray&lt;stdx.serialization.serialization::DataModel&gt;</td><td class="n">1,027</td><td class="n">0.0 MB</td><td class="n">1.7 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.1%</span></td></tr>
+<tr class="fam"><td class="muted">21</td><td class="ty">stdx.encoding.json::JsonArray</td><td class="n">1,031</td><td class="n">0.0 MB</td><td class="n">1.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.0%</span></td></tr>
+<tr class="fam"><td class="muted">22</td><td class="ty">std.collection::ArrayList&lt;stdx.encoding.json::JsonValue&gt;</td><td class="n">1,031</td><td class="n">0.0 MB</td><td class="n">1.6 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.1%</span></td></tr>
+<tr class=""><td class="muted">23</td><td class="ty">std.collection::HashMap&lt;std.core::String,std.collection::ArrayList&lt;Int64&gt;&gt;</td><td class="n">1,019</td><td class="n">0.1 MB</td><td class="n">0.9 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.1%</span></td></tr>
+<tr class=""><td class="muted">24</td><td class="ty">std.io::ByteBuffer</td><td class="n">2,568</td><td class="n">0.1 MB</td><td class="n">0.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:0.30%;background:#1c7ed6"></div></div><span class="pc">0.2%</span></td></tr>
+<tr class="fam"><td class="muted">25</td><td class="ty">stdx.encoding.json::JsonString</td><td class="n">34,448</td><td class="n">0.8 MB</td><td class="n">0.8 MB</td><td class="g"><div class="bar"><div class="fill" style="width:1.25%;background:#1c7ed6"></div></div><span class="pc">1.3%</span></td></tr>
+</tbody></table></div>
+
+<div class="foot">
+由 cjprof 1.2.0-alpha.22 <code>heap</code> 分析导出 · 数据快照来自单次 hidumper-cjheap dump ·
+本文件离线自包含,可直接归档/分享 · 生成脚本 <code>gen_heap_report.py</code>
+</div>
+</div></body></html>

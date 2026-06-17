@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>native heap 属主拆分</title>
+<style>
+body{margin:0;background:#fff;color:#202124;font:14px/1.6 "Roboto",-apple-system,"PingFang SC",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:32px 26px 64px}
+h1{font-size:21px;font-weight:600;margin:0 0 5px}h2{font-size:16px;font-weight:600;margin:28px 0 10px;padding-bottom:8px;border-bottom:1px solid #e8eaed}
+.sub{color:#5f6368;font-size:13px;margin-bottom:16px}.sub code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.kpi{border:1px solid #dadce0;border-radius:8px;padding:14px 16px;box-shadow:0 1px 2px rgba(60,64,67,.1)}
+.kpi .v{font-size:21px;font-weight:600}.kpi .l{color:#5f6368;font-size:11.5px;margin-top:3px}
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid #dadce0;margin:8px 0}.seg{height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:11.5px;color:#5f6368}.lg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}.lg b{color:#202124;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 10px;border-bottom:1px solid #e8eaed;text-align:left}
+th{color:#5f6368;font-weight:500;font-size:11.5px;background:#f8f9fa}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}td{color:#3c4043}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.card{border:1px solid #dadce0;border-radius:8px;padding:14px 18px;box-shadow:0 1px 2px rgba(60,64,67,.1);margin:10px 0}
+.note{background:#f8f9fa;border-left:3px solid #1a73e8;padding:11px 15px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12.5px;color:#3c4043}
+.note.r{border-color:#ea4335}.note.g{border-color:#34a853}
+.foot{color:#5f6368;font-size:11.5px;margin-top:28px;border-top:1px solid #e8eaed;padding-top:14px}.foot code{background:#f1f3f4;padding:0 4px;border-radius:3px}
+ul{margin:6px 0;padding-left:20px}li{margin:5px 0;font-size:12.5px;color:#3c4043}
+</style></head><body><div class="wrap">
+<h1>native heap(jemalloc)属主拆分 · 全量 malloc-hook</h1>
+<div class="sub">com.meituan.banma.hmcrowdsource · 存活 malloc(AllocEvent 未释放)· 总 <b>222 MB</b> · 新启动态(startup hook)· 2026-06-17 15:28 · 离线自包含<br>
+数据源 <code>nhf.db</code>(hiprofiler nativehook 全量·fp_unwind)· 已归因走 <code>last_lib_id</code>,无栈部分按线程名归类</div>
+<div class="kpis">
+  <div class="kpi"><div class="v" style="color:#ea4335">129 MB</div><div class="l">无栈(FFRT 协程+主线程)· 58% — 需 DWARF 才能再拆</div></div>
+  <div class="kpi"><div class="v" style="color:#a142f4">48 MB</div><div class="l">ArkTS/ArkUI 引擎 · 22% — 最大可归因属主</div></div>
+  <div class="kpi"><div class="v" style="color:#1a73e8">9 MB</div><div class="l">RN(V8+原生)· 4% — 本页很小</div></div>
+  <div class="kpi"><div class="v" style="color:#34a853">11 MB</div><div class="l">Cangjie 运行时 · 5%</div></div>
+</div>
+<h2>属主占比(条形)</h2>
+<div class="bar"><div class="seg" style="width:45.50%;background:#ea4335" title="【无栈】FFRT worker pool: 101MB"></div><div class="seg" style="width:21.77%;background:#a142f4" title="ArkTS/ArkUI 引擎: 48MB"></div><div class="seg" style="width:12.78%;background:#f9ab00" title="【无栈】主线程: 28MB"></div><div class="seg" style="width:5.43%;background:#9aa0a6" title="其它已归因 .so: 12MB"></div><div class="seg" style="width:4.78%;background:#34a853" title="Cangjie 运行时: 11MB"></div><div class="seg" style="width:4.40%;background:#00897b" title="图形/文本渲染: 10MB"></div><div class="seg" style="width:2.60%;background:#1a73e8" title="V8 (RN JS 引擎): 6MB"></div><div class="seg" style="width:1.53%;background:#4285f4" title="RN 原生 (.so): 3MB"></div><div class="seg" style="width:1.22%;background:#795548" title="SQLite: 3MB"></div></div>
+<div class="legend"><span class="lg"><i style="background:#ea4335"></i>【无栈】FFRT worker pool <b>101MB · 45%</b></span><span class="lg"><i style="background:#a142f4"></i>ArkTS/ArkUI 引擎 <b>48MB · 22%</b></span><span class="lg"><i style="background:#f9ab00"></i>【无栈】主线程 <b>28MB · 13%</b></span><span class="lg"><i style="background:#9aa0a6"></i>其它已归因 .so <b>12MB · 5%</b></span><span class="lg"><i style="background:#34a853"></i>Cangjie 运行时 <b>11MB · 5%</b></span><span class="lg"><i style="background:#00897b"></i>图形/文本渲染 <b>10MB · 4%</b></span><span class="lg"><i style="background:#1a73e8"></i>V8 (RN JS 引擎) <b>6MB · 3%</b></span><span class="lg"><i style="background:#4285f4"></i>RN 原生 (.so) <b>3MB · 2%</b></span><span class="lg"><i style="background:#795548"></i>SQLite <b>3MB · 1%</b></span></div>
+<h2>明细表</h2>
+<div class="card"><table><thead><tr><th>属主</th><th class="n">存活 malloc</th><th class="n">占比</th><th class="n">分配次数</th><th>归因方式</th></tr></thead><tbody><tr><td><span class="dot" style="background:#ea4335"></span>【无栈】FFRT worker pool</td><td class="n">100.9 MB</td><td class="n">45.5%</td><td class="n">97,185</td><td>调用栈(fp)被 FFRT 协程栈打断,按线程名归类</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkTS/ArkUI 引擎</td><td class="n">48.3 MB</td><td class="n">21.8%</td><td class="n">293,074</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#f9ab00"></span>【无栈】主线程</td><td class="n">28.4 MB</td><td class="n">12.8%</td><td class="n">14,361</td><td>调用栈(fp)被 FFRT 协程栈打断,按线程名归类</td></tr><tr><td><span class="dot" style="background:#9aa0a6"></span>其它已归因 .so</td><td class="n">12.0 MB</td><td class="n">5.4%</td><td class="n">94,766</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#34a853"></span>Cangjie 运行时</td><td class="n">10.6 MB</td><td class="n">4.8%</td><td class="n">188,368</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#00897b"></span>图形/文本渲染</td><td class="n">9.8 MB</td><td class="n">4.4%</td><td class="n">26,688</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>V8 (RN JS 引擎)</td><td class="n">5.8 MB</td><td class="n">2.6%</td><td class="n">4,625</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#4285f4"></span>RN 原生 (.so)</td><td class="n">3.4 MB</td><td class="n">1.5%</td><td class="n">13,190</td><td>last_lib_id 直接调用方 .so</td></tr><tr><td><span class="dot" style="background:#795548"></span>SQLite</td><td class="n">2.7 MB</td><td class="n">1.2%</td><td class="n">3,953</td><td>last_lib_id 直接调用方 .so</td></tr></tbody></table></div>
+<h2>结论</h2>
+<div class="note r"><b>① 最大块是 FFRT worker pool ≈ 101 MB / 45% —— 无栈。</b>HarmonyOS 的 FFRT(Function Flow Runtime)用<b>协程/纤程栈</b>跑并发任务,<code>fp_unwind</code> 在纤程切换边界断掉,记录不到调用栈。这块是 ArkTS 并发/taskpool、V8 后台编译&GC、图片/媒体解码、网络等<b>后台任务</b>共用线程池的分配(其中 74 个大 buffer 合计 ~102MB)。要再拆只能用 <b>DWARF(.eh_frame)展开</b>重抓一遍。</div>
+<div class="note"><b>② 最大可归因属主是 ArkTS/ArkUI 引擎 ≈ 48 MB / 22%。</b>HarmonyOS 原生 UI/JS 运行时(libark_jsruntime + libace_compatible + libace_napi)。订单列表是 Cangjie/ArkUI 页,native 主要由 ArkTS/ArkUI 撑起。</div>
+<div class="note g"><b>③ RN ≈ 9 MB、Cangjie ≈ 11 MB —— 在本页 native 里都很小。</b>RN 原生(react_render/mrn/aki)+ V8 合计不到 10MB;Cangjie C++ 运行时 ~11MB(仓颉 GC 堆另在 <code>[anon:cangjie_heap]</code>,不在 jemalloc)。与既有结论一致:native 大盘不是 RN / 不是 Cangjie。</div>
+<h2>口径与局限</h2>
+<div class="card"><ul>
+<li><b>新启动态 222MB,非存量态 392MB。</b>属主<b>构成比例</b>可代表存量态(同样的属主放大),但绝对值不同;要拿存量态精确拆分,需<b>重启→重放点击负载→DWARF 全量</b>(代价:重新人脸上线、trace 更大)。</li>
+<li><b>无栈 58% 的根因是 fp_unwind + FFRT 协程栈</b>,不是数据缺失。DWARF 展开能拿到任务自身的帧(纤程边界以上),可把这 129MB 大部分归到真实属主。</li>
+<li><b>仓颉 GC 堆不在此表</b>:它是 <code>[anon:cangjie_heap]</code> 命名匿名映射(AnonPage),不走 malloc。本表只含 jemalloc/brk 等 C/C++ malloc。</li>
+<li>已归因走 <code>last_lib_id</code>(直接调用方 .so),非完整调用链根因;同一 .so 可能被多上层调用。</li>
+</ul></div>
+<div class="foot">存活 malloc = <code>native_hook.event_type='AllocEvent' AND end_ts IS NULL</code> · 线程名来自 <code>thread.name</code> · FFRT=Function Flow Runtime(schd-worker / OS_FFRT_*)· 下一步:DWARF(<code>fp_unwind:false</code>)全量重抓以拆分无栈部分</div>
+</div></body></html>
