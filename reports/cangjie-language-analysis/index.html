@@ -331,7 +331,7 @@
       <div class="meta">
         <span class="pill">分析对象：仓颉 / ArkTS / Kotlin / Swift</span>
         <span class="pill">视角：语言设计 + Harmony 工程落地</span>
-        <span class="pill">日期：2026-06-16</span>
+        <span class="pill">日期：2026-06-17</span>
       </div>
     </header>
 
@@ -346,6 +346,10 @@
           AI 可以降低语法学习和样板代码成本，但不能替代语言本身提供的类型约束、错误边界、运行时模型和工具链。
           因此，AI 时代的语言竞争更像“谁能让人和 AI 更少写出不可验证的代码”。
         </p>
+        <p>
+          新增判断：仓颉当前仍属于低资源语言，AI 直接生成仓颉代码未必天然占优；真正的长期优势在于它把机器生成代码放进更强的编译期约束、
+          运行时检查和工程边界里，让 AI 产物更容易被验证、审计和修复。
+        </p>
       </div>
 
       <aside class="scorebox">
@@ -353,9 +357,44 @@
         <div class="score"><span>核心逻辑</span><div class="bar"><span style="width: 92%"></span></div><b>高</b></div>
         <div class="score"><span>性能边界</span><div class="bar"><span style="width: 88%"></span></div><b>高</b></div>
         <div class="score"><span>并发任务</span><div class="bar"><span style="width: 84%"></span></div><b>高</b></div>
+        <div class="score"><span>AI 可验证</span><div class="bar"><span style="width: 90%"></span></div><b>高</b></div>
         <div class="score"><span>UI 页面</span><div class="bar"><span style="width: 48%"></span></div><b>中</b></div>
         <div class="score"><span>生态成熟</span><div class="bar"><span style="width: 58%"></span></div><b>中</b></div>
       </aside>
+    </section>
+
+    <section>
+      <h2>AI 时代的新增判断</h2>
+      <div class="grid two">
+        <div class="panel">
+          <h3>优势不是“模型更会写”，而是“写错后更容易被系统抓住”</h3>
+          <p>
+            低资源语言的现实是：通用大模型对仓颉语法、标准库和工程习惯的先验知识少，直接生成容易混入其他语言的模式。
+            但仓颉的静态强类型、类型推断、运行时越界/溢出检查、包级编译单元和工具链反馈，能把 AI 产物快速送入“编译-诊断-修复”的闭环。
+          </p>
+        </div>
+        <div class="panel">
+          <h3>ArkTS 偏应用层效率，仓颉偏核心层可信度</h3>
+          <p>
+            ArkTS 贴近 HarmonyOS 应用开发和 ArkUI 声明式 UI，适合页面、状态绑定、业务编排和 TS/JS 生态迁移。
+            仓颉更适合把稳定模型、危险边界、并发后台任务和性能热点沉淀为可复用能力层，让 ArkTS 页面只消费清晰接口。
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Option + 穷尽 match 能减少 AI 漏分支</h3>
+          <p>
+            AI 生成业务代码最常见的问题是漏掉异常状态。仓颉用 <code>Option&lt;T&gt;</code> 显式表达“有/无”，用穷尽 <code>match</code>
+            逼迫所有状态分支被覆盖，适合订单、设备、权限、采样、分析任务等状态空间清晰的领域。
+          </p>
+        </div>
+        <div class="panel">
+          <h3>宏和 EDSL 可以把团队规范变成生成入口</h3>
+          <p>
+            仓颉宏的输入输出都是程序片段。团队可以把常见模式沉淀为领域 DSL，例如状态机、报告模板、采样配置、native 绑定和权限检查。
+            后续 AI 生成更高层表达，再由宏展开为规范代码，减少样板和风格漂移。
+          </p>
+        </div>
+      </div>
     </section>
 
     <section>
@@ -539,6 +578,12 @@
             <td>强类型、穷尽匹配、显式 unsafe 更利于机器校验。</td>
             <td>AI 写 ArkTS 快速交付，仓颉承接可验证核心。</td>
           </tr>
+          <tr>
+            <td>低资源语言适配</td>
+            <td>语料更多，TypeScript/JS 迁移心智更接近。</td>
+            <td>需要官方文档、spec、RAG、编译反馈和测试闭环共同支撑。</td>
+            <td>对仓颉采用“文档检索 + 语法约束 + 编译修复”的 AI 工作流。</td>
+          </tr>
         </tbody>
       </table>
     </section>
@@ -585,6 +630,38 @@
         <div class="axis-item">
           <h3>生态桥接</h3>
           <p>HLE 面向 ArkTS/C 的绑定生成，说明仓颉被设计为 Harmony 多语言栈中的连接层。</p>
+        </div>
+        <div class="axis-item">
+          <h3>AI 修复闭环</h3>
+          <p>静态类型、包级编译、明确错误信息和测试框架，让 AI Agent 可以围绕编译失败持续检索、修改和验证。</p>
+        </div>
+        <div class="axis-item">
+          <h3>危险边界可审计</h3>
+          <p><code>foreign</code>、<code>CFunc</code>、<code>unsafe</code> 把跨 C 调用显式标出来，便于审查 AI 生成的 native 交互代码。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>AI 工程化落地方式</h2>
+      <div class="grid two">
+        <div class="panel">
+          <h3>推荐工作流</h3>
+          <ul>
+            <li>先用 ArkTS/ArkUI 快速完成页面和交互骨架。</li>
+            <li>把稳定规则、状态机、算法、采样和归因逻辑下沉到仓颉。</li>
+            <li>让 AI 生成仓颉代码时必须携带官方文档片段、spec 约束和本地示例。</li>
+            <li>用编译、单测、静态扫描和 <code>unsafe</code> 审查形成自动修复闭环。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>需要补齐的生态资产</h3>
+          <ul>
+            <li>机器可读的仓颉 spec 摘要和语法速查。</li>
+            <li>常见编译错误与修复案例库。</li>
+            <li>ArkTS 到仓颉的互操作/迁移模板。</li>
+            <li>领域 DSL 和宏模板，例如状态机、报告生成、内存采样分析。</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -666,6 +743,10 @@
           对企业团队而言，最务实的采用路径是小步试点：先选一个稳定、复杂、性能或可靠性收益明确的模块，用仓颉沉淀核心逻辑，
           再通过 ArkTS 调用它。这样既不打断现有应用开发节奏，也能逐步验证仓颉的真实收益。
         </p>
+        <p>
+          AI 时代的进一步结论是：仓颉不应只被宣传为“又一种可写 Harmony 应用的语言”，而应被定位为“让 AI 生成代码更可验证的核心工程语言”。
+          ArkTS 负责体验层效率，仓颉负责能力层可信度，二者组合才是 Harmony 场景下更现实的生产力路线。
+        </p>
       </div>
     </section>
 
@@ -681,6 +762,9 @@
         <li><code>docs/dev-guide/source_zh_cn/FFI/cangjie-c.md</code>：C 互操作、<code>foreign</code>、<code>CFunc</code>、<code>unsafe</code>。</li>
         <li><code>docs/tools/source_zh_cn/cmd-tools/HLE_manual.md</code>：ArkTS/C 互操作代码模板生成工具。</li>
         <li><code>docs/dev-guide/source_zh_cn/compile_and_build/conditional_compilation.md</code>：OpenHarmony 条件编译。</li>
+        <li><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts">华为 ArkTS 官方文档入口</a>：ArkTS 在 HarmonyOS 应用开发中的定位。</li>
+        <li><a href="https://cangjie-lang.cn/docs?url=%2F0.53.18%2FSpec%2Fsource_zh_cn%2FChapter_01_Lexical_Structure%28zh%29.html">仓颉语言 Spec 官方入口</a>：仓颉语言规范与语法体系。</li>
+        <li><a href="https://arxiv.org/abs/2603.14501">CangjieBench</a>：低资源通用语言场景下，直接生成、语法约束、RAG 和 Agent 方法的对比研究。</li>
       </ul>
       <p class="small">注：适配度评分为分析性判断，用于表达相对适用场景，不代表官方量化指标。</p>
     </section>

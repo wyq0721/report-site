@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>crowdsource 应用内存分类分析</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#202124;font:14px/1.65 "Roboto",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:34px 26px 72px}
+h1{font-size:23px;font-weight:600;margin:0 0 6px}
+h2{font-size:17px;font-weight:600;margin:34px 0 12px;padding-bottom:9px;border-bottom:1px solid #e8eaed}
+h2 .tag{font-size:11px;font-weight:500;color:#fff;background:#1a73e8;border-radius:10px;padding:2px 9px;margin-left:9px;vertical-align:middle}
+.sub{color:#5f6368;font-size:13px;margin-bottom:6px}.sub code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+.kpi{border:1px solid #dadce0;border-radius:10px;padding:15px 17px;box-shadow:0 1px 2px rgba(60,64,67,.1)}
+.kpi .v{font-size:22px;font-weight:600}.kpi .l{color:#5f6368;font-size:11.5px;margin-top:4px}
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid #dadce0;margin:8px 0}.seg{height:100%}
+.barlabel{font-size:11px;color:#5f6368;margin:2px 0 0}
+.legend{display:flex;flex-wrap:wrap;gap:11px 14px;margin:11px 0 4px;font-size:11.5px;color:#5f6368}
+.lg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}.lg b{color:#202124;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 10px;border-bottom:1px solid #e8eaed;text-align:left;vertical-align:top}
+th{color:#5f6368;font-weight:500;font-size:11.5px;background:#f8f9fa}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}td{color:#3c4043}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.card{border:1px solid #dadce0;border-radius:10px;padding:15px 19px;box-shadow:0 1px 2px rgba(60,64,67,.1);margin:10px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.note{background:#f8f9fa;border-left:3px solid #1a73e8;padding:11px 15px;border-radius:0 6px 6px 0;margin:12px 0;font-size:12.5px;color:#3c4043}
+.note.r{border-color:#ea4335}.note.g{border-color:#34a853}.note.a{border-color:#f9ab00}
+.foot{color:#5f6368;font-size:11.5px;margin-top:30px;border-top:1px solid #e8eaed;padding-top:15px}.foot code{background:#f1f3f4;padding:0 4px;border-radius:3px}
+ul{margin:6px 0;padding-left:20px}li{margin:6px 0;font-size:12.5px;color:#3c4043}
+.method{font-size:12px}.method td{padding:7px 10px}
+.prio td:first-child{font-weight:600;white-space:nowrap}
+.medal{font-size:15px}
+@media(max-width:760px){.kpis,.cols{grid-template-columns:1fr 1fr}}
+</style></head><body><div class="wrap">
+
+<h1>crowdsource 应用内存分类分析</h1>
+<div class="sub">com.meituan.banma.hmcrowdsource(仓颉 + ArkTS/ArkUI + React Native 混合)· HarmonyOS 真机 · 上线中(可接单)· 2026-06-17 16:27</div>
+<div class="sub">汇总四项实测:① smaps/hidumper 子系统归因 ② native heap 全量 malloc-hook ③ 刷新期 DWARF 全栈归因 ④ 仓颉 GC 堆受控刷新基准 · 离线自包含</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="v">1068 MB</div><div class="l">存量态 App PSS(hidumper Total 1127MB)</div></div>
+  <div class="kpi"><div class="v" style="color:#ea4335">392 MB · 38%</div><div class="l">native heap — 最大类,smaps 不可分</div></div>
+  <div class="kpi"><div class="v" style="color:#34a853">~36 MB · 3%</div><div class="l">仓颉 GC 堆(modal 作用域)· 存量态摊薄</div></div>
+  <div class="kpi"><div class="v" style="color:#a142f4">26–32 MB</div><div class="l">modal 预估削峰 ≈ 应用峰值 2–3%</div></div>
+</div>
+
+<h2>采集方法(控制变量 · 评委必问)</h2>
+<div class="card"><table class="method"><thead><tr><th>实测</th><th>工具/口径</th><th>状态</th><th>回答的问题</th></tr></thead><tbody>
+<tr><td>① 子系统归因</td><td><code>/proc/&lt;pid&gt;/smaps</code> 按映射名 Pss + <code>hidumper --mem</code> 校验</td><td>存量态(密集交互后,同进程)</td><td>全应用内存按子系统怎么分</td></tr>
+<tr><td>② native 持有</td><td>hiprofiler nativehook 全量 · fp_unwind · startup hook</td><td>新启动态(222MB live malloc)</td><td>native heap 这块谁占的</td></tr>
+<tr><td>③ 刷新分配</td><td>nativehook · <b>DWARF</b>(attach 运行进程,不重启)· 40s/1Hz 刷新</td><td>刷新负载下</td><td>刷新时谁在分配、留存多少</td></tr>
+<tr><td>④ 仓颉 GC 基准</td><td>只读高频采样 <code>[anon:cangjie_heap]</code> + 应用 PSS</td><td>刷新 3s/1s/0.5s 三档</td><td>GC 锯齿 + modal 削峰空间</td></tr>
+</tbody></table>
+<div class="barlabel">固定:同机/同会话/同页面/同骑手状态/同工具口径;唯一自变量按各实测注明。绝对值受会话累积、服务端波动、采样漂移影响,故以<b>构成比例</b>为结论依据。</div></div>
+
+<h2>第一层 · 全应用内存分类<span class="tag">实测① 存量态</span></h2>
+<div class="sub">按 smaps 映射名归因(可归因常驻集 1037MB);GPU(GL+Graph≈58MB)不在 smaps,另计入 hidumper Total。</div>
+<div class="bar"><div class="seg" style="width:37.80%;background:#ea4335" title="native heap(jemalloc 混合池): 392MB"></div><div class="seg" style="width:13.98%;background:#9aa0a6" title="系统/三方 .so(代码段): 145MB"></div><div class="seg" style="width:10.90%;background:#a142f4" title="ArkTS 引擎堆(ArkUI/JS): 113MB"></div><div class="seg" style="width:9.16%;background:#90a4ae" title="其它匿名(线程栈/JIT/分配器): 95MB"></div><div class="seg" style="width:8.68%;background:#34a853" title="Cangjie(GC堆36 + 代码43+std): 90MB"></div><div class="seg" style="width:6.36%;background:#1a73e8" title="RN · JS 堆(V8/JSVM_RNOH): 66MB"></div><div class="seg" style="width:5.11%;background:#f9ab00" title="ArkWeb 内嵌浏览器: 53MB"></div><div class="seg" style="width:2.22%;background:#a142f4" title="ArkUI 框架 .so: 23MB"></div><div class="seg" style="width:1.74%;background:#1a73e8" title="RN · 原生 .so: 18MB"></div><div class="seg" style="width:0.96%;background:#cfd8dc" title="HAP/字节码/资源: 10MB"></div><div class="seg" style="width:0.87%;background:#cfd8dc" title="字体/CPython/GPU.so 等: 9MB"></div></div>
+<div class="legend"><span class="lg"><i style="background:#ea4335"></i>native heap <b>392MB·38%</b></span><span class="lg"><i style="background:#9aa0a6"></i>系统/三方 .so <b>145MB·14%</b></span><span class="lg"><i style="background:#a142f4"></i>ArkTS 引擎堆 <b>113MB·11%</b></span><span class="lg"><i style="background:#90a4ae"></i>其它匿名 <b>95MB·9%</b></span><span class="lg"><i style="background:#34a853"></i>Cangjie <b>90MB·9%</b></span><span class="lg"><i style="background:#1a73e8"></i>RN · JS 堆 <b>66MB·6%</b></span><span class="lg"><i style="background:#f9ab00"></i>ArkWeb 内嵌浏览器 <b>53MB·5%</b></span><span class="lg"><i style="background:#a142f4"></i>ArkUI 框架 .so <b>23MB·2%</b></span></div>
+<div class="card"><table><thead><tr><th>子系统</th><th class="n">PSS</th><th class="n">占比</th><th>说明</th></tr></thead><tbody><tr><td><span class="dot" style="background:#ea4335"></span>native heap(jemalloc 混合池)</td><td class="n">392 MB</td><td class="n">37.8%</td><td>需 malloc 级剖析,见第二层</td></tr><tr><td><span class="dot" style="background:#9aa0a6"></span>系统/三方 .so(代码段)</td><td class="n">145 MB</td><td class="n">14.0%</td><td>共享代码,几乎不可降</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkTS 引擎堆(ArkUI/JS)</td><td class="n">113 MB</td><td class="n">10.9%</td><td>原生 UI/JS 对象、组件树</td></tr><tr><td><span class="dot" style="background:#90a4ae"></span>其它匿名(线程栈/JIT/分配器)</td><td class="n">95 MB</td><td class="n">9.2%</td><td>partition_alloc / <anon></td></tr><tr><td><span class="dot" style="background:#34a853"></span>Cangjie(GC堆36 + 代码43+std)</td><td class="n">90 MB</td><td class="n">8.7%</td><td>GC 堆才是 modal 作用域</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>RN · JS 堆(V8/JSVM_RNOH)</td><td class="n">66 MB</td><td class="n">6.4%</td><td>RN 原生另在 jemalloc</td></tr><tr><td><span class="dot" style="background:#f9ab00"></span>ArkWeb 内嵌浏览器</td><td class="n">53 MB</td><td class="n">5.1%</td><td>libarkweb_engine</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkUI 框架 .so</td><td class="n">23 MB</td><td class="n">2.2%</td><td>代码段</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>RN · 原生 .so</td><td class="n">18 MB</td><td class="n">1.7%</td><td>代码段</td></tr><tr><td><span class="dot" style="background:#cfd8dc"></span>HAP/字节码/资源</td><td class="n">10 MB</td><td class="n">1.0%</td><td></td></tr><tr><td><span class="dot" style="background:#cfd8dc"></span>字体/CPython/GPU.so 等</td><td class="n">9 MB</td><td class="n">0.9%</td><td></td></tr></tbody></table></div>
+<div class="cols">
+  <div class="card"><b style="font-size:12.5px">hidumper 官方类目(交叉校验,Total 1127MB)</b>
+    <table style="margin-top:8px"><thead><tr><th>类目</th><th class="n">PSS</th><th class="n">%</th></tr></thead><tbody><tr><td>native heap</td><td class="n">393 MB</td><td class="n">35%</td></tr><tr><td>.so</td><td class="n">282 MB</td><td class="n">25%</td></tr><tr><td>AnonPage other</td><td class="n">236 MB</td><td class="n">21%</td></tr><tr><td>ark ts heap</td><td class="n">112 MB</td><td class="n">10%</td></tr><tr><td>FilePage other</td><td class="n">24 MB</td><td class="n">2%</td></tr><tr><td>.hap</td><td class="n">11 MB</td><td class="n">1%</td></tr><tr><td>GPU(GL+Graph)</td><td class="n">58 MB</td><td class="n">5%</td></tr><tr><td>stack</td><td class="n">5 MB</td><td class="n">0%</td></tr></tbody></table></div>
+  <div class="note g" style="margin:10px 0 0"><b>关键:仓颉那 90MB 里只有 36MB 是 GC 堆。</b>其余 43MB 是仓颉编译代码 <code>.so</code>(<code>libohos_app_cangjie_entry</code> 37MB + runtime/std 6MB)—— 是代码不是堆,modal 动不了。<b>真正的 modal 作用域只有 ~36MB ≈ 整机 3.4%,比仓颉自己的代码还小。</b></div>
+</div>
+
+<h2>第二层 · native heap 拆分(最大类 38%,smaps 不可分)<span class="tag">实测②③</span></h2>
+<div class="sub">native heap 是 jemalloc 单一混合池,smaps 看不到属主 → 用 malloc-hook 按调用栈归因。<b>持有视角</b>(新启动 222MB live,比例代表存量态):</div>
+<div class="bar"><div class="seg" style="width:45.50%;background:#ff7043" title="FFRT worker pool(后台线程池): 101MB"></div><div class="seg" style="width:21.80%;background:#a142f4" title="ArkTS/ArkUI 引擎: 48MB"></div><div class="seg" style="width:12.80%;background:#fbbc04" title="主线程: 28MB"></div><div class="seg" style="width:5.40%;background:#9aa0a6" title="其它已归因 .so: 12MB"></div><div class="seg" style="width:4.80%;background:#34a853" title="Cangjie 运行时(C++): 11MB"></div><div class="seg" style="width:4.40%;background:#00897b" title="图形/文本渲染: 10MB"></div><div class="seg" style="width:2.60%;background:#1a73e8" title="V8(RN JS 引擎): 5.8MB"></div><div class="seg" style="width:1.50%;background:#1a73e8" title="RN 原生(.so): 3.4MB"></div><div class="seg" style="width:1.20%;background:#795548" title="SQLite: 2.7MB"></div></div>
+<div class="legend"><span class="lg"><i style="background:#ff7043"></i>FFRT worker pool <b>101MB·46%</b></span><span class="lg"><i style="background:#a142f4"></i>ArkTS/ArkUI 引擎 <b>48MB·22%</b></span><span class="lg"><i style="background:#fbbc04"></i>主线程 <b>28MB·13%</b></span><span class="lg"><i style="background:#9aa0a6"></i>其它已归因 .so <b>12MB·5%</b></span><span class="lg"><i style="background:#34a853"></i>Cangjie 运行时 <b>11MB·5%</b></span><span class="lg"><i style="background:#00897b"></i>图形/文本渲染 <b>10MB·4%</b></span><span class="lg"><i style="background:#1a73e8"></i>V8 <b>5.8MB·3%</b></span></div>
+<div class="card"><table><thead><tr><th>属主</th><th class="n">MB</th><th class="n">占比</th><th>说明</th></tr></thead><tbody><tr><td><span class="dot" style="background:#ff7043"></span>FFRT worker pool(后台线程池)</td><td class="n">101 MB</td><td class="n">45.5%</td><td>无栈→DWARF已破:主要本地DB/资源/解码/引擎初始化</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkTS/ArkUI 引擎</td><td class="n">48 MB</td><td class="n">21.8%</td><td>最大可归因属主</td></tr><tr><td><span class="dot" style="background:#fbbc04"></span>主线程</td><td class="n">28 MB</td><td class="n">12.8%</td><td>UI/业务主线程</td></tr><tr><td><span class="dot" style="background:#9aa0a6"></span>其它已归因 .so</td><td class="n">12 MB</td><td class="n">5.4%</td><td></td></tr><tr><td><span class="dot" style="background:#34a853"></span>Cangjie 运行时(C++)</td><td class="n">11 MB</td><td class="n">4.8%</td><td>GC 堆另算,不在 malloc</td></tr><tr><td><span class="dot" style="background:#00897b"></span>图形/文本渲染</td><td class="n">10 MB</td><td class="n">4.4%</td><td>skia/rosen_text</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>V8(RN JS 引擎)</td><td class="n">5.8 MB</td><td class="n">2.6%</td><td></td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>RN 原生(.so)</td><td class="n">3.4 MB</td><td class="n">1.5%</td><td>react_render/mrn/aki</td></tr><tr><td><span class="dot" style="background:#795548"></span>SQLite</td><td class="n">2.7 MB</td><td class="n">1.2%</td><td></td></tr></tbody></table></div>
+<div class="note a"><b>DWARF 破解"无栈"难题:</b>fp_unwind 下 58%(129MB)分配无调用栈 —— 因 FFRT(HarmonyOS 协程线程池)用纤程栈,帧指针展开断在纤程边界。改用 <b>DWARF(.eh_frame)展开后无栈率 58%→3%</b>,这 129MB 得以归因(主体 = FFRT worker 上的本地 DB / 资源解码 / 引擎初始化)。</div>
+
+<h2>第三层 · 刷新时谁在分配(DWARF 全栈)<span class="tag">实测③ 40s/1Hz</span></h2>
+<div class="sub">attach 到运行进程,40s 内每秒「刷新列表」一次。回答"刷新分配什么",<b>不</b>归因已存在的基线。</div>
+<div class="bar"><div class="seg" style="width:23.50%;background:#795548" title="SQLite(本地订单库): churn 31.4MB"></div><div class="seg" style="width:16.77%;background:#90a4ae" title="系统运行时/工具: churn 22.4MB"></div><div class="seg" style="width:16.24%;background:#a142f4" title="ArkTS/ArkUI 引擎: churn 21.7MB"></div><div class="seg" style="width:11.98%;background:#00897b" title="图形/文本渲染: churn 16.0MB"></div><div class="seg" style="width:11.30%;background:#cfd8dc" title="其它: churn 15.1MB"></div><div class="seg" style="width:6.81%;background:#1a73e8" title="RN(render/jsvm/mrn): churn 9.1MB"></div><div class="seg" style="width:5.31%;background:#00897b" title="地图/导航: churn 7.1MB"></div><div class="seg" style="width:2.69%;background:#f9ab00" title="网络: churn 3.6MB"></div><div class="seg" style="width:0.37%;background:#34a853" title="Cangjie: churn 0.5MB"></div></div><div class="barlabel">churn(40s 全部分配 = 133.6MB,≈ 3.3 MB/s)</div>
+<div class="bar" style="margin-top:10px"><div class="seg" style="width:13.18%;background:#795548" title="SQLite(本地订单库): retained 2.9MB"></div><div class="seg" style="width:8.18%;background:#90a4ae" title="系统运行时/工具: retained 1.8MB"></div><div class="seg" style="width:45.45%;background:#a142f4" title="ArkTS/ArkUI 引擎: retained 10.0MB"></div><div class="seg" style="width:13.64%;background:#00897b" title="图形/文本渲染: retained 3.0MB"></div><div class="seg" style="width:2.27%;background:#cfd8dc" title="其它: retained 0.5MB"></div><div class="seg" style="width:2.73%;background:#1a73e8" title="RN(render/jsvm/mrn): retained 0.6MB"></div><div class="seg" style="width:0.91%;background:#34a853" title="Cangjie: retained 0.2MB"></div></div><div class="barlabel">retained(窗口末仍未释放 = 22.0MB,仅 churn 的 16%)</div>
+<div class="card" style="margin-top:12px"><table><thead><tr><th>属主</th><th class="n">churn</th><th class="n">retained</th><th class="n">留存率</th></tr></thead><tbody><tr><td><span class="dot" style="background:#795548"></span>SQLite(本地订单库)</td><td class="n">31.4 MB</td><td class="n">2.9 MB</td><td class="n">9%</td></tr><tr><td><span class="dot" style="background:#90a4ae"></span>系统运行时/工具</td><td class="n">22.4 MB</td><td class="n">1.8 MB</td><td class="n">8%</td></tr><tr><td><span class="dot" style="background:#a142f4"></span>ArkTS/ArkUI 引擎</td><td class="n">21.7 MB</td><td class="n">10.0 MB</td><td class="n">46%</td></tr><tr><td><span class="dot" style="background:#00897b"></span>图形/文本渲染</td><td class="n">16.0 MB</td><td class="n">3.0 MB</td><td class="n">19%</td></tr><tr><td><span class="dot" style="background:#cfd8dc"></span>其它</td><td class="n">15.1 MB</td><td class="n">0.5 MB</td><td class="n">3%</td></tr><tr><td><span class="dot" style="background:#1a73e8"></span>RN(render/jsvm/mrn)</td><td class="n">9.1 MB</td><td class="n">0.6 MB</td><td class="n">7%</td></tr><tr><td><span class="dot" style="background:#00897b"></span>地图/导航</td><td class="n">7.1 MB</td><td class="n">0.0 MB</td><td class="n">0%</td></tr><tr><td><span class="dot" style="background:#f9ab00"></span>网络</td><td class="n">3.6 MB</td><td class="n">0.0 MB</td><td class="n">0%</td></tr><tr><td><span class="dot" style="background:#34a853"></span>Cangjie</td><td class="n">0.5 MB</td><td class="n">0.2 MB</td><td class="n">40%</td></tr></tbody></table></div>
+<div class="note r"><b>刷新 = 高 churn、低留存:</b>churn 133.6MB,只留 22.0MB(16%),其余 84% 当场被 C/C++ 析构(RAII)释放。其中 SQLite churn 最大(本地订单库读写,跑在 FFRT 池上)但留存仅 2.9MB;真正累积下来的以 <b>ArkTS/ArkUI(10MB)</b> 为主。(<code>libunwinder</code> churn 6.75MB 是 DWARF 测量开销,已剔除。)</div>
+
+<h2>第四层 · 仓颉 GC 堆锯齿 + modal 收益<span class="tag">实测④</span></h2>
+<div class="cols">
+  <div><svg viewBox="0 0 460 210" width="100%" style="border:1px solid #e8eaed;border-radius:8px;background:#fff">
+<line x1="34" y1="27.375" x2="448" y2="27.375" stroke="#ea4335" stroke-dasharray="4 3" stroke-width="1"/>
+<line x1="34" y1="140.125" x2="448" y2="140.125" stroke="#34a853" stroke-dasharray="4 3" stroke-width="1"/>
+<polyline points="34,140 139,27 142,140 225,27 227,140 298,27 299,140 348,27 349,140 393,27 394,140 438,27 439,140 448,140" fill="none" stroke="#1a73e8" stroke-width="1.8"/>
+<text x="448" y="22.375" text-anchor="end" font-size="10" fill="#ea4335">峰值≈145MB(GC 阈值)</text>
+<text x="448" y="153.125" text-anchor="end" font-size="10" fill="#34a853">存活地板≈35MB(真实 live)</text>
+<text x="34" y="198" font-size="10" fill="#5f6368">刷新慢</text>
+<text x="241.0" y="198" text-anchor="middle" font-size="10" fill="#5f6368">→ 刷新加快 → GC 更密</text>
+<text x="448" y="198" text-anchor="end" font-size="10" fill="#5f6368">刷新快</text>
+<text x="30" y="27.375" text-anchor="end" font-size="9" fill="#9aa0a6"></text>
+<text x="6" y="18" font-size="10.5" fill="#202124" font-weight="600">仓颉 GC 堆锯齿(示意)</text>
+</svg>
+<div class="barlabel" style="text-align:center">峰−谷振幅 ≈ 110MB 几乎全为瞬时对象;modal 可填平其中 ~30% = 26–32MB</div></div>
+  <div>
+    <div class="note g" style="margin-top:0"><b>仓颉 GC 堆是独立锯齿</b>(<code>[anon:cangjie_heap]</code>,非 malloc,不在第二层)。非分代 copying GC 按堆增长阈值触发:<b>峰值恒定 ≈145MB(阈值)、存活地板 ≈35MB(真实 live)</b>。存量态空闲实测 36MB = 正好落在地板,印证<b>GC 把它死死压住、不随会话累积上涨</b>。</div>
+    <div class="note"><b>GC 频率 ∝ 刷新频率</b>:3s→~13s、1s→~6s、0.5s→~4s 触发一次。峰−谷几乎全是瞬时 JSON/DataModel —— 正是 modal/@local region 化的作用空间。</div>
+    <div class="note a"><b>modal 预估削峰 = (峰−谷振幅) × 可 region 化比例(JSON/DataModel ~30%)≈ 26–32MB ≈ 应用峰值 PSS 的 2–3%</b>,并降低 GC 频率。锯齿等额传导到整机峰值 RSS(Δ 相关 r≈0.6–0.8)→ <b>削峰 = 抗 LMK(Low Memory Killer)</b>。</div>
+  </div>
+</div>
+
+<h2>新启动 vs 存量态:Cangjie 占比被摊薄</h2>
+<div class="card"><table><thead><tr><th>状态</th><th class="n">App PSS</th><th class="n">native heap</th><th class="n">仓颉 GC 堆</th><th class="n">仓颉占比</th></tr></thead><tbody>
+<tr><td>新启动</td><td class="n">~740 MB</td><td class="n">~222 MB</td><td class="n">~35 MB</td><td class="n">~8%</td></tr>
+<tr><td>存量态(密集交互后)</td><td class="n">~1068 MB</td><td class="n">~392 MB</td><td class="n">~36 MB</td><td class="n">~3%</td></tr>
+<tr><td><b>增量 Δ</b></td><td class="n"><b>+~330 MB</b></td><td class="n"><b>+~170 MB</b></td><td class="n"><b>≈0</b></td><td class="n">↓ 摊薄</td></tr>
+</tbody></table></div>
+<div class="note"><b>会话累积的 +330MB 几乎全在 jemalloc / ArkTS 堆 / ArkWeb;仓颉 GC 堆被 GC 压在 ~35MB 恒定。</b>所以仓颉相对占比随使用<b>不升反降</b>(8%→3%)。结论:<b>modal 的价值不在"降存量基线",而在"削刷新瞬时峰"</b>。</div>
+
+<h2>结论 · 哪块最值得投入</h2>
+<div class="card"><table class="prio"><thead><tr><th>优先级</th><th>目标</th><th>依据 / 手段</th></tr></thead><tbody>
+<tr><td><span class="medal">🥇</span> 最高</td><td>native heap(jemalloc)38% — JS/UI 引擎 + 启动留存</td><td>最大且随会话涨;持有大头是 FFRT 后台工作(本地 DB/资源解码/引擎初始化)与 ArkTS/ArkUI。手段:DWARF 已就位,可按符号下钻 ArkUI 留存与启动 SQLite/资源。</td></tr>
+<tr><td><span class="medal">🥈</span> 高</td><td>ArkTS 引擎堆 + 框架 ≈ 13%</td><td>原生 UI/JS 对象、组件树;刷新留存最大头(10MB/轮)。查长列表/未释放 @State/图片缓存。</td></tr>
+<tr><td><span class="medal">🥉</span> 中</td><td>RN(JS 堆 6% + 原生在 jemalloc)/ ArkWeb 5%</td><td>RN 在本(仓颉/ArkUI)订单页 native 很小(churn 9MB/留存 0.6MB);真实占用需切到 RN 页面再测。</td></tr>
+<tr><td>➖ 辅助</td><td>Cangjie / modal(GC 堆 ~3%)</td><td>占比小、削峰 2–3%。价值在<b>削峰抗 LMK + 降 GC 频率</b>,非降总量。整机大盘 modal 不是主战场。</td></tr>
+</tbody></table></div>
+
+<h2>口径与局限</h2>
+<div class="card"><ul>
+<li><b>native heap 不可由 smaps 细分</b>(jemalloc 单一池),归因靠 malloc-hook;实测②为新启动态(比例代表存量,绝对值偏小),实测③为刷新窗口(不含基线)。</li>
+<li><b>GPU(GL+Graph)不在 smaps</b>,随渲染状态波动(58MB 为空闲态),计入 hidumper Total。</li>
+<li><b>仓颉 GC 堆是命名匿名映射不走 malloc</b>,故不在第二/三层;modal 仅作用于此 ~36MB 中可 region 化的 JSON/DataModel(~30%)。</li>
+<li><b>RN 真实占用未完全测出</b>:本订单页是仓颉/ArkUI 页,RN 在 native 极小;要量 RN 需在采集时导航到真正的 RN 页面。</li>
+<li>归因走 <code>last_lib_id</code>(直接调用 .so);DWARF 已含完整调用链,可进一步按符号下钻。</li>
+</ul></div>
+
+<div class="foot">数据:<code>smaps.txt</code>/<code>hidumper_mem.txt</code>(实测①)· <code>nhf.db</code>(实测②全量)· <code>dwarf_refresh.db</code>(实测③DWARF)· 仓颉 GC 基准(实测④,见 cangjie-heap-gc-bench)· 归因规则见各 <code>gen_*.py</code> · FFRT=Function Flow Runtime(schd-worker 协程线程池)· LMK=Low Memory Killer</div>
+</div></body></html>
