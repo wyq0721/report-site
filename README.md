@@ -1,12 +1,13 @@
 # 仓颉语言优势报告静态站点
 
-这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”和“众包内存分析”两类报告。
+这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”“众包内存分析”和“AAR 复盘报告”三类报告。
 
 ## 目录说明
 
 - `index.html`：报告中心入口，部署后访问站点根路径即可打开。
 - `reports/cangjie-language-analysis/`：仓颉语言分析报告。
 - `reports/crowdsourcing-memory-analysis/`：众包内存分析报告。
+- `reports/aar-issue-917/`：release/1.0 部分用例 ICE 11 的 AAR 复盘报告。
 - `cangjie_domain_advantages_report.html`：早期报告备份文件，便于保留原始报告文件名。
 - `_headers`：Cloudflare Pages / Netlify 等静态托管平台可识别的缓存与安全响应头。
 - `404.html`：静态托管平台的兜底页面，会引导访问者回到报告首页。

@@ -154,6 +154,10 @@
       background: var(--red);
     }
 
+    .tag.aar {
+      background: var(--blue);
+    }
+
     .card p {
       color: #445160;
     }
@@ -239,7 +243,7 @@
       <p class="eyebrow">Report center</p>
       <h1>报告中心</h1>
       <p class="lead">
-        面向团队共享的在线报告入口。当前收录两类内容：仓颉语言分析、众包内存分析。
+        面向团队共享的在线报告入口。当前收录三类内容：仓颉语言分析、众包内存分析、AAR 复盘报告。
         后续新增报告时，可以继续按分类扩展，不再把所有内容堆在首页。
       </p>
       <div class="meta">
@@ -283,12 +287,32 @@
             <span class="button">进入分类</span>
           </div>
         </a>
+
+        <a class="card" href="./reports/aar-issue-917/">
+          <span class="tag aar">AAR Review</span>
+          <h3>Issue #917 AAR 复盘</h3>
+          <p>
+            复盘 release/1.0 部分用例 ICE 11，拆分 #1354 引入问题和历史存量问题，并沉淀 CHIR 高风险路径改进项。
+          </p>
+          <ul>
+            <li>问题时间轴与处置过程</li>
+            <li>CHIR/AST2CHIR 根因分析</li>
+            <li>工程质量改进项</li>
+          </ul>
+          <div class="actions">
+            <span class="button">查看报告</span>
+          </div>
+        </a>
       </div>
     </section>
 
     <section>
       <h2>最近报告</h2>
       <div class="report-list">
+        <a class="mini" href="./reports/aar-issue-917/">
+          <b>Issue #917 AAR 复盘报告</b>
+          <span>release/1.0 ICE / CHIR 生命周期 / 回归改进</span>
+        </a>
         <a class="mini" href="./reports/cangjie-language-analysis/">
           <b>仓颉语言在特定领域的优势分析报告</b>
           <span>AI 时代 / 语言设计 / Harmony / ArkTS 对比</span>
@@ -310,11 +334,12 @@
       <ul>
         <li><code>reports/cangjie-language-analysis/</code>：仓颉语言、生态和工具链分析。</li>
         <li><code>reports/crowdsourcing-memory-analysis/</code>：众包内存、GC、native heap、优化收益分析。</li>
+        <li><code>reports/aar-issue-917/</code>：Issue #917 的 AAR 复盘报告。</li>
         <li>新增类别时，在首页补一个分类卡片，并在对应目录放一个 <code>index.html</code> 作为分类页。</li>
       </ul>
     </section>
 
-    <p class="footer">最后更新：2026-06-17</p>
+    <p class="footer">最后更新：2026-06-18</p>
   </main>
 </body>
 </html>

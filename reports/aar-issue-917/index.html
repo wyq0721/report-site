@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AAR 复盘报告 - cangjie_compiler Issue #917</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --border: #d9e0ea;
+      --accent: #1f6feb;
+      --accent-soft: #e8f1ff;
+      --warn: #9a5b00;
+      --warn-soft: #fff3d6;
+      --ok: #126b42;
+      --ok-soft: #e6f5ee;
+      --risk: #9b1c1c;
+      --risk-soft: #fde8e8;
+      --code: #f2f4f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 24px 56px;
+    }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfe;
+      min-height: 92px;
+    }
+
+    .meta-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .meta-card .value {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 14px 0;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+
+    .callout.risk {
+      border-left-color: var(--risk);
+      background: var(--risk-soft);
+    }
+
+    .callout.ok {
+      border-left-color: var(--ok);
+      background: var(--ok-soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 4px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eef3f9;
+      font-weight: 700;
+    }
+
+    code {
+      background: var(--code);
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 12px 0 0;
+      padding-left: 28px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin: 0 0 18px;
+      padding: 0 0 0 8px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -25px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--panel);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .timeline-date {
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .timeline-body {
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .tag.risk {
+      color: var(--risk);
+      background: var(--risk-soft);
+      border-color: #f5b4b4;
+    }
+
+    .tag.warn {
+      color: var(--warn);
+      background: var(--warn-soft);
+      border-color: #f1cf83;
+    }
+
+    .tag.ok {
+      color: var(--ok);
+      background: var(--ok-soft);
+      border-color: #abdcc5;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fbfcfe;
+    }
+
+    .footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .meta-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        padding: 20px 14px 36px;
+      }
+
+      .hero,
+      .section {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">After Action Review</p>
+      <h1>release/1.0 部分用例 ICE 11 复盘报告</h1>
+      <p class="subtitle">
+        本报告复盘 <a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/917">Cangjie/cangjie_compiler Issue #917</a>：
+        release/1.0 分支上 3 个 HLT 用例在 1.0.6 编译器下触发 ICE。修复由
+        <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1739">cangjie_compiler#1739</a>
+        和 <a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1733">cangjie_test#1733</a> 联合完成。
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-card">
+          <div class="label">问题类型</div>
+          <div class="value">编译器 ICE / CHIR 翻译</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">影响分支</div>
+          <div class="value">release/1.0</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">发现版本</div>
+          <div class="value">Cangjie Compiler 1.0.6</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">复盘级别</div>
+          <div class="value">轻量 AAR / 工程质量复盘</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. 摘要结论</h2>
+      <div class="callout">
+        Issue #917 表面上是 3 个用例 ICE，实际包含 3 类独立根因。其中一类由
+        <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1354">cangjie_compiler#1354</a>
+        引入，另外两类更符合历史存量问题特征。复盘重点不应放在追责，而应沉淀 CHIR 新增对象生命周期闭环、组合场景测试、以及高风险模块冒烟集。
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>问题类别</th>
+            <th>触发用例</th>
+            <th>归因判断</th>
+            <th>修复方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>间接 extend 注册缺失</td>
+            <td><code>HashSet/hashset_type_21.cj</code></td>
+            <td><span class="tag risk">#1354 引入</span> 新增 <code>ExtendDef</code> 后未注册到 extended type。</td>
+            <td>抽取 <code>RegisterExtendToExtendedType</code>，在新增 indirect extend 后补充注册。</td>
+          </tr>
+          <tr>
+            <td>局部泛型函数实例化翻译顺序错误</td>
+            <td><code>generic_func_other_10015.cj</code></td>
+            <td><span class="tag warn">历史存量</span> 当前材料未定位到明确引入 PR。</td>
+            <td>先收集并翻译实例化函数，再翻译泛型原始版本。</td>
+          </tr>
+          <tr>
+            <td>mut wrapper 继承链路径计算错误</td>
+            <td><code>invoke_mut_33.cj</code></td>
+            <td><span class="tag warn">历史存量</span> 当前材料未定位到明确引入 PR。</td>
+            <td>重写继承路径 DFS 与泛型替换表收集逻辑。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>2. 问题发生的时间轴</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2026-03-27 17:04</div>
+          <div class="timeline-body">
+            <a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/774">Issue #774</a>
+            创建，反馈“泛型父类有扩展时出现崩溃”，场景涉及父类泛型、extend、接口函数调用。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-03-27 17:35</div>
+          <div class="timeline-body">
+            <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1354">PR #1354</a>
+            创建，新增 <code>AddIndirectExtend</code> 逻辑，用于处理父类继承泛型接口相关场景。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-04-08 10:09</div>
+          <div class="timeline-body">
+            PR #1354 门禁通过。该 PR 曾因评审评论数量不足触发合入前检查失败，之后由白名单用户说明“相关代码已经充分检视”后继续合入流程。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-04-08 17:27</div>
+          <div class="timeline-body">
+            PR #1354 合入 release/1.0。后续确认其中新增的 indirect extend 未完成 extended type 注册，成为 #917 中一类 ICE 的引入点。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-25 20:17</div>
+          <div class="timeline-body">
+            <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1739">PR #1739</a>
+            创建，目标是修复 release/1.0 部分用例 ICE。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-25</div>
+          <div class="timeline-body">
+            PR #1739 提交两类修复：局部泛型函数翻译顺序调整，以及 mut wrapper 继承路径计算修正。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-27</div>
+          <div class="timeline-body">
+            PR #1739 提交 <code>fix: register indirect extend to its extended type</code>，补齐 #1354 新增 indirect extend 的注册链路。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-28 11:24</div>
+          <div class="timeline-body">
+            <a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/917">Issue #917</a>
+            创建，列出 3 个 HLT 用例 ICE，环境为 release/1.0、Cangjie Compiler 1.0.6。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-28 15:02</div>
+          <div class="timeline-body">
+            PR #1739 门禁通过，覆盖 commit 检查、多平台构建、UT/HLT/LLT/集成测试。
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-05-28 19:15</div>
+          <div class="timeline-body">
+            PR #1739 与 <a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1733">cangjie_test#1733</a>
+            联合合入，补充对应回归测试。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. 实际中我们做了什么</h2>
+      <div class="two-col">
+        <div class="mini-card">
+          <h3>问题收敛</h3>
+          <ul>
+            <li>将 #917 中 3 个 ICE 用例按触发机制拆分为 3 类问题。</li>
+            <li>确认 indirect extend 相关问题与 #1354 的新增 <code>AddIndirectExtend</code> 逻辑有关。</li>
+            <li>确认另外两类问题分别落在局部泛型函数翻译和 mut wrapper 继承路径计算。</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>代码修复</h3>
+          <ul>
+            <li>在 <code>ASTPackage2CHIR.cpp</code> 中复用 extend 注册逻辑，避免新生成 <code>ExtendDef</code> 只进入 vtable、不进入 type 查询链路。</li>
+            <li>在 <code>TranslateBlock.cpp</code> 中调整局部泛型函数节点收集顺序。</li>
+            <li>在 <code>FuncWrapper.cpp</code> 中使用显式 DFS 修正 mut wrapper 继承路径与泛型替换表。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>验证动作</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>验证项</th>
+            <th>结果</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>本地自验证</td>
+            <td><span class="tag ok">通过</span></td>
+            <td>PR 描述中记录 compiler、runtime、stdlib 编译通过，并附测试截图。</td>
+          </tr>
+          <tr>
+            <td>CI 门禁</td>
+            <td><span class="tag ok">通过</span></td>
+            <td>2026-05-28 15:02 门禁通过，包含构建与测试任务。</td>
+          </tr>
+          <tr>
+            <td>兼容性检测</td>
+            <td><span class="tag ok">兼容</span></td>
+            <td>变更仅涉及编译器 AST2CHIR 内部流程，不改变对外 API、ABI、SDK 布局或 CLI 契约。</td>
+          </tr>
+          <tr>
+            <td>回归用例</td>
+            <td><span class="tag ok">已补充</span></td>
+            <td>cangjie_test#1733 新增 local generic、indirect extend、mut wrapper 相关 LLT 用例。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>4. 根因分析</h2>
+      <h3>4.1 #1354 引入的问题：新增 ExtendDef 生命周期未闭环</h3>
+      <p>
+        PR #1354 新增 <code>AddIndirectExtend</code>，在 <code>SetVTable</code> 阶段动态生成新的
+        <code>ExtendDef</code> 并生成 vtable。问题在于：原有 <code>SetExtendInfo</code> 只注册包内已有 extend，
+        对 #1354 新生成的 <code>ExtendDef</code> 不生效。结果是 vtable 生成路径能看到该对象，但 extended type
+        的查询路径看不到该对象，内部模型状态不一致。
+      </p>
+      <div class="callout risk">
+        本质问题：新增 CHIR 内部对象后，只接入了一个消费路径，没有确认 package、type 反向索引、vtable、wrapper、CodeGen 查询链路是否完整闭环。
+      </div>
+
+      <h3>4.2 历史存量问题：局部泛型函数实例化翻译顺序</h3>
+      <p>
+        原逻辑先把泛型函数声明放入待翻译列表，再收集实例化函数节点。lambda 或嵌套函数中调用局部泛型实例化函数时，
+        可能导致泛型原始版本先被翻译，实例化函数未按预期优先进入 CHIR 翻译。
+      </p>
+
+      <h3>4.3 历史存量问题：mut wrapper 继承路径计算</h3>
+      <p>
+        旧逻辑依赖共享 <code>visited</code>、<code>stop</code> 和回溯式 <code>parents</code> 记录继承路径。
+        在多接口、多继承链和泛型替换组合下，容易收集到错误路径或错误替换表，影响 mut 方法 wrapper 的函数类型实例化。
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>5. 做得有效的地方</h2>
+      <ul>
+        <li>修复 PR 没有把 3 个 ICE 当成一个根因处理，而是拆成 3 个独立修复点。</li>
+        <li>修复范围控制在 AST2CHIR 内部流程，兼容性风险较低。</li>
+        <li>最终补充了与 3 类问题对应的 cangjie_test 回归用例。</li>
+        <li>合入前门禁覆盖了构建、UT、HLT、LLT 等基础检查。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>6. 可以改进的点</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>改进点</th>
+            <th>问题说明</th>
+            <th>建议措施</th>
+            <th>优先级</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CHIR 新增对象生命周期检查</td>
+            <td>#1354 新增 <code>ExtendDef</code> 后未补齐 extended type 注册，说明 review 缺少对象生命周期视角。</td>
+            <td>在 review checklist 中增加：动态生成 CHIR 对象时，必须确认 package 持有、type 反向索引、vtable、wrapper、CodeGen 查询、dump/增量缓存路径。</td>
+            <td><span class="tag risk">P0</span></td>
+          </tr>
+          <tr>
+            <td>原 bug 用例与机制用例成对出现</td>
+            <td>只验证用户报告场景，容易漏掉内部机制是否真正闭环。</td>
+            <td>修复 PR 除原始复现用例外，补一个机制用例，例如“新增 ExtendDef 后仍能被 type-based lookup 命中”。</td>
+            <td><span class="tag risk">P0</span></td>
+          </tr>
+          <tr>
+            <td>高风险模块小型冒烟集</td>
+            <td>泛型继承、extend、vtable、mut wrapper 组合路径容易出现单点遗漏。</td>
+            <td>维护 5 到 10 个 LLT 小用例。凡修改 <code>AddIndirectExtend</code>、<code>SetVTable</code>、<code>WrapVirtualFunc</code>、局部泛型翻译相关文件时必须运行。</td>
+            <td><span class="tag warn">P1</span></td>
+          </tr>
+          <tr>
+            <td>大型 transformation PR 的评审依据</td>
+            <td>#1354 新增代码较多，合入前曾触发评审评论数量不足检查并被 bypass。</td>
+            <td>允许 bypass，但需要在评论中说明已重点检视的模块、边界场景和测试覆盖，而不仅是笼统说明。</td>
+            <td><span class="tag warn">P1</span></td>
+          </tr>
+          <tr>
+            <td>Issue 状态闭环</td>
+            <td>#917 修复 PR 已合入，但 issue 页面仍显示 open/待办。</td>
+            <td>修复合入后同步关闭或更新 issue 状态，并备注修复 PR 与测试 PR。</td>
+            <td><span class="tag warn">P1</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>7. 后续行动项</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>行动项</th>
+            <th>交付物</th>
+            <th>建议负责人</th>
+            <th>建议完成时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>补充 CHIR 生命周期 review checklist</td>
+            <td>PR 模板或 reviewer checklist 中新增检查项。</td>
+            <td>CHIR owner / compiler reviewer</td>
+            <td>1 周内</td>
+          </tr>
+          <tr>
+            <td>建立 CHIR 高风险路径冒烟集</td>
+            <td>覆盖 indirect extend、SetVTable、mut wrapper、局部泛型函数的 LLT 列表。</td>
+            <td>compiler test owner</td>
+            <td>2 周内</td>
+          </tr>
+          <tr>
+            <td>补充机制型回归测试</td>
+            <td>验证新生成 <code>ExtendDef</code> 可被后续 type-based lookup 使用的最小用例。</td>
+            <td>CHIR owner</td>
+            <td>本版本周期</td>
+          </tr>
+          <tr>
+            <td>更新 #917 状态</td>
+            <td>issue 关闭或状态更新，并关联 #1739 / cangjie_test#1733。</td>
+            <td>Issue assignee</td>
+            <td>立即</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>8. 参考链接</h2>
+      <ul>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/917">Issue #917: release/1.0 部分用例 ICE 11</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1739">cangjie_compiler#1739: fix: translate instantiated local func firstly, and then its generic version</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1733">cangjie_test#1733: fix: add test case</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1354">cangjie_compiler#1354: fix: parent class inherit generic interface</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/774">Issue #774: 泛型父类有扩展时出现崩溃</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1323">cangjie_test#1323: fix: indirect extend</a></li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      生成日期：2026-06-18。报告基于 GitCode issue、PR 描述、diff、评论与门禁信息整理。
+    </div>
+  </main>
+</body>
+</html>
