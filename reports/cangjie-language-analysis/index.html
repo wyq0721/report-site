@@ -331,7 +331,7 @@
       <div class="meta">
         <span class="pill">分析对象：仓颉 / ArkTS / Kotlin / Swift</span>
         <span class="pill">视角：语言设计 + Harmony 工程落地</span>
-        <span class="pill">日期：2026-06-17</span>
+        <span class="pill">日期：2026-06-18</span>
       </div>
     </header>
 
@@ -340,7 +340,7 @@
         <h2>核心判断</h2>
         <p>
           <strong>仓颉的最佳位置不是页面层，而是 Harmony 应用与系统能力之间的“核心语言层”。</strong>
-          它适合承载领域模型、并发任务、算法计算、设备能力封装、C/ArkTS 互操作、SDK 与基础库代码。
+          它适合承载领域模型、并发任务、算法计算、设备能力封装、C/ArkTS 边界治理、SDK 与基础库代码。
         </p>
         <p>
           AI 可以降低语法学习和样板代码成本，但不能替代语言本身提供的类型约束、错误边界、运行时模型和工具链。
@@ -376,8 +376,8 @@
         <div class="panel">
           <h3>ArkTS 偏应用层效率，仓颉偏核心层可信度</h3>
           <p>
-            ArkTS 贴近 HarmonyOS 应用开发和 ArkUI 声明式 UI，适合页面、状态绑定、业务编排和 TS/JS 生态迁移。
-            仓颉更适合把稳定模型、危险边界、并发后台任务和性能热点沉淀为可复用能力层，让 ArkTS 页面只消费清晰接口。
+            ArkTS 贴近 HarmonyOS 应用开发和 ArkUI 声明式 UI，适合页面、状态绑定、业务编排和 TS/JS 生态迁移，也具备访问 native 与系统能力的互操作路径。
+            仓颉的优势不是“独有互操作”，而是更适合把稳定模型、危险边界、并发后台任务和性能热点沉淀为可审计的能力层，让 ArkTS 页面只消费清晰接口。
           </p>
         </div>
         <div class="panel">
@@ -468,21 +468,22 @@
 
         <article class="domain">
           <span class="tag interop">Interop</span>
-          <h3>4. ArkTS / C 互操作胶水层</h3>
+          <h3>4. ArkTS / C 互操作边界治理</h3>
           <p>
-            仓颉文档提供 HLE 工具，可从 ArkTS 声明或 C 头文件生成互操作代码模板。这让仓颉更适合成为跨语言能力的聚合层。
+            ArkTS 本身也有互操作能力，因此不能把“支持互操作”作为仓颉优势。更准确的优势是：仓颉可以把 ArkTS/C 边界拉入强类型核心层，
+            通过 HLE、C FFI、<code>foreign</code> 和 <code>unsafe</code> 形成可搜索、可审查、可测试的边界治理模型。
           </p>
           <ul>
             <li>ArkTS 继续负责 UI、声明式页面和应用层体验。</li>
-            <li>仓颉负责沉淀可复用核心能力。</li>
-            <li>C FFI 支持复用既有 native 库。</li>
+            <li>仓颉负责沉淀可复用核心能力，并把跨语言入口收敛到少量稳定接口。</li>
+            <li>C FFI 支持复用既有 native 库，风险点由 <code>unsafe</code> 和指针类型显式暴露。</li>
           </ul>
           <div class="examples">
             <b>场景示例</b>
             <ul>
               <li>ArkTS 页面调用仓颉封装的蓝牙配网 SDK，页面只关心进度和结果。</li>
               <li>复用已有 C/C++ 加密、音频降噪、图像处理库，由仓颉统一包装成稳定接口。</li>
-              <li>将三方 ArkTS 声明文件生成仓颉绑定，减少手写胶水代码和类型不一致。</li>
+              <li>将三方 ArkTS 声明文件生成仓颉绑定，统计 <code>JSValue</code>、<code>unsafe</code>、<code>CPointer</code> 等逃逸点作为审查入口。</li>
             </ul>
           </div>
           <p class="fit">适合：三方库绑定、设备能力封装、已有 C/C++ 能力迁移。</p>
@@ -568,9 +569,9 @@
           </tr>
           <tr>
             <td>跨语言生态</td>
-            <td>JS/TS 生态与 UI 生态迁移成本低。</td>
-            <td>通过 HLE、C FFI 承接 ArkTS/C 能力边界。</td>
-            <td>ArkTS 面向上层生态，仓颉沉淀稳定接口。</td>
+            <td>JS/TS 生态与 UI 生态迁移成本低，也具备 native/系统能力互操作路径。</td>
+            <td>通过 HLE、C FFI 承接 ArkTS/C 能力边界，并把风险点显式化。</td>
+            <td>ArkTS 面向上层生态与体验交付，仓颉沉淀可审计的核心接口。</td>
           </tr>
           <tr>
             <td>AI 协作</td>
@@ -586,6 +587,54 @@
           </tr>
         </tbody>
       </table>
+    </section>
+
+    <section>
+      <h2>如何证明仓颉优势</h2>
+      <p>
+        判断仓颉优势时，不应比较“谁有互操作”，而应比较同一能力跨越语言边界后的可维护性、可验证性和风险可见度。
+        建议用同一组 Harmony 模块做 A/B 验证：ArkTS 直接集成 native 能力，与 ArkTS 调用仓颉核心层再由仓颉封装 C/ArkTS 能力进行对比。
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>验证维度</th>
+            <th>要观察的指标</th>
+            <th>仓颉成立优势的条件</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>边界显式度</td>
+            <td><code>unsafe</code>、<code>foreign</code>、<code>CPointer</code>、<code>JSValue</code> 等跨边界点数量和集中度。</td>
+            <td>危险入口集中在少量仓颉模块，代码审查和 CI 扫描可以直接定位。</td>
+          </tr>
+          <tr>
+            <td>类型保持度</td>
+            <td>ArkTS/C 声明转换后保留为强类型的比例，以及退化为 <code>JSValue</code> 或需要手修的比例。</td>
+            <td>核心路径多数能进入仓颉类型系统，动态逃逸点被显式标记并可被人工复核。</td>
+          </tr>
+          <tr>
+            <td>AI 纠错效率</td>
+            <td>AI 生成代码后，编译期捕获的错误数、单测修复轮次、运行时边界故障数。</td>
+            <td>仓颉方案能在编译和测试阶段更早暴露漏分支、空值、类型不匹配和 unsafe 使用问题。</td>
+          </tr>
+          <tr>
+            <td>状态机完整性</td>
+            <td>新增一种业务状态后，需要修改的分支是否被编译器或测试强制暴露。</td>
+            <td><code>enum</code> + 穷尽 <code>match</code> 能推动核心状态变化被系统性处理。</td>
+          </tr>
+          <tr>
+            <td>性能与隔离</td>
+            <td>热点路径耗时、内存波动、UI 线程阻塞、native 资源释放缺陷。</td>
+            <td>仓颉核心层能把计算、协议、采样、编解码等重逻辑从 ArkTS 页面层隔离出来。</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small">
+        这套验证方式也能避免过度宣传：如果某个模块只是页面展示或简单表单，ArkTS 仍是更高效选择；只有在核心逻辑复杂、跨语言边界多、
+        性能或可靠性收益明确时，仓颉优势才值得投入验证。
+      </p>
     </section>
 
     <section>
@@ -629,7 +678,7 @@
         </div>
         <div class="axis-item">
           <h3>生态桥接</h3>
-          <p>HLE 面向 ArkTS/C 的绑定生成，说明仓颉被设计为 Harmony 多语言栈中的连接层。</p>
+          <p>HLE 面向 ArkTS/C 的绑定生成，说明仓颉可以在 Harmony 多语言栈中承担类型化核心层，而不是简单替代 ArkTS 互操作。</p>
         </div>
         <div class="axis-item">
           <h3>AI 修复闭环</h3>
@@ -744,8 +793,9 @@
           再通过 ArkTS 调用它。这样既不打断现有应用开发节奏，也能逐步验证仓颉的真实收益。
         </p>
         <p>
-          AI 时代的进一步结论是：仓颉不应只被宣传为“又一种可写 Harmony 应用的语言”，而应被定位为“让 AI 生成代码更可验证的核心工程语言”。
-          ArkTS 负责体验层效率，仓颉负责能力层可信度，二者组合才是 Harmony 场景下更现实的生产力路线。
+          AI 时代的进一步结论是：仓颉不应只被宣传为“又一种可写 Harmony 应用的语言”，也不应把优势建立在“ArkTS 不能互操作”这种错误前提上。
+          更稳妥的定位是“让 AI 生成代码更可验证的核心工程语言”：ArkTS 负责体验层效率，仓颉负责能力层可信度、类型化边界治理和 native 风险收敛，
+          二者组合才是 Harmony 场景下更现实的生产力路线。
         </p>
       </div>
     </section>
@@ -761,6 +811,7 @@
         <li><code>docs/dev-guide/source_zh_cn/concurrency/concurrency_overview.md</code>：M:N 语言线程模型。</li>
         <li><code>docs/dev-guide/source_zh_cn/FFI/cangjie-c.md</code>：C 互操作、<code>foreign</code>、<code>CFunc</code>、<code>unsafe</code>。</li>
         <li><code>docs/tools/source_zh_cn/cmd-tools/HLE_manual.md</code>：ArkTS/C 互操作代码模板生成工具。</li>
+        <li><code>docs/tools/source_zh_cn/cmd-tools/cj-dts2cj-translation-rules.md</code>：ArkTS 声明到仓颉胶水代码的类型转换范围与限制。</li>
         <li><code>docs/dev-guide/source_zh_cn/compile_and_build/conditional_compilation.md</code>：OpenHarmony 条件编译。</li>
         <li><a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/arkts">华为 ArkTS 官方文档入口</a>：ArkTS 在 HarmonyOS 应用开发中的定位。</li>
         <li><a href="https://cangjie-lang.cn/docs?url=%2F0.53.18%2FSpec%2Fsource_zh_cn%2FChapter_01_Lexical_Structure%28zh%29.html">仓颉语言 Spec 官方入口</a>：仓颉语言规范与语法体系。</li>
