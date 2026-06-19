@@ -53,7 +53,7 @@ http://127.0.0.1:8077/
 当前本机配置的 HTML 投放目录为：
 
 ```text
-/Users/cjdebug/workspace/PR/report-site-drop
+/Users/cjdebug/Documents/github/report-site-drop
 ```
 
 把需要发布的单文件 HTML 报告复制到该目录后，LaunchAgent 会触发 `tools/report_site_autopush.py`：

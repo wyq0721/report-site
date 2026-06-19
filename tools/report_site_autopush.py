@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
-DROP_DIR = Path(os.environ.get("REPORT_SITE_DROP_DIR", "/Users/cjdebug/workspace/PR/report-site-drop"))
+DROP_DIR = Path(os.environ.get("REPORT_SITE_DROP_DIR", "/Users/cjdebug/Documents/github/report-site-drop"))
 AUTO_DIR = SITE_ROOT / "reports" / "auto"
 STATE_FILE = AUTO_DIR / "publish-state.json"
 LOCK_FILE = AUTO_DIR / ".publish.lock"
