@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>自动发布报告</title>
+  <style>
+    body { margin: 0; background: #f6f8fb; color: #1f2937; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; line-height: 1.65; }
+    main { max-width: 1080px; margin: 0 auto; padding: 34px 22px 56px; }
+    header { border-bottom: 1px solid #d9e0ea; padding-bottom: 22px; margin-bottom: 24px; }
+    a { color: inherit; text-decoration: none; }
+    .back { color: #1f6feb; font-weight: 700; }
+    h1 { margin: 12px 0 8px; font-size: 36px; letter-spacing: 0; }
+    .lead { color: #5b6472; max-width: 760px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .card { display: block; background: #fff; border: 1px solid #d9e0ea; border-radius: 8px; padding: 18px; }
+    .card:hover { border-color: #93c5fd; }
+    .card h2 { margin: 0 0 8px; font-size: 20px; letter-spacing: 0; }
+    .card p { margin: 0 0 12px; color: #5b6472; }
+    .card span { color: #6b7280; font-size: 13px; }
+    .empty { background: #fff; border: 1px solid #d9e0ea; border-radius: 8px; padding: 18px; }
+    footer { margin-top: 28px; color: #6b7280; font-size: 13px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="back" href="../../">返回报告中心</a>
+      <h1>自动发布报告</h1>
+      <p class="lead">本页由本地 hook 自动生成。将 HTML 文件放入投放目录后，脚本会复制、提交并推送到 GitHub Pages。</p>
+    </header>
+    <section class="grid"><p class="empty">暂无自动发布报告。</p>
+    </section>
+    <footer>最后更新：2026-06-19 15:40:18</footer>
+  </main>
+</body>
+</html>

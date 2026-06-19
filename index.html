@@ -158,6 +158,10 @@
       background: var(--blue);
     }
 
+    .tag.auto {
+      background: var(--green);
+    }
+
     .card p {
       color: #445160;
     }
@@ -243,7 +247,7 @@
       <p class="eyebrow">Report center</p>
       <h1>报告中心</h1>
       <p class="lead">
-        面向团队共享的在线报告入口。当前收录三类内容：仓颉语言分析、众包内存分析、AAR 复盘报告。
+        面向团队共享的在线报告入口。当前收录四类内容：仓颉语言分析、众包内存分析、AAR 复盘报告、自动发布报告。
         后续新增报告时，可以继续按分类扩展，不再把所有内容堆在首页。
       </p>
       <div class="meta">
@@ -303,12 +307,32 @@
             <span class="button">查看报告</span>
           </div>
         </a>
+
+        <a class="card" href="./reports/auto/">
+          <span class="tag auto">Auto Publish</span>
+          <h3>自动发布报告</h3>
+          <p>
+            本地 hook 监听 HTML 投放目录，自动复制到报告站点、提交并推送 GitHub Pages。
+          </p>
+          <ul>
+            <li>投放目录自动同步</li>
+            <li>自动生成报告列表</li>
+            <li>自动提交并推送 main</li>
+          </ul>
+          <div class="actions">
+            <span class="button">进入分类</span>
+          </div>
+        </a>
       </div>
     </section>
 
     <section>
       <h2>最近报告</h2>
       <div class="report-list">
+        <a class="mini" href="./reports/auto/">
+          <b>自动发布报告入口</b>
+          <span>本地投放 / 自动提交 / GitHub Pages 刷新</span>
+        </a>
         <a class="mini" href="./reports/aar-issue-917/">
           <b>Issue #917 AAR 复盘报告</b>
           <span>release/1.0 ICE / CHIR 生命周期 / 回归改进</span>
@@ -335,11 +359,12 @@
         <li><code>reports/cangjie-language-analysis/</code>：仓颉语言、生态和工具链分析。</li>
         <li><code>reports/crowdsourcing-memory-analysis/</code>：众包内存、GC、native heap、优化收益分析。</li>
         <li><code>reports/aar-issue-917/</code>：Issue #917 的 AAR 复盘报告。</li>
+        <li><code>reports/auto/</code>：本地 hook 自动发布的 HTML 报告列表。</li>
         <li>新增类别时，在首页补一个分类卡片，并在对应目录放一个 <code>index.html</code> 作为分类页。</li>
       </ul>
     </section>
 
-    <p class="footer">最后更新：2026-06-18</p>
+    <p class="footer">最后更新：2026-06-19</p>
   </main>
 </body>
 </html>

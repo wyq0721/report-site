@@ -1,6 +1,6 @@
 # 仓颉语言优势报告静态站点
 
-这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”“众包内存分析”和“AAR 复盘报告”三类报告。
+这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”“众包内存分析”“AAR 复盘报告”和“自动发布报告”四类报告。
 
 ## 目录说明
 
@@ -8,6 +8,8 @@
 - `reports/cangjie-language-analysis/`：仓颉语言分析报告。
 - `reports/crowdsourcing-memory-analysis/`：众包内存分析报告。
 - `reports/aar-issue-917/`：release/1.0 部分用例 ICE 11 的 AAR 复盘报告。
+- `reports/auto/`：本地 hook 自动发布的 HTML 报告列表。
+- `tools/report_site_autopush.py`：扫描投放目录、复制 HTML、提交并推送的本地自动化脚本。
 - `cangjie_domain_advantages_report.html`：早期报告备份文件，便于保留原始报告文件名。
 - `_headers`：Cloudflare Pages / Netlify 等静态托管平台可识别的缓存与安全响应头。
 - `404.html`：静态托管平台的兜底页面，会引导访问者回到报告首页。
@@ -44,4 +46,26 @@ python3 -m http.server 8077 --bind 127.0.0.1
 
 ```text
 http://127.0.0.1:8077/
+```
+
+## 本地自动发布 Hook
+
+当前本机配置的 HTML 投放目录为：
+
+```text
+/Users/cjdebug/workspace/PR/report-site-drop
+```
+
+把需要发布的单文件 HTML 报告复制到该目录后，LaunchAgent 会触发 `tools/report_site_autopush.py`：
+
+1. 扫描投放目录顶层 `*.html`。
+2. 复制到 `reports/auto/<文件名 slug>/index.html`。
+3. 重新生成 `reports/auto/index.html`。
+4. 提交 `reports/auto` 变更并推送 `origin main`，触发 GitHub Pages 刷新。
+
+日志路径：
+
+```text
+/tmp/report-site-autopush.out.log
+/tmp/report-site-autopush.err.log
 ```
