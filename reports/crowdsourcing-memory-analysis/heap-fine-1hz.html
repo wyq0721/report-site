@@ -28,4 +28,5 @@ h1{font-size:21px;font-weight:600;margin:0 0 5px}.sub{color:#5f6368;font-size:13
 </svg></div>
 <div class="note"><b>结论:</b>1Hz 刷新下 GC 每 <b>6.3s</b> 触发一次(对比 3s 刷新时约每 18s 一次)—— <b>GC 频率随分配速率近似线性上升,锯齿幅度(~67MB,受 GC 阈值约束)基本不变</b>。存活地板稳定在 ~36MB(与锁屏 35MB 一致),证明峰谷差几乎全是瞬时。modal 把其中 ~30% 的 JSON/DataModel region 化,既降幅度又降频率。</div>
 <div class="foot">采样 <code>capture_cjheap_fine.sh</code>(只读,仅 [anon:cangjie_heap] Rss)· GC 事件 = 相邻点跌幅&gt;15MB · 仅 cangjie_heap,不含全应用类目</div>
-</div></body></html>
+</div>  <script src="../../assets/site-nav.js"></script>
+</body></html>

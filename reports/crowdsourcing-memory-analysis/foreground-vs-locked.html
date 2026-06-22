@@ -35,4 +35,5 @@ th{color:var(--mut);font-weight:500;font-size:11.5px;background:#f8f9fa}td.n,th.
 ③ <b>空闲不囤垃圾</b>:锁屏 177MB 高水位大部分是没被回收的瞬时垃圾;modal 在作用域退出即释放,空闲不会坐在这堆垃圾上。</div>
 <div class="foot">采集 <code>capture_mem_timeseries.sh</code>(只读)+ <code>uinput</code> 自动刷新 · 解析 <code>parse_raw_to_csv.py</code> · 数据 <code>mem_ts_foreground.csv</code> / <code>mem_ts_locked.csv</code><br>
 口径:① 采样实际间隔 ≈6s(受 hidumper --mem 在 ~1GB 进程上耗时主导,非设定的 2s;刷新点击循环为每 3s 一次)→ 峰/谷为采样近似,真实峰可能更高、谷更低。② GC 次数 = cj_heap 相邻点跌幅 &gt;30MB 计数(近似,小周期可能漏算)。</div>
-</div></body></html>
+</div>  <script src="../../assets/site-nav.js"></script>
+</body></html>
