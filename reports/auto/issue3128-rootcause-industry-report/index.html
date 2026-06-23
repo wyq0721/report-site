@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issue 3128 根因分析与业界对照调研报告</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-muted: #f8fafc;
+      --text: #16202a;
+      --text-muted: #52606d;
+      --line: #d9e2ec;
+      --accent: #1769aa;
+      --accent-soft: #e8f1fb;
+      --ok: #1f7a45;
+      --ok-soft: #e6f4ec;
+      --warn: #9a6700;
+      --warn-soft: #fff7d6;
+      --bad: #b42318;
+      --bad-soft: #fdecea;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .page { max-width: 1060px; margin: 0 auto; padding: 32px 20px 64px; }
+    .hero, .section { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+    .hero { padding: 28px 32px; }
+    .eyebrow { margin: 0 0 8px; font-size: 13px; color: var(--text-muted); letter-spacing: .04em; }
+    h1 { margin: 0; font-size: 26px; line-height: 1.3; }
+    h2 { margin: 0 0 14px; font-size: 19px; line-height: 1.35; border-left: 4px solid var(--accent); padding-left: 10px; }
+    h3 { margin: 22px 0 8px; font-size: 16px; }
+    .summary { margin-top: 18px; padding: 14px 18px; background: var(--accent-soft); border: 1px solid #cddff5; border-radius: 8px; font-size: 14.5px; }
+    .section { margin-top: 22px; padding: 24px 32px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 4px; font-size: 13.5px; }
+    th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+    th { background: var(--surface-muted); font-weight: 600; white-space: nowrap; }
+    code, .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--surface-muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.55; }
+    pre code { background: none; border: none; color: inherit; padding: 0; }
+    .tag { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .tag-ok { background: var(--ok-soft); color: var(--ok); }
+    .tag-warn { background: var(--warn-soft); color: var(--warn); }
+    .tag-bad { background: var(--bad-soft); color: var(--bad); }
+    .tag-info { background: var(--accent-soft); color: var(--accent); }
+    .muted { color: var(--text-muted); font-size: 13px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .chain { list-style: none; margin: 14px 0; padding: 0; counter-reset: step; }
+    .chain li { position: relative; padding: 12px 16px 12px 56px; margin-bottom: 10px; background: var(--surface-muted); border: 1px solid var(--line); border-radius: 8px; counter-increment: step; }
+    .chain li::before { content: counter(step); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+    .callout { margin: 12px 0; padding: 12px 16px; border-radius: 8px; font-size: 13.8px; }
+    .callout-warn { background: var(--warn-soft); border: 1px solid #efd87a; }
+    .callout-ok { background: var(--ok-soft); border: 1px solid #bfe3cd; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 16px; }
+    .meta-card { background: var(--surface-muted); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13px; }
+    .meta-card b { display: block; font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+    footer { margin-top: 28px; text-align: center; font-size: 12px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <p class="eyebrow">仓颉 release/1.1 · 缺陷分析与设计决策记录 · 2026-06-12</p>
+    <h1>Issue 3128「parseProgram 段错误」根因分析与业界对照调研</h1>
+    <div class="summary">
+      <b>TL;DR：</b>这不是解析器正确性缺陷，而是 <b>FFI 边界的栈预算错配</b>——按 8MB 主线程栈编写的 C++ 递归下降解析器，被 std.ast 经 C2N stub 放到 128KB 仓颉协程栈上执行。
+      修复收敛为 stdlib 单仓 7 文件（<a href="https://gitcode.com/Cangjie/cangjie_runtime/merge_requests/1331">runtime!1331</a>），核心机制为「按输入定栈的专用解析线程 + 热点解码迭代化 + 残余转类型化异常」，
+      对 cjc 行为零改动；编译器侧 256 层深度上限方案（<a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1625">compiler!1625</a>，已关闭）经门禁实证既不充分也不必要。
+      该组合的每一件在 clang / rustc / Roslyn / CPython / Go / PostgreSQL 中均有直接对应物。
+    </div>
+    <div class="meta-grid">
+      <div class="meta-card"><b>Issue</b><a href="https://gitcode.com/Cangjie/UsersForum/issues/3128">UsersForum #3128</a>（2026-04-01，STS 1.1.0-Beta.25，Ubuntu 22.04）</div>
+      <div class="meta-card"><b>修复 PR</b><a href="https://gitcode.com/Cangjie/cangjie_runtime/merge_requests/1331">cangjie_runtime!1331</a>（独立完整修复）</div>
+      <div class="meta-card"><b>用例 PR</b><a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1672">cangjie_test!1672</a>（6 个契约式 LLT）</div>
+      <div class="meta-card"><b>已关闭 PR</b><a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1625">cangjie_compiler!1625</a>（深度守卫方案）</div>
+    </div>
+  </div>
+
+  <!-- ================= 根因分析 ================= -->
+  <div class="section">
+    <h2>一、根因分析</h2>
+
+    <h3>1.1 现象</h3>
+    <p>
+      用户程序对 11 个 <code>.cj</code> 文件循环调用 <code>std.ast.parseProgram</code>，在深嵌套输入上进程直接
+      <span class="tag tag-bad">SIGSEGV (core dumped)</span>。issue 附带的崩溃堆栈明确指向库内 native 帧：
+    </p>
+    <pre><code>#0  Cangjie::ParserImpl::ParseQualifiedType()   ← libcangjie-std-ast.so（C++ 解析器）
+#1  CJ_MCC_C2NStub                               ← libcangjie-runtime.so（FFI 入口桩）
+#2  parseProgram → parse(ffi.cj:77)              ← 仓颉侧 std.ast
+#5  user main</code></pre>
+
+    <h3>1.2 因果链（五层）</h3>
+    <ol class="chain">
+      <li>
+        <b>std.ast 复用了编译器的 C++ 递归下降解析器。</b>
+        编译器 Parse 模块被直接编进 <code>libcangjie-std-ast.so</code>，仓颉侧经
+        <code>ast_api.cpp</code> 的 <code>CJ_AST_Parse*</code> 系列 extern 入口调用。这份解析器代码自诞生起的运行环境假设是
+        <b>cjc 的 8MB 主线程栈</b>，递归深度从未被显式约束——在 cjc 里这从来不是问题。
+      </li>
+      <li>
+        <b>C2N FFI 让 native 代码直接跑在协程栈上。</b>
+        仓颉 cjnative 的 C2N stub（<code>runtime/src/arch/&lt;arch&gt;/C2NStub.S</code>，已核对 x86_64_linux / aarch64_macos 两版汇编）不切换栈：native 函数就在发起调用的 cjthread 协程栈上执行，
+        Linux 默认 <b>128KB</b>（<code>CjScheduler.cpp:224</code>），macOS 默认 1MB。
+        作为对照，<a href="https://github.com/golang/go/blob/master/src/runtime/HACKING.md">Go 的 cgo 在设计上禁止这样做</a>——每次
+        C 调用都切到 OS 分配的 g0 系统栈，因为 C 代码没有栈增长 prologue、无法参与协程栈的协作式扩容。仓颉 C2N 当前缺这一层，是根因中的<b>架构性成分</b>。
+      </li>
+      <li>
+        <b>栈预算错配：64 倍的差距。</b>
+        8MB 假设 ÷ 128KB 现实 = 64 倍。按实测帧开销折算成可承受的嵌套深度：
+        <table>
+          <tr><th>递归路径</th><th>触发形态（issue 复现文件）</th><th>实测帧开销</th><th>128KB 栈崩溃点</th><th>8MB 栈（cjc）</th></tr>
+          <tr><td><code>ParseType → ParseQualifiedType → ParseRefType</code></td><td>425 层 <code>S&lt;S&lt;…&gt;&gt;</code>（regression_fuzz_0017.cj）</td><td>≈0.5KB/层</td><td><b>≈250 层</b>（issue 主崩溃点）</td><td>≈1.6 万层</td></tr>
+          <tr><td><code>ParseExpr → ParseAtom → ParseReturnExpr</code></td><td>2 万层 <code>return</code> 链（multi_return.cj）</td><td><b>2–4KB/层</b></td><td>≈40–60 层</td><td>≈3000 层（cjc 在 2 万层上同样 ICE，rc139，有既有 LLT 记录）</td></tr>
+          <tr><td><code>ParseUnaryExpr → ParseBaseExpr</code></td><td>深 <code>!</code> 前缀链（timeout_06/07.cj 族）</td><td>≈0.5KB/层</td><td>≈250 层</td><td>≈1.6 万层</td></tr>
+        </table>
+        <p class="muted">帧开销测定方法：return 链 2000 层在 8MB 栈通过（≤4KB/层）、2 万层在 40MB 栈溢出（≥2KB/层），夹逼得 2–4KB/层；type 链由 issue 崩溃深度 ≈250 层 ÷ 128KB 反推 ≈0.5KB/层。</p>
+      </li>
+      <li>
+        <b>C2N 入口栈检查对递归 native 函数无效 → 不可捕获的 SIGSEGV。</b>
+        <code>CJ_MCC_C2NStub</code> 入口<b>确实有一次栈检查</b>（汇编核对：<code>sp ≤ CJThreadStackGuardGet() + cpStackSize</code> 时
+        调 <code>MCC_ThrowStackOverflowError</code>，抛<b>可捕获</b>的 StackOverflowError）。但 <code>cpStackSize</code> 是
+        <b>编译期对单次调用的静态栈需求估计</b>，而 <code>ParseType</code> 的递归深度由运行时输入决定：入口检查放行后，
+        native <code>ParseType→ParseQualifiedType→ParseType→…</code> 是纯 C++ 递归，<b>不再经过任何 stub、没有后续栈检查，也无法触发协程栈增长</b>
+        （cjthread 有 <code>stackGrow</code> 机制，但只有托管函数的栈增长 prologue 能触发它，见上一层 Go cgo 类比）。
+        于是逐层吃栈，越过 mprotect 保护的 <code>stackGuard</code> 保留区（cjthread.cpp:193/1333）→ SIGSEGV，不可捕获。
+        更糟的是无 sigaltstack 时信号处理器在已溢出栈上二次崩溃，表现为<b>无任何输出的静默退出（rc 132）</b>——连 issue 里那种崩溃堆栈都打不出来。
+      </li>
+      <li>
+        <b>次生问题：解析成功后，反序列化在仓颉侧重演同样的递归。</b>
+        native 解析产出 flatbuffer，仓颉侧 <code>createBinaryExpr / createReturnExpr / createUnaryExpr / createRefType</code>
+        逐层递归解码——同样跑在 128KB 协程栈上。左结合长二元链（2 万个 <code>+</code>，parameters_arguments_in_one_func.cj）还会让
+        native 侧的 <code>Walker::Walk / SerializeBinaryExpr</code> 先崩（Bus Error）。这层是<b>可捕获的</b> StackOverflowError，
+        严重度低一级，但同样让合法输入无法解析。
+      </li>
+    </ol>
+
+    <h3>1.3 一句话根因与定性</h3>
+    <div class="callout callout-warn">
+      <b>根因：</b>「按 8MB 栈编写的递归代码」与「128KB 的实际执行栈」之间的预算错配，错配点在 std.ast 的 FFI 边界。
+      <b>定性：</b>这是 std.ast 的<b>部署环境缺陷</b>，不是解析器的正确性缺陷——同一份解析器在 cjc 里对 issue 全部输入工作正常。
+      因此修复归属在 std.ast，而非给解析器加深度上限（上限治不了 40 层就崩的 return 链，还会在补丁版本里收窄 cjc 接受的语言）。
+    </div>
+
+    <h3>1.4 为什么 256 层深度守卫方案（compiler!1625）被否决</h3>
+    <table>
+      <tr><th>检验项</th><th>结论</th><th>证据</th></tr>
+      <tr><td>充分性</td><td><span class="tag tag-bad">不充分</span></td><td>守卫按 cjc 的 8MB 栈校准；128KB 协程栈在 ≈250 层（type 链）/ ≈40 层（return 链）就崩，<b>守卫没有机会触发</b>——Linux 门禁 18 个用例 SIGSEGV 实证</td></tr>
+      <tr><td>必要性</td><td><span class="tag tag-bad">不必要</span></td><td>大栈线程合入后崩溃消失，无需任何深度上限</td></tr>
+      <tr><td>兼容性</td><td><span class="tag tag-bad">回退</span></td><td>1.1.0 能编译的 &gt;256 层嵌套代码在 1.1.x 补丁版本突然报错；业界硬上限（GCC -ftemplate-depth、clang -fbracket-depth、SQLite）均为<b>文档化 + 发布版引入 + 按栈校准</b>，无补丁版本悄悄加限的先例</td></tr>
+    </table>
+  </div>
+
+  <!-- ================= 修复策略 ================= -->
+  <div class="section">
+    <h2>二、修复策略与验证（runtime!1331，7 文件，全部在 std.ast 内）</h2>
+    <table>
+      <tr><th>机制</th><th>对应根因层</th><th>实现要点</th></tr>
+      <tr>
+        <td><b>按输入定栈的专用解析线程</b><br/><span class="muted">ast_api.cpp</span></td>
+        <td>第 2、3 层（栈预算）</td>
+        <td>8 个 extern 入口整体（含 ParseWithError 重解析与 NodeWriter 序列化）调度到专用线程；栈 = <code>clamp(tokenCount × 8KB, 8MB, 2GB)</code>——token 数从序列化流头部 uint32 零成本读出，是嵌套深度的数学上界（每层至少消耗 1 token），8KB/token 对实测最贵路径（return 链 2–4KB）留 2 倍余量；虚拟内存惰性提交，扁平大输入只多预留不拒绝；≤32 token 走 inline 快路径（宏展开热路径零线程开销）；创建失败回退 8MB，再失败返回错误 ParseRes（仓颉侧抛 ParseASTException），不再冒险 inline</td>
+      </tr>
+      <tr>
+        <td><b>热点解码迭代化</b><br/><span class="muted">parse_expr.cj / parse_type.cj</span></td>
+        <td>第 5 层（解码递归）</td>
+        <td><code>createBinaryExpr</code>（左结合链）、<code>createReturnExpr / createUnaryExpr</code>（右嵌套链）、<code>createRefType</code>（单参数泛型链）改为「迭代收集 → 自底向上重建」；逐层位置信息与原递归路径精确等价（独立评审逐项核对确认）</td>
+      </tr>
+      <tr>
+        <td><b>残余转类型化异常</b><br/><span class="muted">ffi.cj decodeAST + 9 个公共 API</span></td>
+        <td>第 5 层兜底</td>
+        <td>未迭代化形态（多参数泛型嵌套、深括号链）的 StackOverflowError 统一转为 <code>ParseASTException("…nests too deeply to decode; increasing the cjthread stack size (cjStackSize) may allow deeper inputs.")</code>——守卫在前、提示在后（PostgreSQL HINT 模式）</td>
+      </tr>
+    </table>
+
+    <h3>验证结论（macOS aarch64，基线编译器 + 修复版 stdlib，默认栈与 cjStackSize=128KB 双配置）</h3>
+    <table>
+      <tr><th>验证项</th><th>结果</th></tr>
+      <tr><td>issue 11 文件复现（逐文件 try-catch）</td><td><span class="tag tag-ok">零 crash</span> 9 个 OK（含 2 万层 return 的 multi_return.cj —— 守卫时代它被误报语法错误，实为合法输入）；2 个抛 ParseASTException（test_macro / fuzz_0017 自身语法错误，输出与修复前字节一致）</td></tr>
+      <tr><td>深度矩阵 type/return/unary/binary 链 @255–20000</td><td><span class="tag tag-ok">全部 OK decls=1</span>（两种栈一致）</td></tr>
+      <tr><td>残余形态 multiArgType@2000–20000 / paren@20000</td><td><span class="tag tag-ok">类型化 ParseASTException</span>（修复前为裸 StackOverflowError 或 SIGSEGV）</td></tr>
+      <tr><td>宏展开冒烟 + toTokens 往返</td><td><span class="tag tag-ok">通过</span>（inline 快路径生效，位置信息无损）</td></tr>
+      <tr><td>LLT（test!1672 6 用例 + libast/parse 目录全量）</td><td><span class="tag tag-ok">17/17 PASS</span>（断言用户契约而非实现常数）</td></tr>
+      <tr><td>已知残余</td><td><span class="tag tag-warn">已文档化</span> 超 2GB 预留的纯嵌套（≈26 万 token 构造输入）native 侧理论可溢出；独立评审判定为可接受残余，终态方案见 dev 议题</td></tr>
+    </table>
+  </div>
+
+  <!-- ================= 业界调研 ================= -->
+  <div class="section">
+    <h2>三、业界对照调研：五个处理家族</h2>
+
+    <h3>家族一：检测栈余量，不足时换大栈继续 —— clang / rustc / Roslyn</h3>
+    <p>
+      <b>clang</b>（<a href="https://clang.llvm.org/doxygen/Stack_8h_source.html">Basic/Stack.h</a>）：<code>DesiredStackSize = 8MB</code>，
+      <code>isStackNearlyExhausted()</code> 检测 + <code>runWithSufficientStackSpace()</code> 先发
+      <code>warn_stack_exhausted</code> 诊断、再换大栈执行。设计动机（<a href="https://reviews.llvm.org/D66361">D66361</a>）：递归操作「实践上无法保证不爆栈，崩溃时用户体验极差」。
+      <b>关键事实：2019–2025 年其实现就是经 CrashRecoveryContext 起一个新线程换栈</b>——与本修复同构——
+      <a href="https://github.com/llvm/llvm-project/pull/133173">PR #133173</a>（2025）才优化为直接分配栈段。机制还被扩展到反序列化层
+      （<a href="https://github.com/llvm/llvm-project/pull/79875">PR #79875</a>），对应本修复把序列化一并罩进大栈线程。
+    </p>
+    <p>
+      <b>rustc</b>：<a href="https://doc.rust-lang.org/beta/nightly-rustc/rustc_data_structures/stack/fn.ensure_sufficient_stack.html">ensure_sufficient_stack</a>
+      包装 <a href="https://github.com/rust-lang/stacker">stacker</a>，递归热点插桩，余量 &lt;100KB 红区时分配 1MB 新栈段（<a href="https://github.com/rust-lang/rust/pull/55617">PR #55617</a>）。
+      反面教材 <a href="https://github.com/rust-lang/rust/issues/128422">#128422</a>（<a href="https://sunshowers.io/posts/rustc-segfault-illumos/">调试全记录</a>）：
+      <b>拍脑袋的 1MB 栈段对真实生成文件不够，照样段错误</b>——印证「按实测帧开销 + 余量定值」而非猜测的必要性；
+      stacker 社区某失败案例的 workaround 恰是「<a href="https://github.com/rust-lang/stacker/pull/51">起一个 8MB 栈的新线程</a>」。
+    </p>
+    <p>
+      <b>Roslyn</b>：.NET 的 StackOverflowException 不可捕获（与 native SIGSEGV 同性质），故必须前置检测——
+      <code>VisitExpressionWithStackGuard</code> + <code>EnsureSufficientExecutionStack()</code> 抛可捕获异常，最终落为
+      <code>ERR_InsufficientStack</code> 编译诊断（<a href="https://github.com/dotnet/roslyn/issues/70381">#70381</a>）。
+    </p>
+
+    <h3>家族二：解析时栈限位 → 类型化错误 —— V8 / SpiderMonkey / CPython</h3>
+    <p>
+      JS 引擎在解析器中做栈指针限位检查，深嵌套源码抛 JS 层 <code>RangeError</code>（SpiderMonkey：<code>InternalError: too much recursion</code>），进程不死。
+      <b>CPython</b> 的演进最完整：旧 pgen 解析器固定 <a href="https://bugs.python.org/issue1881">MAXSTACK 报 "parser stack overflow"</a>；
+      3.12 起（<a href="https://github.com/python/cpython/issues/91079">gh-91079</a> / <a href="https://github.com/python/cpython/pull/96510">PR #96510</a>）把 C 栈防护与 Python 递归计数解耦；
+      3.14 改为<b>真实栈指针对比软/硬限位</b>（<a href="https://github.com/python/cpython/blob/main/Include/internal/pycore_ceval.h">pycore_ceval.h</a>），超限抛可捕获 <code>RecursionError</code>。
+      对应本修复的 decodeAST 兜底，也是 dev 议题「栈余量探测」的原型。
+    </p>
+
+    <h3>家族三：文档化的硬深度上限 —— GCC / clang / SQLite / Jackson / simdjson / MSVC</h3>
+    <p>
+      clang <code>-fbracket-depth=256</code>、GCC <a href="https://gcc.gnu.org/legacy-ml/gcc-help/2009-05/msg00279.html">-ftemplate-depth=900</a>
+      （默认 900 而非标准建议的 1024，因为「编译器可能在 1024 前先耗尽栈」——<b>上限必须按实际栈校准</b>，这正是 1625 的 256 在 128KB 栈上失效的教训）、
+      SQLite <a href="https://sqlite.org/limits.html">SQLITE_MAX_EXPR_DEPTH=1000</a>（运行时只可调低）、
+      MSVC <a href="https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1026?view=msvc-170">C1026</a>。
+      最具参考价值的是 <b>Jackson</b>：<a href="https://github.com/FasterXML/jackson-core/pull/943">2.15 在小版本中加入 maxNestingDepth=1000</a>
+      作为不可信输入的安全加固（后关联 CVE-2025-52999），条件是<b>宽松到零误伤的默认值 + 可配置 + 超限抛类型化异常</b>——这是 dev 分支深度守卫提案可借鉴的引入条件。
+    </p>
+
+    <h3>家族四：运行时层 FFI 栈切换 —— Go cgo（架构终态）</h3>
+    <p>
+      <a href="https://github.com/golang/go/blob/master/src/runtime/HACKING.md">Go 运行时</a>从设计上禁止 C 代码跑在 goroutine 栈上：
+      goroutine 栈靠编译器 prologue 协作增长，C 代码无 prologue 不能参与，故 <b>每次 cgo 调用切到 OS 分配的 g0 系统栈执行、返回再切回</b>
+      （<a href="https://groups.google.com/d/topic/golang-nuts/_YrvM8OO6QY">golang-nuts：在 goroutine 栈上跑 C 是 footgun</a>）。
+      仓颉 C2N 让 native 解析器直接跑在 128KB 协程栈上，正是 Go 刻意规避的反模式——这是「runtime 在 C2N 层提供大栈切换原语」作为终态方案的最有力背书；届时 std.ast 的局部方案可自然退役。
+    </p>
+
+    <h3>家族五：「提示用户调栈参数」作为正式机制 —— PostgreSQL / JVM 系（有前提条件）</h3>
+    <p>
+      <b>PostgreSQL</b>：<code>check_stack_depth()</code> 守卫<b>先拦下溢出保住进程</b>，再报
+      <code>ERROR: stack depth limit exceeded</code> + <code>HINT: Increase "max_stack_depth"…</code>
+      （<a href="https://www.postgresql.org/message-id/CAONhAovOas_XLigiebcfL5_q9M2iCHwG5hkYQk0L0qh_8RoQEw@mail.gmail.com">实例</a>）；
+      且 <a href="https://help.heroku.com/VJ4LVRE7/can-we-increase-max_stack_depth-for-our-postgres-database">Heroku 明确拒绝放开该参数</a>（须与 OS ulimit 联动，调错会崩后端）——全局栈旋钮的运维风险有实证。
+      <b>JVM 系</b>（<a href="https://www.scala-lang.org/old/node/397.html">scalac 官方建议给 64MB 栈</a>、<code>-Xss</code>）把调栈作为正式答案，
+      前提是 StackOverflowError 可捕获、崩溃有完整栈迹。
+      <span class="tag tag-warn">关键结论</span> 业界从无「裸崩溃 + 让用户猜环境变量」的先例：<b>提示永远建立在守卫或可捕获性之上</b>。
+      故 cjStackSize 不能作为本 issue 的修复（主崩溃是 native SIGSEGV，无报错路径；所需值随输入线性增长，multi_return.cj 需 ≥64MB 全局生效）；
+      但在 decodeAST 的类型化异常消息中附 cjStackSize 提示（解码侧调大确实有效）符合 PostgreSQL HINT 模式，已落地。
+    </p>
+  </div>
+
+  <!-- ================= 映射 ================= -->
+  <div class="section">
+    <h2>四、修复决策 ↔ 业界实践映射</h2>
+    <table>
+      <tr><th>本修复的决策</th><th>业界对应物</th><th>符合度</th></tr>
+      <tr><td>专用大栈线程跑 native 解析（含序列化）</td><td>clang 2019–2025 RunSafelyOnThread；stacker 社区 8MB 线程 workaround；clang 把机制扩展到反序列化层</td><td><span class="tag tag-ok">同构</span></td></tr>
+      <tr><td>按输入定栈：8KB/token 实测上界 + 2 倍余量 + [8MB, 2GB] 截断</td><td>rustc #128422 教训——拍脑袋的固定栈段照样崩；本方案以 token 数为深度数学上界，更保守</td><td><span class="tag tag-ok">更稳健</span></td></tr>
+      <tr><td>解码残余 → 类型化 ParseASTException</td><td>V8 RangeError / CPython RecursionError / Roslyn ERR_InsufficientStack / Jackson StreamConstraintsException</td><td><span class="tag tag-ok">标准做法</span></td></tr>
+      <tr><td>异常消息附 cjStackSize 提示</td><td>PostgreSQL「守卫在前、HINT 在后」模式</td><td><span class="tag tag-ok">同模式</span></td></tr>
+      <tr><td>拒绝在补丁版本加 256 硬上限</td><td>GCC/SQLite/Jackson：上限均为文档化 + 宽松默认 + 按栈校准 + 发布版引入</td><td><span class="tag tag-ok">一致</span></td></tr>
+      <tr><td>dev 议题：runtime C2N 大栈/系统栈切换原语</td><td>Go cgo g0 切换（设计级先例）</td><td><span class="tag tag-info">架构终态</span></td></tr>
+      <tr><td>dev 议题：解析器栈余量探测</td><td>clang isStackNearlyExhausted；CPython 3.14 真实栈指针限位</td><td><span class="tag tag-info">现代趋势</span></td></tr>
+    </table>
+  </div>
+
+  <!-- ================= 残余与议题 ================= -->
+  <div class="section">
+    <h2>五、残余风险与后续议题</h2>
+    <table>
+      <tr><th>事项</th><th>性质</th><th>归属</th></tr>
+      <tr><td>超 2GB 预留的纯嵌套输入（≈26 万 token 构造输入）native 侧理论可溢出</td><td><span class="tag tag-warn">可接受残余</span>（独立评审判定，纯构造性攻击面，已文档化）</td><td>终态由 dev 议题关闭</td></tr>
+      <tr><td>runtime C2N 层 FFI 大栈执行原语（Go g0 模式）/ 解析器栈余量探测（clang/CPython 模式）</td><td>架构改进</td><td>dev 分支立项</td></tr>
+      <tr><td>SignalManager 识别「协程栈上的 native 溢出」并在崩溃 dump 中提示 cjStackSize；裸解析线程补 sigaltstack</td><td>诊断改进（惠及所有 FFI 库）</td><td>dev 分支 / 1331 小补丁</td></tr>
+      <tr><td>宏展开真实路径 LLT、inline 阈值（32）复核、宏密集编译吞吐基准</td><td>测试/参数补强（独立评审建议项）</td><td>1672 后续补充</td></tr>
+      <tr><td>cjc 自身在 2 万层 return 上 ICE（rc139，基线行为，既有 LLT 记录）</td><td>上游既有行为，不属本修复范围</td><td>dev 分支随栈余量探测一并解决</td></tr>
+    </table>
+    <div class="callout callout-ok">
+      <b>独立评审结论（2026-06-11，subagent 独立核实代码与 PR）：</b>策略合适、两个 PR 建议合入、关闭 1625 正确、零阻塞项；
+      「无过度工程」（逐项验证了每个机制的必要性）、「无修复不足」（残余面全部文档化 + 类型化 + 用例钉住）。
+    </div>
+  </div>
+
+  <footer>
+    生成于 2026-06-12（2026-06-13 据 C2NStub.S 汇编源码核对、修订根因因果链第 2/4 层）· 基于 issue/PR 原文、本地代码与实测数据、独立 subagent 评审、以及带出处的业界调研整理 ·
+    数据出处：实测帧开销与验证矩阵见 runtime!1331 描述；业界引用以正文超链接为准
+  </footer>
+</div>
+</body>
+</html>
