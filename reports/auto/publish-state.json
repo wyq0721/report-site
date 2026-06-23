@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23 15:23:02",
+  "generated_at": "2026-06-23 16:44:14",
   "reports": {
     "issue3128_rootcause_industry_report.html": {
       "sha256": "d8a6b568fc168682d6061efd149c5f00d0b59df98eab35a4b2ca43f666dd18ed",
@@ -7,6 +7,13 @@
       "source_name": "issue3128_rootcause_industry_report.html",
       "title": "Issue 3128 根因分析与业界对照调研报告",
       "updated_at": "2026-06-23 15:23:02"
+    },
+    "qcc_cangjie_compiler_ice_project_report.html": {
+      "sha256": "55e7dcfc374a9dc9ffd1ac482a10bcfd252dfc41c6306f0e3663ba1c2d8c87b6",
+      "slug": "qcc-cangjie-compiler-ice-project-report",
+      "source_name": "qcc_cangjie_compiler_ice_project_report.html",
+      "title": "QCC立项报告 - 仓颉编译器ICE问题定位效率提升",
+      "updated_at": "2026-06-23 16:44:14"
     }
   }
 }
