@@ -25,10 +25,29 @@ DROP_DIR = Path(os.environ.get("REPORT_SITE_DROP_DIR", "/Users/cjdebug/Documents
 AUTO_DIR = SITE_ROOT / "reports" / "auto"
 STATE_FILE = AUTO_DIR / "publish-state.json"
 LOCK_FILE = AUTO_DIR / ".publish.lock"
+HOOK_PATH_ENTRIES = (
+    str(Path.home() / ".npm-global" / "bin"),
+    "/opt/homebrew/bin",
+    "/usr/local/bin",
+    "/usr/bin",
+    "/bin",
+    "/usr/sbin",
+    "/sbin",
+)
+
+
+def command_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env.setdefault("HOME", str(Path.home()))
+
+    entries = list(HOOK_PATH_ENTRIES)
+    entries.extend(path for path in env.get("PATH", "").split(os.pathsep) if path)
+    env["PATH"] = os.pathsep.join(dict.fromkeys(entries))
+    return env
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(cmd, cwd=SITE_ROOT, check=check, text=True, capture_output=True)
+    return subprocess.run(cmd, cwd=SITE_ROOT, check=check, text=True, capture_output=True, env=command_env())
 
 
 def sha256_file(path: Path) -> str:
@@ -137,6 +156,7 @@ def render_auto_index(reports: dict, generated_at: str) -> str:
     </section>
     <footer>最后更新：{html.escape(now)}</footer>
   </main>
+  <script src="../../assets/site-nav.js"></script>
 </body>
 </html>
 """
