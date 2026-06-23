@@ -282,6 +282,51 @@
     .axis-item:nth-child(3) { border-left-color: var(--blue); }
     .axis-item:nth-child(4) { border-left-color: var(--gold); }
 
+    .snippet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .snippet {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(33, 45, 58, .05);
+    }
+
+    .snippet h3 {
+      margin: 0;
+      padding: 14px 16px 8px;
+      font-size: 18px;
+    }
+
+    .snippet p {
+      margin: 0;
+      padding: 0 16px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      border-top: 1px solid var(--line);
+      background: #17212b;
+      color: #e9f1f7;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    pre code {
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font-size: inherit;
+    }
+
     .source-list {
       color: var(--muted);
       font-size: 14px;
@@ -304,7 +349,8 @@
       .grid.two,
       .grid.three,
       .callout,
-      .axis {
+      .axis,
+      .snippet-grid {
         grid-template-columns: 1fr;
       }
 
@@ -331,7 +377,7 @@
       <div class="meta">
         <span class="pill">分析对象：仓颉 / ArkTS / Kotlin / Swift</span>
         <span class="pill">视角：语言设计 + Harmony 工程落地</span>
-        <span class="pill">日期：2026-06-18</span>
+        <span class="pill">日期：2026-06-23</span>
       </div>
     </header>
 
@@ -635,6 +681,95 @@
         这套验证方式也能避免过度宣传：如果某个模块只是页面展示或简单表单，ArkTS 仍是更高效选择；只有在核心逻辑复杂、跨语言边界多、
         性能或可靠性收益明确时，仓颉优势才值得投入验证。
       </p>
+    </section>
+
+    <section>
+      <h2>可落地代码片段</h2>
+      <p>
+        下面的片段用于佐证前面的判断：仓颉优势不是“多一种语法”，而是把状态、空值、跨语言边界和动态逃逸点变成更容易被编译器、
+        CI 和代码审查识别的结构。片段为说明性缩写，真实工程中应按具体 SDK 和 API 约束补齐错误处理。
+      </p>
+      <div class="snippet-grid">
+        <article class="snippet">
+          <h3>1. 状态机：新增状态会暴露漏分支</h3>
+          <p>不用字符串或魔法数表达订单状态；核心逻辑通过枚举和穷尽 <code>match</code> 管理。</p>
+<pre><code class="language-cangjie">enum OrderState {
+    | Created
+    | Dispatching
+    | Delivering
+    | Finished
+    | Failed(String)
+}
+
+func nextAction(state: OrderState): String {
+    match (state) {
+        case Created =&gt; "submit"
+        case Dispatching =&gt; "wait_courier"
+        case Delivering =&gt; "track_route"
+        case Finished =&gt; "archive"
+        case Failed(reason) =&gt; "retry:${reason}"
+    }
+}</code></pre>
+        </article>
+
+        <article class="snippet">
+          <h3>2. 空值：缺失数据不是普通字符串</h3>
+          <p><code>?T</code> 把“可能缺失”写进类型，AI 生成代码时不能默默跳过 <code>None</code> 分支。</p>
+<pre><code class="language-cangjie">struct DeviceSnapshot {
+    public let battery: ?Int64
+    public let location: ?String
+
+    public init(battery: ?Int64, location: ?String) {
+        this.battery = battery
+        this.location = location
+    }
+}
+
+func batteryRisk(snapshot: DeviceSnapshot): String {
+    match (snapshot.battery) {
+        case Some(v) where v &lt; 20 =&gt; "low_power"
+        case Some(_) =&gt; "normal"
+        case None =&gt; "missing_battery"
+    }
+}</code></pre>
+        </article>
+
+        <article class="snippet">
+          <h3>3. C 边界：危险调用集中到可审查位置</h3>
+          <p><code>foreign</code> 声明和 <code>unsafe</code> 调用让 native 风险点可以被 grep、CI 和评审规则直接定位。</p>
+<pre><code class="language-cangjie">foreign func nativeDecode(input: CString): Int32
+
+public func decodeStatus(input: CString): Bool {
+    let status = unsafe {
+        nativeDecode(input)
+    }
+    return status == 0
+}
+
+// CI 可扫描 unsafe/foreign：
+// 1. 是否校验入参
+// 2. 是否处理错误码
+// 3. 是否有资源释放路径</code></pre>
+        </article>
+
+        <article class="snippet">
+          <h3>4. ArkTS 绑定：动态边界被显式转换</h3>
+          <p>HLE/dts2cj 的价值是把 ArkTS 声明尽量拉回仓颉类型；无法类型化的位置会暴露为审查对象。</p>
+<pre><code class="language-typescript">// ArkTS declaration
+declare function printToConsole(s: string): void;
+declare function pickOrder(id: string): Promise&lt;Order&gt;;</code></pre>
+<pre><code class="language-cangjie">// Generated Cangjie-style binding sketch
+public func printToConsole(s: String): Unit {
+    hmsGlobalApiCall&lt;Unit&gt;("order_api", "printToConsole",
+        { ctx =&gt; [s.toJSValue(ctx)] })
+}
+
+// 审查重点：
+// - String 是否保持强类型
+// - Promise/union/unknown 是否退化为 JSValue
+// - JSValue 逃逸点是否集中封装</code></pre>
+        </article>
+      </div>
     </section>
 
     <section>
