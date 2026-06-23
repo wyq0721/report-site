@@ -247,7 +247,7 @@
       <p class="eyebrow">Report center</p>
       <h1>报告中心</h1>
       <p class="lead">
-        面向团队共享的在线报告入口。当前收录四类内容：仓颉语言分析、众包内存分析、AAR 复盘报告、自动发布报告。
+        面向团队共享的在线报告入口。当前收录四类内容：仓颉语言分析、众包内存分析、复盘报告、自动发布报告。
         后续新增报告时，可以继续按分类扩展，不再把所有内容堆在首页。
       </p>
       <div class="meta">
@@ -292,19 +292,19 @@
           </div>
         </a>
 
-        <a class="card" href="./reports/aar-issue-917/">
+        <a class="card" href="./reports/aar/">
           <span class="tag aar">AAR Review</span>
-          <h3>Issue #917 AAR 复盘</h3>
+          <h3>复盘报告</h3>
           <p>
-            复盘 release/1.0 部分用例 ICE 11，拆分 #1354 引入问题和历史存量问题，并沉淀 CHIR 高风险路径改进项。
+            集中收录 AAR、问题复盘和工程质量回看报告，后续新增复盘 HTML 统一放到这个分类入口下维护。
           </p>
           <ul>
-            <li>问题时间轴与处置过程</li>
-            <li>CHIR/AST2CHIR 根因分析</li>
-            <li>工程质量改进项</li>
+            <li>事故与问题复盘</li>
+            <li>根因、经验和改进项沉淀</li>
+            <li>后续复盘报告扩展入口</li>
           </ul>
           <div class="actions">
-            <span class="button">查看报告</span>
+            <span class="button">进入分类</span>
           </div>
         </a>
 
@@ -358,7 +358,7 @@
       <ul>
         <li><code>reports/cangjie-language-analysis/</code>：仓颉语言、生态和工具链分析。</li>
         <li><code>reports/crowdsourcing-memory-analysis/</code>：众包内存、GC、native heap、优化收益分析。</li>
-        <li><code>reports/aar-issue-917/</code>：Issue #917 的 AAR 复盘报告。</li>
+        <li><code>reports/aar/</code>：AAR、问题复盘和工程质量回看报告分类页。</li>
         <li><code>reports/auto/</code>：本地 hook 自动发布的 HTML 报告列表。</li>
         <li>新增类别时，在首页补一个分类卡片，并在对应目录放一个 <code>index.html</code> 作为分类页。</li>
       </ul>

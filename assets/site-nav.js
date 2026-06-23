@@ -34,8 +34,11 @@
     if (relativePath.indexOf("reports/auto/") === 0 && !isCurrent("reports/auto/")) {
       return '<a class="site-nav__context" href="' + href("reports/auto/") + '">返回自动报告</a>';
     }
-    if (relativePath.indexOf("reports/aar-issue-917/") === 0 && !isCurrent("reports/aar-issue-917/")) {
-      return '<a class="site-nav__context" href="' + href("reports/aar-issue-917/") + '">返回 AAR 报告</a>';
+    if (relativePath.indexOf("reports/aar/") === 0 && !isCurrent("reports/aar/")) {
+      return '<a class="site-nav__context" href="' + href("reports/aar/") + '">返回复盘报告</a>';
+    }
+    if (relativePath.indexOf("reports/aar-issue-917/") === 0) {
+      return '<a class="site-nav__context" href="' + href("reports/aar/") + '">返回复盘报告</a>';
     }
     if (!isCurrent("")) {
       return '<a class="site-nav__context" href="' + href("") + '">返回报告中心</a>';
@@ -69,7 +72,7 @@
     '<div class="site-nav__links">' +
     link("仓颉语言分析", "reports/cangjie-language-analysis/") +
     link("众包内存分析", "reports/crowdsourcing-memory-analysis/") +
-    link("AAR 复盘", "reports/aar-issue-917/") +
+    link("复盘报告", "reports/aar/") +
     link("自动报告", "reports/auto/") +
     "</div>" +
     '<span class="site-nav__spacer"></span>' +
