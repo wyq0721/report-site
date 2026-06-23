@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>安全审计报告</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #17212b;
+      --muted: #5f6b7a;
+      --line: #d8e0e8;
+      --accent: #b34b42;
+      --accent-weak: #fbeceb;
+      --teal: #0f7b7b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 34px 22px 64px;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+    }
+    .back { color: var(--teal); font-weight: 750; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 16px;
+      border-radius: 999px;
+      padding: 3px 10px;
+      background: var(--accent-weak);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+    h1 { margin: 12px 0 10px; font-size: 40px; line-height: 1.15; }
+    .lead { max-width: 780px; margin: 0; color: var(--muted); font-size: 17px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .card {
+      display: flex;
+      min-height: 260px;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 22px;
+      box-shadow: 0 1px 8px rgba(23, 33, 43, .04);
+    }
+    .card:hover { border-color: #e0a39d; box-shadow: 0 8px 22px rgba(23, 33, 43, .08); }
+    .tag {
+      width: fit-content;
+      border-radius: 999px;
+      padding: 3px 10px;
+      background: var(--accent-weak);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    h2 { margin: 14px 0 10px; font-size: 22px; line-height: 1.3; }
+    .card p { margin: 0 0 14px; color: #3f4d5f; }
+    ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .actions { margin-top: auto; padding-top: 18px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      border: 1px solid #e0a39d;
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #8f352e;
+      background: #fdf4f3;
+      font-weight: 800;
+    }
+    .guide {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 18px 20px;
+      color: #3f4d5f;
+    }
+    .guide h2 { margin-top: 0; font-size: 20px; }
+    code {
+      border-radius: 5px;
+      background: #eef2f7;
+      padding: 2px 5px;
+      color: #233142;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .92em;
+    }
+    footer { margin-top: 28px; color: #6b7280; font-size: 13px; }
+    @media (max-width: 760px) {
+      main { padding: 28px 18px 48px; }
+      h1 { font-size: 30px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="back" href="../../">返回报告中心</a>
+      <div class="eyebrow">Security Audit</div>
+      <h1>安全审计报告</h1>
+      <p class="lead">集中收录仓颉编译器、工具链与组件的源码级安全审计报告。每篇报告给出源到汇的可达性证明、严重性判定、复现与修复建议。后续新增审计 HTML 时，在这个分类页补充入口。</p>
+    </header>
+
+    <section class="grid" aria-label="安全审计报告列表">
+      <a class="card" href="./cangjie-compiler-2026-06-17/">
+        <span class="tag">cjc · 2026-06-17</span>
+        <h2>仓颉编译器安全审计报告</h2>
+        <p>针对 C++ 前端编译器 <code>cjc</code> 的五阶段流水线审计，并与 2026 年 3 月历史基线逐项比对验证修复状态。</p>
+        <ul>
+          <li>2 个确认项：<code>std::sto*</code> 崩溃、SIGINT 异步信号安全</li>
+          <li>3 个疑似项 + 6 个已验证修复/缓解项</li>
+          <li>源到汇证明 / 复现 / 修复建议</li>
+        </ul>
+        <div class="actions">
+          <span class="button">查看报告</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="guide">
+      <h2>新增安全审计报告</h2>
+      <p>建议后续新增报告放在 <code>reports/security-audit/&lt;slug&gt;/index.html</code>，并在页面底部引用 <code>../../../assets/site-nav.js</code>，然后在本页列表中补一张报告卡片。</p>
+    </section>
+
+    <footer>最后更新：2026-06-23</footer>
+  </main>
+  <script src="../../assets/site-nav.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # 仓颉语言优势报告静态站点
 
-这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”“众包内存分析”“复盘报告”和“自动发布报告”四类报告。
+这是一个可直接发布到云端的静态报告中心。站点入口为 `index.html`，当前包含“仓颉语言分析”“众包内存分析”“复盘报告”“自动发布报告”和“安全审计报告”五类报告。
 
 ## 目录说明
 
@@ -10,6 +10,7 @@
 - `reports/aar/`：AAR、问题复盘和工程质量回看报告分类页。
 - `reports/aar-issue-917/`：release/1.0 部分用例 ICE 11 的 AAR 复盘报告，当前已收录到 `reports/aar/`。
 - `reports/auto/`：本地 hook 自动发布的 HTML 报告列表。
+- `reports/security-audit/`：仓颉编译器/工具链/组件的源码级安全审计报告分类页（当前收录 cjc 前端 2026-06-17 审计）。
 - `assets/site-nav.js`：全站导航注入脚本，负责在每个报告页顶部生成报告中心、分类入口和返回上级入口。
 - `tools/report_site_autopush.py`：扫描投放目录、复制 HTML、提交并推送的本地自动化脚本。
 - `cangjie_domain_advantages_report.html`：早期报告备份文件，便于保留原始报告文件名。

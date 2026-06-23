@@ -40,6 +40,9 @@
     if (relativePath.indexOf("reports/aar-issue-917/") === 0) {
       return '<a class="site-nav__context" href="' + href("reports/aar/") + '">返回复盘报告</a>';
     }
+    if (relativePath.indexOf("reports/security-audit/") === 0 && !isCurrent("reports/security-audit/")) {
+      return '<a class="site-nav__context" href="' + href("reports/security-audit/") + '">返回安全审计报告</a>';
+    }
     if (!isCurrent("")) {
       return '<a class="site-nav__context" href="' + href("") + '">返回报告中心</a>';
     }
@@ -74,6 +77,7 @@
     link("众包内存分析", "reports/crowdsourcing-memory-analysis/") +
     link("复盘报告", "reports/aar/") +
     link("自动报告", "reports/auto/") +
+    link("安全审计", "reports/security-audit/") +
     "</div>" +
     '<span class="site-nav__spacer"></span>' +
     contextLink() +

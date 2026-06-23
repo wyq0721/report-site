@@ -162,6 +162,10 @@
       background: var(--green);
     }
 
+    .tag.security {
+      background: #8f352e;
+    }
+
     .card p {
       color: #445160;
     }
@@ -247,7 +251,7 @@
       <p class="eyebrow">Report center</p>
       <h1>报告中心</h1>
       <p class="lead">
-        面向团队共享的在线报告入口。当前收录四类内容：仓颉语言分析、众包内存分析、复盘报告、自动发布报告。
+        面向团队共享的在线报告入口。当前收录五类内容：仓颉语言分析、众包内存分析、复盘报告、自动发布报告、安全审计报告。
         后续新增报告时，可以继续按分类扩展，不再把所有内容堆在首页。
       </p>
       <div class="meta">
@@ -323,12 +327,32 @@
             <span class="button">进入分类</span>
           </div>
         </a>
+
+        <a class="card" href="./reports/security-audit/">
+          <span class="tag security">Security Audit</span>
+          <h3>安全审计报告</h3>
+          <p>
+            收录仓颉编译器、工具链与组件的源码级安全审计，给出源到汇可达性证明、严重性判定、复现与修复建议。
+          </p>
+          <ul>
+            <li>编译器 DoS / 内存与 UB</li>
+            <li>进程调用 / 文件系统完整性</li>
+            <li>历史基线复核与修复验证</li>
+          </ul>
+          <div class="actions">
+            <span class="button">进入分类</span>
+          </div>
+        </a>
       </div>
     </section>
 
     <section>
       <h2>最近报告</h2>
       <div class="report-list">
+        <a class="mini" href="./reports/security-audit/cangjie-compiler-2026-06-17/">
+          <b>仓颉编译器安全审计报告</b>
+          <span>cjc 前端 / std::sto* 崩溃 / 信号安全 / 历史基线复核</span>
+        </a>
         <a class="mini" href="./reports/auto/">
           <b>自动发布报告入口</b>
           <span>本地投放 / 自动提交 / GitHub Pages 刷新</span>
@@ -360,11 +384,12 @@
         <li><code>reports/crowdsourcing-memory-analysis/</code>：众包内存、GC、native heap、优化收益分析。</li>
         <li><code>reports/aar/</code>：AAR、问题复盘和工程质量回看报告分类页。</li>
         <li><code>reports/auto/</code>：本地 hook 自动发布的 HTML 报告列表。</li>
+        <li><code>reports/security-audit/</code>：仓颉编译器/工具链/组件的源码级安全审计报告分类页。</li>
         <li>新增类别时，在首页补一个分类卡片，并在对应目录放一个 <code>index.html</code> 作为分类页。</li>
       </ul>
     </section>
 
-    <p class="footer">最后更新：2026-06-22</p>
+    <p class="footer">最后更新：2026-06-23</p>
   </main>
   <script src="./assets/site-nav.js"></script>
 </body>

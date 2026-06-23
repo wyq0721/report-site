@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>仓颉编译器安全审计报告 · 2026-06-17</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --text: #17212b;
+      --muted: #5f6b7a;
+      --line: #d8e0e8;
+      --accent: #b34b42;
+      --accent-weak: #fbeceb;
+      --teal: #0f7b7b;
+      --blue: #2368ad;
+      --green: #2f8c57;
+      --gold: #b27716;
+      --slate: #34495e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.7;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 30px 22px 72px;
+    }
+    header.doc {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      margin-bottom: 26px;
+    }
+    .back { color: var(--teal); font-weight: 750; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 16px;
+      border-radius: 999px;
+      padding: 3px 12px;
+      background: var(--accent-weak);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    h1 {
+      margin: 12px 0 10px;
+      font-size: 36px;
+      line-height: 1.16;
+    }
+    .lead { max-width: 760px; margin: 0; color: var(--muted); font-size: 16px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0 8px;
+    }
+    .summary .kv {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 12px 14px;
+    }
+    .summary .kv b { display: block; font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .summary .kv span { font-size: 15px; font-weight: 650; }
+    h2 {
+      margin: 38px 0 14px;
+      font-size: 25px;
+      line-height: 1.25;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent-weak);
+    }
+    h3 { margin: 26px 0 10px; font-size: 19px; line-height: 1.3; }
+    h4 { margin: 18px 0 8px; font-size: 15px; color: var(--slate); }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 14px; padding-left: 22px; }
+    li { margin: 5px 0; }
+    code {
+      border-radius: 5px;
+      background: #eef2f7;
+      padding: 2px 5px;
+      color: #233142;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .9em;
+      word-break: break-word;
+    }
+    pre {
+      margin: 0 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0f1b24;
+      color: #e6edf3;
+      padding: 14px 16px;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; font-size: 13px; }
+    .note {
+      margin: 0 0 18px;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 8px 8px 0;
+      background: #fbf6ea;
+      padding: 12px 16px;
+      color: #5a4a25;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 18px;
+      font-size: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th { background: #eef3f7; font-weight: 750; font-size: 13px; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: .86em; }
+    .badge {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 1px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .sev-medium { background: var(--gold); }
+    .sev-low { background: var(--green); }
+    .sev-info { background: var(--slate); }
+    .v-confirmed { background: var(--accent); }
+    .v-suspected { background: var(--blue); }
+    .v-excluded { background: #7a8694; }
+    .finding {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      padding: 4px 22px 18px;
+      margin: 0 0 22px;
+      box-shadow: 0 1px 8px rgba(23, 33, 43, .04);
+    }
+    .finding h3 { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .kvlist { list-style: none; padding: 0; margin: 6px 0 14px; }
+    .kvlist li { margin: 4px 0; }
+    .kvlist b { color: var(--slate); }
+    footer { margin-top: 40px; color: #6b7280; font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+    @media (max-width: 760px) {
+      main { padding: 24px 16px 52px; }
+      h1 { font-size: 28px; }
+      .summary { grid-template-columns: 1fr; }
+      .finding { padding: 4px 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="doc">
+      <a class="back" href="../">返回安全审计报告</a>
+      <div class="eyebrow">Security Audit · Cangjie Compiler</div>
+      <h1>仓颉编译器安全审计报告</h1>
+      <p class="lead">针对 C++ 前端编译器 <code>cjc</code> 的源码级安全审计，采用五阶段流水线并与 2026 年 3 月历史审计基线逐项比对验证修复状态。</p>
+      <div class="summary">
+        <div class="kv"><b>目标分支</b><span>upstream/main</span></div>
+        <div class="kv"><b>审计日期</b><span>2026-06-17</span></div>
+        <div class="kv"><b>总体风险</b><span>中 (Medium)</span></div>
+        <div class="kv"><b>确认 Confirmed</b><span>2</span></div>
+        <div class="kv"><b>疑似 Suspected</b><span>3</span></div>
+        <div class="kv"><b>已修复/排除</b><span>7</span></div>
+      </div>
+    </header>
+
+    <h2>执行摘要</h2>
+    <ul>
+      <li><b>目标</b>：<code>cangjie_compiler</code>（分支 <code>upstream/main</code>）。</li>
+      <li><b>范围</b>：Driver/Tool 调用、词法/语法/语义、宏服务、demangler/压缩、临时文件管理、信号处理、配置/JSON 解析、条件编译、Java FFI，以及新增未跟踪代码（<code>CjdTextEmitter</code>）。</li>
+      <li><b>方法</b>：五阶段流水线（Scout → Broad → Analyst → PoC → Report），与历史审计基线逐项比对。</li>
+      <li><b>总体风险</b>：<b>中 (Medium)</b> —— 多数历史高危项已修复，残留为可由源码/依赖触发的编译器崩溃 (DoS) 与异步信号安全缺陷。</li>
+    </ul>
+    <div class="note">工具说明：本仓库 shell 中 <code>rg</code> 被封装函数拦截并污染输出（标识符被替换为 <code>n</code>）。已切换到 <code>/usr/bin/grep</code> 与文件读取取证，所有结论基于干净读取。</div>
+
+    <h2>发现汇总</h2>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>严重性</th><th>结论</th><th>类别</th><th>标题</th><th>位置</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VUL-001</td><td><span class="badge sev-medium">Medium</span></td><td><span class="badge v-confirmed">CONFIRMED</span></td>
+          <td>Parser/Input DoS</td><td>未捕获的 <code>std::sto*</code> 异常导致编译器崩溃</td>
+          <td><code>ConditionalCompilation.cpp:167-169</code>、<code>InteropLibBridge.cpp:1758</code></td>
+        </tr>
+        <tr>
+          <td>VUL-002</td><td><span class="badge sev-low">Low</span></td><td><span class="badge v-confirmed">CONFIRMED</span></td>
+          <td>Signal/Async Safety</td><td>SIGINT 处理器调用非异步信号安全的 <code>DeleteTempFiles()</code></td>
+          <td><code>SignalUnix.cpp:78</code></td>
+        </tr>
+        <tr>
+          <td>VUL-003</td><td><span class="badge sev-medium">Low-Med</span></td><td><span class="badge v-suspected">SUSPECTED</span></td>
+          <td>Parser DoS</td><td>syscap JSON 解析无递归深度上限 + 路径受控文件读取</td>
+          <td><code>ParseJson.cpp</code>、<code>PluginCustomAnnoChecker.cpp:327</code></td>
+        </tr>
+        <tr>
+          <td>VUL-004</td><td><span class="badge sev-low">Low</span></td><td><span class="badge v-suspected">SUSPECTED</span></td>
+          <td>Process/Tool</td><td>裸工具名经 <code>posix_spawnp</code> 走 PATH 搜索</td>
+          <td><code>Driver/Tool.cpp:243-245</code></td>
+        </tr>
+        <tr>
+          <td>VUL-005</td><td><span class="badge sev-low">Low</span></td><td><span class="badge v-suspected">SUSPECTED</span></td>
+          <td>Input robustness</td><td>GCC 版本串 <code>std::stoi</code> 无异常处理</td>
+          <td><code>GCCPathScanner.cpp:103/126/145</code></td>
+        </tr>
+        <tr>
+          <td>INFO-01</td><td><span class="badge sev-info">Info</span></td><td><span class="badge v-excluded">NOTE</span></td>
+          <td>Memory/UB</td><td>新增未接线代码 <code>CjdTextEmitter</code> 潜在空指针解引用</td>
+          <td><code>CjdTextEmitter.cpp:316/324/332</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>确认发现 (Confirmed Findings)</h2>
+
+    <div class="finding">
+      <h3>[VUL-001] 未捕获 <code>std::sto*</code> 异常导致编译器崩溃 <span class="badge sev-medium">Medium</span> <span class="badge v-confirmed">CONFIRMED</span></h3>
+      <ul class="kvlist">
+        <li><b>类别</b>：Parser/Deserializer DoS (COMP-PARSE-002 / COMP-NUM-001)</li>
+        <li><b>位置</b>：<code>src/ConditionalCompilation/ConditionalCompilation.cpp:167-169</code>（经 <code>:431</code> 触达）；<code>src/Sema/NativeFFI/Java/AfterTypeCheck/InteropLibBridge.cpp:1758</code></li>
+        <li><b>状态</b>：历史 MED-13 的<b>不完整修复</b> —— 安全包装器 <code>StdUtils::Stoul/Stoi</code>（返回 <code>std::optional</code>，内部 <code>try/catch</code>）已存在，但这两处仍直接调用原始 <code>std::stoul/std::stoi</code>。</li>
+      </ul>
+
+      <h4>证据 (Source → Path → Sink)</h4>
+      <p><b>实例 A —— 条件编译版本比较（源码可控）</b></p>
+      <pre><code>// ConditionalCompilation.cpp:430-437
+if (conditionStr == CJC_VERSION_STR) {
+    VersionInfo rightVersion = ParseVersion(right-&gt;stringValue);   // right-&gt;stringValue 来自源码字符串字面量
+    ...
+}
+// ParseVersion: 167-169
+std::regex pattern("([0-9]+)[.]([0-9]+)[.]([0-9]+)");   // 数字组无长度上限
+...
+info.major = static_cast&lt;uint32_t&gt;(std::stoul(match[REGEX_MAJOR_IDX].str()));  // 无 try/catch</code></pre>
+      <ul>
+        <li><b>Source</b>：<code>.cj</code> 源文件中的条件编译条件 <code>@When[cjc_version &gt;= "&lt;version&gt;"]</code>，RHS 是字符串字面量（<code>:409</code> 已校验为 STRING）。</li>
+        <li><b>Path</b>：<code>CompileStrategy::ConditionCompile</code> → <code>HandleConditionalCompilation</code> → <code>EvalJudgeBinaryExpr</code> → <code>ParseVersion</code>。属于正常前端编译流程。</li>
+        <li><b>Sink</b>：<code>std::stoul("99999999999999999999")</code>（20 位 &gt; <code>ULONG_MAX</code>）抛出 <code>std::out_of_range</code>。范围校验 <code>IsValidVersionNumber</code> 在 <code>stoul</code> <b>之后</b>，无法阻止异常。</li>
+      </ul>
+      <p><b>实例 B —— Java 互操作库版本（依赖可控）</b></p>
+      <pre><code>// InteropLibBridge.cpp:1750-1758
+if (... versionDecl-&gt;initializer-&gt;TyKind() != TypeKind::TYPE_INT64) { ... }  // 类型为 Int64
+auto libVersion = std::stoi(libVersionLit-&gt;stringValue);   // 用 stoi(int!) 解析 Int64 字面量</code></pre>
+      <p>字面量类型是 <b>Int64</b>，却用 <code>std::stoi</code>（<code>int</code>，上限 ~2.1e9）解析。任何合法 Int64 版本值 &gt; <code>INT_MAX</code>（如 <code>3000000000</code>）即抛 <code>std::out_of_range</code>。Source = 被处理的 Java interop 库包中的 <code>VERSION</code> 声明。</p>
+
+      <h4>影响</h4>
+      <p><code>main.cpp:104</code> 顶层只 <code>catch (NullPointerException)</code>，<b>不</b>捕获 <code>std::out_of_range</code>/<code>std::exception</code>。异常逃逸 → <code>std::terminate()</code> → <code>abort()</code> → <code>SIGABRT</code>（在 <code>SignalUnix.cpp:24</code> 的崩溃信号列表中）→ 以 ICE 形式硬崩溃退出。即：<b>一段构造的源码或一个恶意/畸形依赖即可可靠地崩溃编译器</b>（CI、包构建、IDE 后台编译、在线 playground 等场景的 DoS）。</p>
+
+      <h4>复现 (Reproducer)</h4>
+      <pre><code>// crash_condcomp.cj —— 触发实例 A
+@When[cjc_version &gt;= "999999999999999999999999.0.0"]
+func f(): Unit {}
+
+main() {}</code></pre>
+      <p>预期：<code>cjc crash_condcomp.cj</code> 抛出未捕获 <code>std::out_of_range</code>，以 SIGABRT/ICE 终止，而非输出 “invalid cjc_version format” 诊断。（实例 B 需构造 <code>VERSION: Int64 = 3000000000</code> 的 interop 库，机制相同。）</p>
+
+      <h4>修复</h4>
+      <pre><code>auto v = StdUtils::Stoul(match[REGEX_MAJOR_IDX].str());
+if (!v) { /* 报 conditional_compilation_not_support_cjc_version_format 诊断 */ return info; }
+info.major = static_cast&lt;uint32_t&gt;(*v);</code></pre>
+      <p>实例 B 用 <code>StdUtils::Stoll</code>（匹配 Int64）并对 <code>nullopt</code>/越界发诊断。建议全仓禁用裸 <code>std::sto*</code>（可加 lint 规则）。</p>
+    </div>
+
+    <div class="finding">
+      <h3>[VUL-002] SIGINT 处理器调用非异步信号安全的 <code>DeleteTempFiles()</code> <span class="badge sev-low">Low</span> <span class="badge v-confirmed">CONFIRMED</span></h3>
+      <ul class="kvlist">
+        <li><b>类别</b>：Signal/Async Safety (COMP-SIG-001)</li>
+        <li><b>位置</b>：<code>src/Utils/SignalUnix.cpp:76-80</code></li>
+        <li><b>状态</b>：崩溃信号路径<b>已修复</b>（<code>ConcurrentSynchronousSignalHandler</code> → <code>DeleteTempFilesSignalSafe()</code>，仅 <code>unlink/rmdir</code>），但 <b>SIGINT（Ctrl-C）处理器未同步修复</b>，且该处理器在 release 与 debug 构建中均编译（位于 <code>#if RELEASE/#else/#endif</code> 之外）。</li>
+      </ul>
+      <h4>证据</h4>
+      <pre><code>// SignalUnix.cpp:76-80
+void SigintHandler(int signum, ...) {
+    Cangjie::TempFileManager::Instance().DeleteTempFiles();   // 非异步信号安全
+    _exit(signum + 128);
+}</code></pre>
+      <p><code>DeleteTempFiles()</code>（<code>TempFileManager.cpp:431</code>）经 <code>RemoveDirRecursively</code> 调用 <code>opendir/readdir</code>（内部 <code>malloc</code>）及递归 —— 均<b>非</b>异步信号安全。对照崩溃路径正确使用的 <code>DeleteTempFilesSignalSafe()</code>（<code>:464</code>），此处明显遗漏。</p>
+      <h4>影响</h4>
+      <p>在编译期间按 Ctrl-C，若信号恰好在主线程持有 malloc 锁时送达，处理器内的 <code>opendir/readdir</code> 可能死锁；或产生堆状态不一致 / 清理不完整。非攻击者可控、用户自发触发，故为 Low。</p>
+      <h4>修复</h4>
+      <p><code>SigintHandler</code> 改调 <code>DeleteTempFilesSignalSafe()</code>。</p>
+    </div>
+
+    <h2>疑似发现 (Suspected Findings)</h2>
+
+    <div class="finding">
+      <h3>[VUL-003] syscap JSON 解析无递归深度上限（HIGH-06 残留项） <span class="badge sev-medium">Low-Med</span> <span class="badge v-suspected">SUSPECTED</span></h3>
+      <ul class="kvlist">
+        <li><b>位置</b>：<code>src/Sema/Plugin/ParseJson.cpp</code>（<code>ParseJsonObject</code> ↔ <code>ParseJsonArray</code> 互递归），触发于 <code>PluginCustomAnnoChecker.cpp:316/334</code></li>
+      </ul>
+      <ul>
+        <li><b>已修复部分</b>：数字解析改用安全 <code>Stoull().value_or(0)</code>；<code>.back()</code> 在 <code>mod==VALUE</code> 分支前由 <code>:</code> 处理器（<code>:121-123</code>）保证非空，转义处理重写 —— 故 HIGH-06 的 release UB 与数字异常已闭合。</li>
+        <li><b>残留</b>：解析器<b>无递归深度计数器</b>。<code>--syscap=evil.json</code> 提供 <code>{"a":{"a":{...}}}</code>（数万层，文件仅数十 KB）→ 栈溢出 → SIGSEGV（DoS）。</li>
+        <li><b>附带</b>：<code>PluginCustomAnnoChecker.cpp:324-327</code> 将首层 JSON 的 <code>deviceSysCap</code> 字符串值当作<b>文件路径</b>用 <code>ReadBinaryFileToBuffer</code> 读取 —— 配置内容可控编译器读取哪些文件（内容不外泄，仅作 JSON 再解析）。</li>
+        <li><b>缺证据</b>：syscap 配置在目标威胁模型（OpenHarmony 应用构建）中是否真由不可信方提供尚需确认。</li>
+        <li><b>修复</b>：<code>ParseJsonObject/Array</code> 增加 <code>depth</code> 参数与上限（如 256），超限返回诊断；对 <code>deviceSysCap</code> 路径做规范化/根目录约束。</li>
+      </ul>
+    </div>
+
+    <div class="finding">
+      <h3>[VUL-004] 裸工具名经 <code>posix_spawnp</code> 走 PATH 搜索 <span class="badge sev-low">Low</span> <span class="badge v-suspected">SUSPECTED</span></h3>
+      <ul class="kvlist">
+        <li><b>位置</b>：<code>src/Driver/Tool.cpp:243-245</code>（R3：需攻击者控制 PATH/env）</li>
+      </ul>
+      <ul>
+        <li>当外部工具 <code>name</code> 不含目录分隔符时用 <code>posix_spawnp</code>（PATH 搜索）。环境构建 <code>BuildEnvironmentVector</code>（<code>:259-318</code>）已用<b>黑名单</b>剔除 <code>LD_PRELOAD/LD_AUDIT/DYLD_*/RUSTC_WRAPPER</code> 等加载器变量（MED-08 已缓解），但 <code>PATH</code> 本身被继承。在构建农场 / IDE / sudo 构建等 PATH 受影响场景，可能执行被植入的同名链接器/汇编器。</li>
+        <li><b>残留点</b>：env 过滤是黑名单而非白名单（历史推荐白名单），可能遗漏未来新增的危险变量。</li>
+        <li><b>修复</b>：链接器/汇编器一律解析为可信安装根下的绝对路径并用 <code>posix_spawn</code>；env 改白名单。</li>
+      </ul>
+    </div>
+
+    <div class="finding">
+      <h3>[VUL-005] GCC 版本串 <code>std::stoi</code> 无异常处理 <span class="badge sev-low">Low</span> <span class="badge v-suspected">SUSPECTED</span></h3>
+      <ul class="kvlist">
+        <li><b>位置</b>：<code>src/Driver/Toolchains/GCCPathScanner.cpp:103/126/145</code></li>
+      </ul>
+      <p>解析本地 GCC 版本号 <code>std::stoi(versionStr.substr(...))</code>，无 try/catch。畸形/超长版本串（本地 toolchain 被篡改）可抛异常崩溃。属 MED-13 同类、信任度更高（本地工具链），故 Low。改用 <code>StdUtils::Stoi</code>。</p>
+    </div>
+
+    <h2>信息项 (Informational)</h2>
+    <div class="finding">
+      <h3>[INFO-01] 新增未跟踪代码 <code>CjdTextEmitter</code> 潜在空指针解引用 <span class="badge sev-info">Info</span></h3>
+      <ul class="kvlist">
+        <li><b>位置</b>：<code>src/Modules/CjdTextEmitter.cpp:316 / 324 / 332</code></li>
+      </ul>
+      <ul>
+        <li>这些行在 <code>RenderInheritedHeader(.., cd.body ? cd.body-&gt;leftCurlPos : cd.end)</code> <b>三元判空暗示 body 可能为空</b>之后，立即无判空地 <code>cd.body-&gt;decls</code>（struct/interface 同样）。</li>
+        <li><b>当前不可达</b>：<code>CjdTextEmitter::EmitPackage</code> 在全仓<b>无任何调用方</b>（grep 命中的 <code>EmitPackage</code> 均为无关的 <code>EmitPackageIR</code> 代码生成）；该文件未被 git 跟踪，仅因 <code>src/Modules/CMakeLists.txt</code> 的 <code>GLOB *.cpp</code> 被编译进来。<code>CjdFileSelection.h</code> 亦无人引用。</li>
+        <li><b>建议</b>：接线启用前补 <code>cd.body</code> 判空；JSON 输出已用 <code>StringConvertor::EscapeToJsonString</code> 转义（无注入）。提请开发者注意这是开发中实验代码。</li>
+      </ul>
+    </div>
+
+    <h2>已排除 / 已验证修复 (Excluded Candidates)</h2>
+    <table>
+      <thead>
+        <tr><th>历史项</th><th>当前状态</th><th>依据</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>HIGH-01 <code>Tool.cpp</code> argv <code>reserve</code>+下标写</td><td><b>已修复</b></td><td><code>Tool.cpp:219</code> 改 <code>resize(n+1)</code> 后再写，末尾置 null（R4）</td></tr>
+        <tr><td>HIGH-02 临时目录 <code>0775</code></td><td><b>已修复</b></td><td><code>TempFileManager.cpp:149</code> 改 <code>0755</code>（去组写）；目录名含时间戳+随机 hex</td></tr>
+        <tr><td>MED-14 <code>FileUtil::Mkdir</code> <code>0775</code></td><td><b>已修复</b></td><td><code>FileUtil.cpp:69</code> 改 <code>0755</code></td></tr>
+        <tr><td>MED-04 宏服务 PATH 搜索</td><td><b>已修复</b></td><td><code>ExecMacroSrv</code> 由 <code>executablePath</code> 推导绝对路径 + <code>execv</code>（R4）</td></tr>
+        <tr><td>MED-08 子进程继承未过滤环境</td><td><b>已缓解</b></td><td><code>BuildEnvironmentVector</code> 黑名单剔除加载器变量（残留见 VUL-004）</td></tr>
+        <tr><td>MED-09 临时文件删除 TOCTOU</td><td><b>已缓解</b></td><td>0755 私有性 + 随机目录名 + 新增 <code>DeleteTempFilesSignalSafe</code></td></tr>
+        <tr><td>EXTRA-MED-06 <code>Compression</code> 索引越界读</td><td><b>已修复</b></td><td><code>ForwardName</code> 用安全 <code>Stoi</code>；超界 <code>idx</code> 在所有调用方均有 <code>idx &lt; n &amp;&amp;</code> 守卫（R4）</td></tr>
+        <tr><td>MED-13 <code>stoi/stoll/stoull</code> 异常（包装器侧）</td><td><b>部分修复</b></td><td><code>StdUtils.cpp</code> 全部 <code>try/catch</code>；<code>--jobs</code>、apiLevel 已防护。残留裸调用见 VUL-001/005</td></tr>
+      </tbody>
+    </table>
+
+    <h2>方法论 (Methodology)</h2>
+    <ul>
+      <li><b>Scout</b>：枚举 19 个模块，定位入口与信任边界（源文件 / 包元数据 / 命令行 / 环境变量 / syscap 配置 / .cjd / 宏管道 / 符号名 / 临时目录）。</li>
+      <li><b>Broad</b>：针对 COMP-MEM/FS/PROC/PARSE/DESER/PLUGIN/SIG/NUM 模式用 <code>grep</code> 扫描；重点核对 13 个历史确认项的当前位置。</li>
+      <li><b>Analyst</b>：对 Top 候选做源到汇的可达性证明，逐条套用 R1–R8 拒绝规则。</li>
+      <li>关键搜索词：<code>reserve(</code>、<code>posix_spawn*</code>、<code>execv*</code>、<code>mkdir/S_IRWXG/0775</code>、<code>DeleteTempFiles</code>、<code>sigaction</code>、<code>std::sto*</code>、<code>flatbuffers::Verifier</code>、<code>dlopen/RTLD_GLOBAL</code>、<code>ParseJson*</code>、<code>ForwardName</code>、<code>ParseVersion</code>。</li>
+    </ul>
+
+    <h2>残留风险 (Residual Risk)</h2>
+    <ul>
+      <li><b>未深入</b>：CHIR/CodeGen 数值常量折叠的除零/移位（EXTRA-MED-02/LOW-02/EXTRA-MED-08）仅做面上扫描 —— 建议后续专项审计 <code>ConstantRange.cpp</code>、<code>SInt.cpp</code>、<code>CalcConstExpr.cpp</code>。</li>
+      <li><b>FlatBuffers/增量缓存</b>（COMP-DESER-001）：历史按"可信缓存"排除；若缓存目录在多用户/共享构建中可被他人写入，需重开。</li>
+      <li><b>平台差异</b>：Windows 路径（<code>SignalWin.cpp</code>、<code>_wmkdir</code>）未细审。</li>
+      <li><b>未跟踪代码</b>：<code>CjdTextEmitter</code>/<code>Cjd*</code> 头文件为本地未提交实验代码，启用前应纳入正式审计与判空加固。</li>
+    </ul>
+
+    <h2>建议下一步 (Recommended Next Steps)</h2>
+    <ol>
+      <li><b>(VUL-001, 优先)</b> 修复 <code>ConditionalCompilation.cpp:167-169</code> 与 <code>InteropLibBridge.cpp:1758</code> 的裸 <code>std::sto*</code>；新增 lint 禁止全仓裸 <code>std::sto*</code>。</li>
+      <li><b>(VUL-002)</b> <code>SigintHandler</code> 改调 <code>DeleteTempFilesSignalSafe()</code>。</li>
+      <li><b>(VUL-003)</b> 为 <code>ParseJson</code> 增加递归深度上限并约束 <code>deviceSysCap</code> 路径。</li>
+      <li><b>(VUL-004)</b> 工具调用绝对路径化 + env 改白名单。</li>
+      <li>对 CHIR 数值折叠做专项除零/溢出审计；<code>CjdTextEmitter</code> 接线前补判空。</li>
+    </ol>
+
+    <footer>仓颉编译器安全审计 · 审计日期 2026-06-17 · 由 cangjie-compiler-vuln-hunter 五阶段流水线生成</footer>
+  </main>
+  <script src="../../../assets/site-nav.js"></script>
+</body>
+</html>
