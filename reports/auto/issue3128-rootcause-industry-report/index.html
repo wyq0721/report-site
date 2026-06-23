@@ -101,7 +101,24 @@
 #2  parseProgram → parse(ffi.cj:77)              ← 仓颉侧 std.ast
 #5  user main</code></pre>
 
-    <h3>1.2 因果链（五层）</h3>
+    <h3>1.2 崩溃发生在哪里：用户程序运行时，不是 cjc 编译器进程</h3>
+    <p>
+      这是最常见的误解，先厘清。issue 复现是 <code>cjc main.cj &amp;&amp; ./main</code>，崩溃发生在 <b><code>./main</code> 运行时</b>，
+      不是 <code>cjc main.cj</code> 编译时——堆栈最底部是 <code>user main</code> / <code>cj_entry$</code>（仓颉程序运行时入口），不是 cjc 的入口。
+      用户程序在运行时用 std.ast 去解析<b>另一段</b>仓颉源码（元编程 / 工具场景）。
+    </p>
+    <p>关键区分：<b>「解析器代码」≠「编译器进程」</b>。同一份 C++ 递归下降解析器有两处部署：</p>
+    <table>
+      <tr><th>部署</th><th>何时执行</th><th>栈环境</th><th>issue 输入下</th></tr>
+      <tr><td>编进 <b>cjc</b></td><td>编译期</td><td>8MB 主线程栈</td><td><span class="tag tag-ok">不崩</span>（8MB 够深）</td></tr>
+      <tr><td>编进 <b>libcangjie-std-ast.so</b></td><td>用户程序<b>运行时</b>调 <code>parseProgram</code></td><td>128KB 协程栈（经 C2N）</td><td><span class="tag tag-bad">SIGSEGV（本 issue）</span></td></tr>
+    </table>
+    <div class="callout callout-warn">
+      <b>推论：</b>「把<b>编译器</b>的栈调大些，反正不影响运行」无法解决本 issue——崩的不是 cjc 进程，cjc 用 8MB 主栈对 issue 全部输入本就不崩，调它指向了错误的对象。
+      （若把那个深嵌套文件<b>直接</b>喂给 cjc 编译 <code>cjc files/multi_return.cj</code>，cjc 自己也会在 8MB 主栈上 ICE，只是阈值高得多、表现为 rc139 ICE 而非 std.ast 的 SIGSEGV；那是同源的另一个崩溃，基线已有 LLT 记录，属 dev 分支「栈余量探测」统一解决的范畴，不在本 issue 范围。）
+    </div>
+
+    <h3>1.3 因果链（五层）</h3>
     <ol class="chain">
       <li>
         <b>std.ast 复用了编译器的 C++ 递归下降解析器。</b>
@@ -146,14 +163,14 @@
       </li>
     </ol>
 
-    <h3>1.3 一句话根因与定性</h3>
+    <h3>1.4 一句话根因与定性</h3>
     <div class="callout callout-warn">
       <b>根因：</b>「按 8MB 栈编写的递归代码」与「128KB 的实际执行栈」之间的预算错配，错配点在 std.ast 的 FFI 边界。
       <b>定性：</b>这是 std.ast 的<b>部署环境缺陷</b>，不是解析器的正确性缺陷——同一份解析器在 cjc 里对 issue 全部输入工作正常。
       因此修复归属在 std.ast，而非给解析器加深度上限（上限治不了 40 层就崩的 return 链，还会在补丁版本里收窄 cjc 接受的语言）。
     </div>
 
-    <h3>1.4 为什么 256 层深度守卫方案（compiler!1625）被否决</h3>
+    <h3>1.5 为什么 256 层深度守卫方案（compiler!1625）被否决</h3>
     <table>
       <tr><th>检验项</th><th>结论</th><th>证据</th></tr>
       <tr><td>充分性</td><td><span class="tag tag-bad">不充分</span></td><td>守卫按 cjc 的 8MB 栈校准；128KB 协程栈在 ≈250 层（type 链）/ ≈40 层（return 链）就崩，<b>守卫没有机会触发</b>——Linux 门禁 18 个用例 SIGSEGV 实证</td></tr>
@@ -183,6 +200,17 @@
         <td>未迭代化形态（多参数泛型嵌套、深括号链）的 StackOverflowError 统一转为 <code>ParseASTException("…nests too deeply to decode; increasing the cjthread stack size (cjStackSize) may allow deeper inputs.")</code>——守卫在前、提示在后（PostgreSQL HINT 模式）</td>
       </tr>
     </table>
+
+    <div class="callout callout-ok">
+      <b>为什么是「临时大栈线程」而不是「调大某个全局栈值」：</b>「给解析用大栈、且不影响其余运行」的直觉是对的，关键只在<b>作用域</b>。三种候选对比——
+      <table>
+        <tr><th>方案</th><th>对本 issue</th><th>副作用</th></tr>
+        <tr><td>调大 cjc 主栈</td><td><span class="tag tag-bad">无效</span>：崩的不是 cjc 进程</td><td>指向错误对象</td></tr>
+        <tr><td>全局调大 <code>cjStackSize</code></td><td><span class="tag tag-warn">需 ≥64MB 且无固定解</span>：所需栈随输入深度线性增长，下一个更深输入仍击穿</td><td>拖累进程内<b>所有</b>协程，违背 128KB 密度设计</td></tr>
+        <tr><td><b>本修复：临时大栈线程</b></td><td><span class="tag tag-ok">解决</span>：按本次输入 token 数裁剪栈</td><td><b>不影响运行</b>：线程随单次 parseProgram 临时存在、用完即销毁；虚拟内存惰性提交，只用到实际深度对应的页；其余协程仍 128KB</td></tr>
+      </table>
+      本质上就是把「调大栈」这个对的直觉，约束到「单次解析操作 + 按输入自适应 + 用完即弃」的正确作用域，而非一个写死的全局数字。
+    </div>
 
     <h3>验证结论（macOS aarch64，基线编译器 + 修复版 stdlib，默认栈与 cjStackSize=128KB 双配置）</h3>
     <table>
@@ -296,7 +324,7 @@
   </div>
 
   <footer>
-    生成于 2026-06-12（2026-06-13 据 C2NStub.S 汇编源码核对、修订根因因果链第 2/4 层）· 基于 issue/PR 原文、本地代码与实测数据、独立 subagent 评审、以及带出处的业界调研整理 ·
+    生成于 2026-06-12（2026-06-13 据 C2NStub.S 汇编源码核对、修订根因因果链；2026-06-23 新增 1.2「崩溃位置：运行时 vs 编译器进程」与「临时大栈 vs 全局调栈」辨析）· 基于 issue/PR 原文、本地代码与实测数据、独立 subagent 评审、以及带出处的业界调研整理 ·
     数据出处：实测帧开销与验证矩阵见 runtime!1331 描述；业界引用以正文超链接为准
   </footer>
 </div>

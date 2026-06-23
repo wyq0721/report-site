@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-23 14:37:56",
+  "generated_at": "2026-06-23 15:23:02",
   "reports": {
     "issue3128_rootcause_industry_report.html": {
-      "sha256": "c1438d2faf095b82145ccc42f8f843866497ed5381f75b07c4f4d8a514d0d5ef",
+      "sha256": "d8a6b568fc168682d6061efd149c5f00d0b59df98eab35a4b2ca43f666dd18ed",
       "slug": "issue3128-rootcause-industry-report",
       "source_name": "issue3128_rootcause_industry_report.html",
       "title": "Issue 3128 根因分析与业界对照调研报告",
-      "updated_at": "2026-06-23 14:37:56"
+      "updated_at": "2026-06-23 15:23:02"
     }
   }
 }
