@@ -165,6 +165,19 @@
     </header>
 
     <section class="grid" aria-label="复盘报告列表">
+      <a class="card" href="./issue-927-sum-filter-1815-1832/">
+        <span class="tag">Issue #927</span>
+        <h2>候选过滤纰漏复盘（!1815 → !1832）</h2>
+        <p>剪枝型性能修复 !1815 因覆盖模型只认成员参数、漏掉返回位泛型与下标用法，误删合法候选导致回归，!1832 补救。</p>
+        <ul>
+          <li>时间线、期望、实际、根因、补救与经验改进</li>
+          <li>过窄不变量 + 缺失下标识别的双重缺陷</li>
+          <li>“诊断逐字节一致 ≠ 行为不变”的验证教训</li>
+        </ul>
+        <div class="actions">
+          <span class="button">查看报告</span>
+        </div>
+      </a>
       <a class="card" href="../aar-issue-917/">
         <span class="tag">Issue #917</span>
         <h2>release/1.0 部分用例 ICE 11 复盘报告</h2>

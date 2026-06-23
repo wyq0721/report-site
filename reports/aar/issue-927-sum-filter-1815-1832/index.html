@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AAR 复盘报告 - Issue #927 候选过滤纰漏（!1815 → !1832）</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --border: #d9e0ea;
+      --accent: #1f6feb;
+      --accent-soft: #e8f1ff;
+      --warn: #9a5b00;
+      --warn-soft: #fff3d6;
+      --ok: #126b42;
+      --ok-soft: #e6f5ee;
+      --risk: #9b1c1c;
+      --risk-soft: #fde8e8;
+      --code: #f2f4f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .page { max-width: 1180px; margin: 0 auto; padding: 36px 24px 56px; }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    h1 { margin: 0; font-size: 30px; line-height: 1.25; letter-spacing: 0; }
+
+    .subtitle { margin: 12px 0 0; color: var(--muted); max-width: 900px; }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfe;
+      min-height: 92px;
+    }
+
+    .meta-card .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .meta-card .value { font-weight: 700; font-size: 15px; }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    h2 { margin: 0 0 14px; font-size: 22px; letter-spacing: 0; }
+    h3 { margin: 22px 0 8px; font-size: 17px; letter-spacing: 0; }
+    p { margin: 0 0 12px; }
+    ul { margin: 8px 0 0 20px; padding: 0; }
+    li { margin: 6px 0; }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 14px 0;
+    }
+    .callout.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+    .callout.risk { border-left-color: var(--risk); background: var(--risk-soft); }
+    .callout.ok { border-left-color: var(--ok); background: var(--ok-soft); }
+
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 4px; font-size: 14px; }
+    th, td { border: 1px solid var(--border); padding: 10px 12px; vertical-align: top; text-align: left; }
+    th { background: #eef3f9; font-weight: 700; }
+
+    code {
+      background: var(--code);
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+    }
+
+    pre {
+      background: #0f1b2a;
+      color: #e6edf3;
+      border-radius: 8px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 14px 0;
+      line-height: 1.55;
+      font-size: 13px;
+    }
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font-size: 13px;
+    }
+    pre .c { color: #7d8aa0; }
+    pre .k { color: #7ee0c0; }
+    pre .s { color: #f0b072; }
+
+    .timeline { position: relative; margin: 12px 0 0; padding-left: 28px; }
+    .timeline::before {
+      content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item { position: relative; margin: 0 0 18px; padding: 0 0 0 8px; }
+    .timeline-item::before {
+      content: ""; position: absolute; left: -25px; top: 5px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--accent); border: 3px solid var(--panel);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .timeline-item.risk::before { background: var(--risk); box-shadow: 0 0 0 1px var(--risk); }
+    .timeline-item.ok::before { background: var(--ok); box-shadow: 0 0 0 1px var(--ok); }
+    .timeline-date { font-weight: 700; margin-bottom: 3px; }
+    .timeline-body { color: var(--muted); }
+
+    .tag {
+      display: inline-block; border-radius: 999px; padding: 2px 8px;
+      font-size: 12px; font-weight: 700; border: 1px solid var(--border);
+      background: #fff; color: var(--muted); white-space: nowrap;
+    }
+    .tag.risk { color: var(--risk); background: var(--risk-soft); border-color: #f5b4b4; }
+    .tag.warn { color: var(--warn); background: var(--warn-soft); border-color: #f1cf83; }
+    .tag.ok { color: var(--ok); background: var(--ok-soft); border-color: #abdcc5; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .mini-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: #fbfcfe; }
+    .mini-card h3 { margin-top: 0; }
+
+    .footer { margin-top: 22px; color: var(--muted); font-size: 13px; text-align: center; }
+
+    @media (max-width: 900px) {
+      .meta-grid, .two-col { grid-template-columns: 1fr; }
+      .page { padding: 20px 14px 36px; }
+      .hero, .section { padding: 18px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="eyebrow">After Action Review</p>
+      <h1>Issue #927 候选过滤纰漏复盘（!1815 → !1832）</h1>
+      <p class="subtitle">
+        本报告复盘 <a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/927">Cangjie/cangjie_compiler Issue #927</a>
+        的性能修复 <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1815">!1815</a>：
+        它通过过滤无标注 lambda 参数推断中“无法确定”的泛型候选，把 TypeCheck 耗时从 ~16s 降回 0.11s；
+        但合入后冒烟暴露出一个合法程序被改坏的回归，由
+        <a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1832">!1832</a> 补救。
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-card">
+          <div class="label">问题类型</div>
+          <div class="value">类型推断剪枝 / 过度过滤回归</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">影响分支</div>
+          <div class="value">main</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">发现环节</div>
+          <div class="value">合入后冒烟（HLT 运行用例）</div>
+        </div>
+        <div class="meta-card">
+          <div class="label">复盘级别</div>
+          <div class="value">轻量 AAR / 工程质量复盘</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. 时间线</h2>
+      <div class="timeline">
+        <div class="timeline-item ok">
+          <div class="timeline-date">06-11 · !1815 合入 <span class="tag ok">性能修复</span></div>
+          <div class="timeline-body">
+            <code>6c32ad7c · fix(sema): filter under-determined generic candidates from sum constraints</code>。
+            解决 <code>import std.collection.*</code> 触发的 TypeCheck 爆炸（~16s → 0.11s）。
+            自验证：335 个 Sema LLT 诊断逐字节一致、!1418 复现用例编译通过、std 全量重编通过。
+          </div>
+        </div>
+        <div class="timeline-item risk">
+          <div class="timeline-date">合入后 · 冒烟发现回归 <span class="tag risk">真实回归</span></div>
+          <div class="timeline-body">
+            HLT 用例 <code>lambda00920.cj</code>（LEVEL 2 / RUN-EXEC，需真正编译并运行）被改坏——
+            一个本应通过的合法程序。PR 描述中“不改变任何当前能编译程序的行为”的论断被证伪。
+          </div>
+        </div>
+        <div class="timeline-item ok">
+          <div class="timeline-date">06-17 · !1832 合入 <span class="tag ok">补救</span></div>
+          <div class="timeline-body">
+            <code>3e6a2f2a · fix(sema): preserve result-constrained candidates</code>。
+            补上下标识别、结果约束建模和“永不清空候选集”兜底，同时保住 !1815 的性能优化。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. 期望发生什么</h2>
+      <div class="callout">
+        对一个<strong>剪枝型</strong>性能修复来说，期望不是“跑赢既有用例”，而是：被剪掉的候选必须<strong>确实永远解不出来</strong>；
+        任何“这个候选可以安全丢弃”的判断，都要穷尽它可能被约束的所有通道，并保证不会误伤任何一个合法程序。
+      </div>
+      <table>
+        <thead>
+          <tr><th>期望项</th><th>具体标准</th><th>为什么重要</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>剪枝正确性</td>
+            <td>“候选无法确定”的判定必须覆盖所有约束来源：成员参数、成员返回值、以及外层上下文（二元运算、<code>is</code>、<code>as</code> 等）。</td>
+            <td>排除式剪枝一旦把可解候选误判为不可解，就会把合法程序改成推断失败。</td>
+          </tr>
+          <tr>
+            <td>语法形态覆盖</td>
+            <td>lambda 参数最常见的使用形态（含下标 <code>a[i]</code>）都应被“成员使用”枚举识别。</td>
+            <td>枚举不全会让整类用法在剪枝里“隐身”，既测不到也保护不到。</td>
+          </tr>
+          <tr>
+            <td>行为不变性</td>
+            <td>“当前能编译的程序行为不变”需要针对剪枝盲区构造反例来证明，而不是只看既有语料 diff。</td>
+            <td>既有语料不覆盖盲区时，“诊断逐字节一致”只是虚假的安全感。</td>
+          </tr>
+          <tr>
+            <td>失败兜底</td>
+            <td>当剪枝把候选集清空、但仍存在外层判别器时，应回退到完整候选集，绝不让外层无候选可用。</td>
+            <td>剪枝的本意是去掉“纯噪声”候选，不应在还有判别器时把推断逼到死路。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>3. 实际发生了什么</h2>
+      <p>
+        无标注 lambda 参数靠“它在 lambda 体里怎么被使用”来反推类型。歧义候选会被塞进类型变量的 sum 约束
+        （<code>AddSumByCtor</code>），并为泛型实参分配占位变量。!1815 的核心是排除式过滤
+        <code>CanDetermineCandidate</code>：
+      </p>
+      <div class="callout warn">
+        如果某个泛型候选的泛型参数<strong>不能全部由所匹配成员的“参数类型”确定</strong>，就不进 sum。
+        例如 <code>HashMap&lt;K, V&gt;</code> 经 <code>operator [](key: K): V</code> 匹配时 <code>V</code> 只在返回位，
+        注入的占位 <code>V</code> 永远无解，拖着所有依赖约束“落不定”，触发字面量重试的组合式重算。过滤它，耗时回到 0.11s。
+      </div>
+      <p>问题在于这个“参数才算数”的覆盖模型漏掉了一整类：<strong>返回位泛型可以被外层上下文约束</strong>。冒烟用例：</p>
+      <pre><code><span class="c">// lambda00920.cj · LEVEL 2 / RUN-EXEC（需编译并运行）</span>
+main(): Int64 {
+    <span class="k">let</span> f = {
+        a =&gt; a[0] == 1
+    }
+    <span class="k">if</span> (f <span class="k">is</span> (Array&lt;Int64&gt;) -&gt; Bool) {
+        <span class="k">return</span> 0
+    }
+    <span class="k">return</span> 1
+}</code></pre>
+      <p>
+        <code>a[0]</code> 是 <code>Array&lt;T&gt;.operator [](Int): T</code>，<code>T</code> 只在<strong>返回位</strong>。
+        而 <code>T</code> 其实完全可由外层确定：<code>== 1</code> 把结果约束成可与 <code>Int64</code> 比较，
+        外层 <code>is (Array&lt;Int64&gt;) -&gt; Bool</code> 更是直接钉死。!1815 只看参数类型（<code>Int</code>，无泛型），
+        判定 <code>T</code> 落不定，把 <code>Array&lt;T&gt;</code> 误删，推断失败、用例回归。
+      </p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h3><span class="tag risk">缺陷 A</span> 下标根本没被识别</h3>
+          <p>!1815 的扫描器只处理 <code>a.f(...)</code>（CallExpr）和 <code>a.f</code>（MemberAccess），
+          <code>a[i]</code> 这种极常见写法压根没产出 MemSig。</p>
+        </div>
+        <div class="mini-card">
+          <h3><span class="tag risk">缺陷 B</span> 只认参数覆盖</h3>
+          <p>覆盖模型只统计成员<strong>参数类型</strong>里的泛型，忽略了“返回位泛型可被外层结果约束确定”这一通道。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. 根因分析</h2>
+      <p>
+        两个缺陷叠加，但根因是同一个：!1815 把“候选解不出来”的判定建立在了一个<strong>过窄的不变量</strong>上——
+        “泛型只能由成员参数确定”。这个不变量只对参数通道成立，却被当成了全集，于是返回位泛型（以及它背后的外层约束源）
+        被整体漏掉。PR 描述里那句“被排除的候选反正解不出来，所以不改变任何当前能编译程序的行为”，正是这个过窄不变量的直接产物，事后被 <code>lambda00920.cj</code> 证伪。
+      </p>
+      <table>
+        <thead>
+          <tr><th>层次</th><th>根因</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>直接原因</td>
+            <td>覆盖检查只数成员参数类型里的泛型；返回位泛型被判为不可确定 → 合法候选 <code>Array&lt;T&gt;</code> 被剪掉。</td>
+          </tr>
+          <tr>
+            <td>实现缺口</td>
+            <td>“成员使用”枚举不含 <code>SubscriptExpr</code>，下标用法在整条链路里缺席。</td>
+          </tr>
+          <tr>
+            <td>深层原因</td>
+            <td>排除式优化默认“我已枚举完所有约束来源”，缺少“还有我没想到的约束通道”的防御性假设和兜底。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>5. !1832 怎么补的</h2>
+      <p>思路：把“覆盖”从“仅参数”扩展为“参数 ∪（在有外层结果约束时）返回值”，并加一道永不清空候选集的兜底。</p>
+      <table>
+        <thead>
+          <tr><th>修法</th><th>实现</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>识别下标</td>
+            <td>新增 <code>FindCandidatesFromSubscript</code>，把 <code>a[i]</code> 记成 <code>MemSig{"[]", false, indexCount, 0}</code>。</td>
+          </tr>
+          <tr>
+            <td>标记结果约束</td>
+            <td>扫描器进入 <code>BinaryExpr</code> / <code>IsExpr</code> / <code>AsExpr</code> 的左侧时置 <code>resultConstrained=true</code>，相应成员使用记入 <code>resultConstrainedMemSigs</code>。</td>
+          </tr>
+          <tr>
+            <td>结果覆盖</td>
+            <td><code>CollectMemberResultCoverage</code> 对结果受约束的成员，把其<strong>返回类型</strong>里的 owner 泛型也算作可确定，于是 <code>Array&lt;T&gt;.[]→T</code> 的 <code>T</code> 被覆盖、候选得以保留。</td>
+          </tr>
+          <tr>
+            <td>清空兜底</td>
+            <td>过滤后若 <code>sumTys</code> 为空<strong>且</strong>存在结果约束，则恢复全部候选 <code>sumTys = declTys</code>——外层结果约束可能是唯一判别器，不能因证不出就清空。</td>
+          </tr>
+          <tr>
+            <td>快路径收口</td>
+            <td>把原来的 <code>uniq</code> 快路径用 <code>resultConstrainedMemSigs.empty()</code> 网住，保证有结果约束时走完整路径。</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout ok">
+        <strong>关键设计：只在存在结果约束时放宽。</strong>无结果约束的路径完全保持 !1815 的过滤逻辑，
+        所以 927 的性能优化不回退——这是一次“收窄修复范围、不动已验证收益”的补丁。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>6. 为什么自验证没拦住</h2>
+      <p>!1815 的验证是 335 个 Sema LLT 诊断逐字节一致 + !1418 复现用例 + std 全量重编。但触发回归的用例不在这张网里：</p>
+      <ul>
+        <li><strong>套件错位</strong>：<code>lambda00920.cj</code> 在 <strong>HLT</strong> 套件，且是 <strong>LEVEL 2 / RUN-EXEC</strong>（要真正编译并运行），不在那 335 个 Sema 诊断集中。</li>
+        <li><strong>盲区未覆盖</strong>：验证集里没有“lambda 参数下标访问 + 返回值被外层约束”这个组合。</li>
+        <li><strong>对比方法的局限</strong>：“诊断逐字节一致”只覆盖被测样本；对排除式改动，真正该问的是“被排除集合里有没有合法程序”，这需要针对盲区构造反例，而不是跑既有语料看 diff。</li>
+      </ul>
+      <div class="callout warn">
+        缺口不在回归对比方法本身，而在<strong>验证语料的覆盖面</strong>：不变的是样本，而剪枝的盲区恰好不在样本里。
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>7. 经验与改进</h2>
+      <table>
+        <thead>
+          <tr><th>经验</th><th>下一步改进</th><th>优先级</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>“反正解不出来”是危险的优化前提——剪枝必须穷尽所有约束通道（参数 / 返回值 / 外层），并配“永不清空候选集”的 fail-safe。</td>
+            <td>把“枚举所有约束来源 + 兜底回退”作为剪枝类改动的设计自检项，评审清单固化。</td>
+            <td><span class="tag risk">P0</span></td>
+          </tr>
+          <tr>
+            <td>“诊断逐字节一致”≠“行为不变”。</td>
+            <td>对排除式改动，要求作者针对盲区构造反例用例（返回位泛型 / 外层约束），并随修复一起入库。</td>
+            <td><span class="tag risk">P0</span></td>
+          </tr>
+          <tr>
+            <td>常见语法形态（下标 <code>a[i]</code>）被整条链路漏掉。</td>
+            <td>实现“成员使用”枚举时对照语法形态清单（调用 / 访问 / 下标 / 操作符 / <code>is</code> / <code>as</code>）逐项确认。</td>
+            <td><span class="tag warn">P1</span></td>
+          </tr>
+          <tr>
+            <td>合入后冒烟（含 HLT + 运行）兜住了，但代价是已进入 main。</td>
+            <td>对性能剪枝型修复，在合入门禁加一组“剪枝盲区”定向用例，把验证从“既有语料 diff”前移到“针对性反例”。</td>
+            <td><span class="tag warn">P1</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>8. 参考链接</h2>
+      <ul>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/issues/927">Issue #927：增加未使用 import 后 TypeCheck 耗时异常</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1815">cangjie_compiler !1815：filter under-determined generic candidates from sum constraints</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_compiler/merge_requests/1832">cangjie_compiler !1832：preserve result-constrained candidates</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1791">cangjie_test !1791：!1815 配套测试</a></li>
+        <li><a href="https://gitcode.com/Cangjie/cangjie_test/merge_requests/1799">cangjie_test !1799：!1832 配套测试</a></li>
+        <li>触发回归用例：<code>HLT/compiler/cjnative/Function/Lambda/lambda009/lambda00920.cj</code></li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      更新日期：2026-06-23。报告基于 Issue #927、!1815 / !1832 的 PR 描述、commit diff 与冒烟回归用例整理。
+    </div>
+  </main>
+  <script src="../../../assets/site-nav.js"></script>
+</body>
+</html>
