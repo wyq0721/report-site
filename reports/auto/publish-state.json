@@ -1,6 +1,13 @@
 {
-  "generated_at": "2026-06-23 17:57:39",
+  "generated_at": "2026-06-23 21:16:01",
   "reports": {
+    "cangjie-codegen-error-analysis.html": {
+      "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
+      "slug": "cangjie-codegen-error-analysis",
+      "source_name": "cangjie-codegen-error-analysis.html",
+      "title": "仓颉代码生成：错误分析与常见错误清单",
+      "updated_at": "2026-06-23 21:16:01"
+    },
     "issue3128_rootcause_industry_report.html": {
       "sha256": "d8a6b568fc168682d6061efd149c5f00d0b59df98eab35a4b2ca43f666dd18ed",
       "slug": "issue3128-rootcause-industry-report",
@@ -14,13 +21,6 @@
       "source_name": "qcc_cangjie_compiler_ice_project_report.html",
       "title": "QCC立项报告 - 仓颉编译器ICE问题定位效率提升",
       "updated_at": "2026-06-23 16:44:14"
-    },
-    "仓颉代码生成错误分析.html": {
-      "sha256": "48eab970e1874b97da52489373c49f19a33c43718360e949e37ca3ae3ca33b12",
-      "slug": "report-48eab970e1",
-      "source_name": "仓颉代码生成错误分析.html",
-      "title": "仓颉代码生成：错误分析与常见错误清单",
-      "updated_at": "2026-06-23 17:57:39"
     }
   }
 }

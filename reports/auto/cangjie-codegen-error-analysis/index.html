@@ -90,13 +90,13 @@
   <header class="top">
     <h1>仓颉（Cangjie）代码生成：错误分析与常见错误清单</h1>
     <p>面对训练数据稀少的新语言，如何把"模型凭记忆写"升级为"拦截层 + 编译闭环"</p>
-    <div class="meta">整理日期：2026-06-23 &nbsp;·&nbsp; 工作目录：apilevel_ws/wikishare &nbsp;·&nbsp; 适用：用 AI 生成仓颉业务逻辑</div>
+    <div class="meta">整理日期：2026-06-23 &nbsp;·&nbsp; 适用：用 AI 生成仓颉业务逻辑</div>
   </header>
 
   <div class="card tldr">
-    <strong>核心结论：</strong> 编译器报错已经足够准确，<strong>优化报错信息是低杠杆</strong>。真正的杠杆在两处——
-    ① <strong>减少这些错被"生产"出来的概率</strong>（写之前拦截）；
-    ② <strong>让 agent 自己消化编译器反馈</strong>（自动 cjc 编译→改），而不是把报错丢给人。
+    <strong>核心结论：</strong> 编译器报错已经足够准确，<strong>优化报错信息是低杠杆</strong>。真正的杠杆有两层——
+    ① <strong>写之前拦截</strong>，减少这些错被"生产"出来；
+    ② <strong>编译反馈的自动消化已落地</strong>：agent 已能自己 cjc 编译→改、不把报错丢给人，当前要继续压低的是这个闭环的<strong>迭代消耗</strong>（见第五节）。
     更关键的洞察：碰到的错<strong>不是一类问题，需要相反的解法</strong>——见下表。
   </div>
 
@@ -136,19 +136,19 @@
     <table>
       <tr><th style="width:46%">问题</th><th style="width:14%">归属</th><th>对策</th></tr>
       <tr>
-        <td>1. API 调用参数或类型给错</td>
-        <td><span class="tag B">B 类</span></td>
-        <td>写前查<b>真实签名</b>（codegraph / 文档 / 跳转定义），不凭记忆</td>
-      </tr>
-      <tr>
-        <td>2. Option 类型、match 语法使用错误</td>
+        <td>1. 语法错误，如 Option、match 使用错误</td>
         <td><span class="tag A">A 类</span>（多数）</td>
         <td>把正确惯用法写进<b>规则清单前置注入</b></td>
       </tr>
       <tr>
-        <td>3. 包名导入跟实际成员对应不上</td>
+        <td>2. 无法导入正确的包、调用对应的接口</td>
         <td><span class="tag B">B 类</span></td>
-        <td>对照文档 + 现有 import + cjc，查<b>真实导出</b></td>
+        <td>对照文档 + 现有 import + cjc，查<b>真实导出与接口</b></td>
+      </tr>
+      <tr>
+        <td>3. API 调用时给错参数类型或参数个数</td>
+        <td><span class="tag B">B 类</span></td>
+        <td>写前查<b>真实签名</b>（codegraph / 文档 / 跳转定义），不凭记忆</td>
       </tr>
     </table>
   </div>
@@ -212,7 +212,7 @@ return Some&lt;User&gt;(u)
   <div class="card">
     <ul>
       <li><b>把 A 类沉淀成"仓颉反模式 checklist"</b>，写仓颉前先注入。每踩一个新的系统性坑就追加一条 → <b>复发率单调下降</b>。（仓库已有 checklist 文化 + <code class="inline">cangjie-regulations</code> skill）</li>
-      <li><b>把编译闭环自动化</b>：让 agent 自己 <code class="inline">cjc</code> 编译 → 读报错 → 改，而不是把报错贴给人。这样"编译器很准"的优点被 agent 吃掉，人看不到这些 round-trip。</li>
+      <li><b>编译闭环已自动化</b>：agent 已能自己 <code class="inline">cjc</code> 编译 → 读报错 → 改，报错不丢给人，"编译器很准"的优点已被 agent 吃掉；<b>下一步是压低它的迭代消耗</b>（见第五节）。</li>
       <li><b>B 类无法靠规则</b>：写之前<b>强制检索</b>真实签名 / 包导出（codegraph、读现有 import、cangjie-std/stdx 文档）。</li>
     </ul>
     <div class="label" style="margin-top:14px; color:var(--accent)">建议工作流</div>
