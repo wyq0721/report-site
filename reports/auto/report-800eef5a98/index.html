@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>季度民主生活会 · 团队活动策划案</title>
+<style>
+  :root{
+    --bg:#0f1226; --bg2:#171a3a; --card:#1d2148; --ink:#eef1ff; --sub:#a6abdb;
+    --brand:#7c8cff; --brand2:#ff7eb6; --accent:#ffd166; --good:#4ade80; --line:#2c2f5e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:linear-gradient(160deg,var(--bg),#0a0c1d 60%);color:var(--ink);line-height:1.7;padding:0 0 80px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header.hero{background:radial-gradient(1200px 400px at 50% -120px,rgba(124,140,255,.35),transparent),linear-gradient(135deg,#1b1f4a,#241a45);padding:64px 22px 56px;text-align:center;border-bottom:1px solid var(--line)}
+  .badge{display:inline-block;background:rgba(255,209,102,.15);color:var(--accent);border:1px solid rgba(255,209,102,.4);padding:6px 16px;border-radius:999px;font-size:14px;letter-spacing:2px;margin-bottom:18px}
+  h1{font-size:42px;letter-spacing:1px;background:linear-gradient(90deg,#fff,#b9c2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--sub);margin-top:14px;font-size:17px}
+  .meta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .meta span{background:rgba(255,255,255,.06);border:1px solid var(--line);padding:8px 16px;border-radius:12px;font-size:14px;color:var(--ink)}
+  section{margin-top:48px}
+  h2{font-size:26px;display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:2px solid var(--line);margin-bottom:22px}
+  h2 .n{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--brand2));font-size:18px;color:#fff;flex:none}
+  h3{font-size:19px;margin:22px 0 10px;color:#dfe3ff}
+  p,li{color:#d7dbff}
+  .sub{color:var(--sub)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin-top:16px}
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:1fr 1fr}
+  @media(max-width:760px){.g2{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--accent);font-weight:600;background:rgba(255,255,255,.03)}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(124,140,255,.2);color:#cdd4ff;border:1px solid rgba(124,140,255,.4)}
+  .timeline{position:relative;margin-left:8px;padding-left:26px;border-left:2px dashed var(--line)}
+  .timeline .item{position:relative;padding:12px 0 18px}
+  .timeline .item::before{content:"";position:absolute;left:-34px;top:16px;width:14px;height:14px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px rgba(124,140,255,.2)}
+  .time{font-weight:700;color:var(--accent);font-size:15px}
+  .qfilter{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px;align-items:center}
+  .qfilter button{background:rgba(255,255,255,.05);color:var(--sub);border:1px solid var(--line);padding:7px 14px;border-radius:999px;cursor:pointer;font-size:14px;transition:.2s}
+  .qfilter button.active,.qfilter button:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;cursor:pointer;transition:.2s;position:relative}
+  .qcard:hover{border-color:var(--brand);transform:translateY(-2px)}
+  .qhead{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sub)}
+  .qcat{color:var(--brand2);letter-spacing:1px}
+  .stars{color:var(--accent);letter-spacing:1px}
+  .qbody{font-size:22px;margin:10px 0;min-height:34px}
+  .qbody code{display:block;font-family:"SF Mono",Consolas,monospace;font-size:15px;line-height:1.5;color:#cdd4ff;white-space:pre-wrap}
+  .qans{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:var(--good);font-weight:600;font-size:17px}
+  .qcard.show .qans{display:block}
+  .tag{display:inline-block;font-size:12px;color:var(--sub);margin-top:6px}
+  ul{margin:8px 0 8px 20px}
+  li{margin:5px 0}
+  .note{background:rgba(255,126,182,.1);border:1px solid rgba(255,126,182,.35);border-radius:12px;padding:14px 18px;color:#ffd9ec;margin-top:14px;font-size:15px}
+  .budget td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  footer{margin-top:60px;text-align:center;color:var(--sub);font-size:14px}
+  .kpi{display:flex;gap:14px;flex-wrap:wrap}
+  .kpi div{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+  .kpi b{display:block;font-size:30px;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .kpi span{font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="badge">QUARTERLY TEAM GATHERING</div>
+  <h1>季度民主生活会 · 活动策划案</h1>
+  <p>活跃气氛 · 释放压力 · 凝聚团队 —— 2026年 Q2</p>
+  <div class="meta">
+    <span>🗓 建议时长 80 分钟</span>
+    <span>👥 适用 20–40 人</span>
+    <span>🎯 三大板块</span>
+    <span>🎁 答对即领礼</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2><span class="n">★</span>活动概览</h2>
+    <div class="kpi">
+      <div><b>3</b><span>核心环节</span></div>
+      <div><b>30</b><span>emoji 谜题(由易到难)</span></div>
+      <div><b>80′</b><span>总时长</span></div>
+      <div><b>¥800</b><span>建议预算</span></div>
+    </div>
+    <div class="card">
+      <p>本次民主生活会以"<b>轻松 · 解压 · 团结</b>"为主题,通过三个环节让团队在欢笑中放松、在互动中升温。规则极简、人人有份、答对即领礼。</p>
+    </div>
+    <div class="timeline" style="margin-top:18px">
+      <div class="item"><div class="time">0:00 – 0:05　开场暖场</div><p class="sub">主持人开场,介绍流程与规则,炒热气氛。</p></div>
+      <div class="item"><div class="time">0:05 – 0:45　环节一 · emoji 猜猜猜</div><p class="sub">30 道纯 emoji 谜题由易到难抢答,涵盖电影、歌名、综艺、电视剧。<b>谁先答对谁拿礼品。</b></p></div>
+      <div class="item"><div class="time">0:45 – 1:00　环节二 · 泡泡纸大作战</div><p class="sub">首次开展。全场人手一张解压泡泡纸,一起捏爆,释放压力。</p></div>
+      <div class="item"><div class="time">1:00 – 1:20　环节三 · 生日会</div><p class="sub">点名本季度寿星,集体唱生日歌、切蛋糕、许愿合影。</p></div>
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section>
+    <h2><span class="n">1</span>猜词大乱斗</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="margin-top:0">🎮 规则(极简版)</h3>
+        <ul>
+          <li>主持人逐题投影,选手 <b>看到题目即可抢答</b>(举手 / 喊"我来")。</li>
+          <li><b>谁先答对,谁就到奖品区拿走 1 份小礼品。</b></li>
+          <li>答错不扣分,可由他人补答。</li>
+          <li>全是 <b>纯 emoji 猜题</b>:电影、歌名、综艺、电视剧四类。</li>
+          <li>由易到难,越往后越烧脑,30 题。</li>
+        </ul>
+        <p class="tag">备 40–50 份小礼品,确保人人有机会。往期礼品:纸巾、零食、小风扇、贴纸、文具盲盒等。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">🎚 难度曲线</h3>
+        <ul>
+          <li><b>第 1–6 题　★★</b>　一眼就能猜</li>
+          <li><b>第 7–18 题　★★★</b>　想一下</li>
+          <li><b>第 19–28 题　★★★★</b>　烧脑</li>
+          <li><b>第 29–30 题　★★★★★</b>　压轴硬核</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>📋 30 道题库(点击卡片显示/隐藏答案)</h3>
+    <div class="qfilter" id="qfilter"></div>
+    <div class="grid g2" id="quizGrid"></div>
+    <div class="note">提示:主持人可用本 HTML 现场对答案,正式投影请用配套 PPT。题面只给 emoji、不带文字提示;同一谜题答案可能有多种叫法,意思对就算过。</div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2><span class="n">2</span>泡泡纸大作战 <span class="pill">首次开展 · 唯一解压游戏</span></h2>
+    <p class="sub">一个动作,简单粗暴又上头 —— 全场一起捏泡泡纸,把压力"啪啪啪"全捏掉。</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="margin-top:0">🫧 怎么玩</h3>
+        <ul>
+          <li>给每人发一张 <b>解压泡泡纸</b>(大小一致)。</li>
+          <li>主持人喊"3、2、1,开捏!",全场 <b>一起开捏 60 秒</b>,配动感音乐。</li>
+          <li>可选小比拼:<b>限时谁捏破得最多 / 谁最先捏完一整排</b>,赢家拿小奖。</li>
+          <li>最后全场跟着音乐节奏一起捏出"啪啪啪"的节拍,集体释放收尾。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">✨ 为什么有效 & 要点</h3>
+        <ul>
+          <li>捏泡泡纸是公认的<b>即时减压</b>动作,手感反馈强、零门槛、人人能参与。</li>
+          <li>全场同步捏,声浪+笑声本身就是最好的破冰。</li>
+          <li>物料只需泡泡纸,<b>准备简单、清场快</b>。</li>
+          <li>主持人控好节奏:开捏 → 小比拼 → 节奏齐捏,3 分钟一波,15 分钟收尾。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">小贴士:多备几张泡泡纸应对"意犹未尽";捏破的纸现场收进垃圾袋,保持整洁。</div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2><span class="n">3</span>生日会</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="margin-top:0">🎂 流程</h3>
+        <ul>
+          <li>大屏展示本季度(4–6月)寿星名单与照片。</li>
+          <li>关灯、点蜡烛,全体合唱生日歌。</li>
+          <li>寿星集体许愿、吹蜡烛、切蛋糕。</li>
+          <li>每位寿星一句话"季度心愿",大合影留念。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">🎈 本季寿星名单(待填)</h3>
+        <table>
+          <tr><th>月份</th><th>寿星</th></tr>
+          <tr><td>4 月</td><td>____ / ____</td></tr>
+          <tr><td>5 月</td><td>____ / ____</td></tr>
+          <tr><td>6 月</td><td>____ / ____</td></tr>
+        </table>
+        <p class="tag">请提前统计部门内 4–6 月生日同事,填入并准备小生日卡。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGISTICS -->
+  <section>
+    <h2><span class="n">✓</span>物料 · 分工 · 预算</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="margin-top:0">🧰 物料清单</h3>
+        <ul>
+          <li>投影 / 大屏 + 配套 PPT、备用笔记本</li>
+          <li>小礼品 40–50 份(答对即领)</li>
+          <li><b>解压泡泡纸 ×全员(多备几张)</b></li>
+          <li>蓝牙音箱 + 动感音乐 / 生日歌歌单</li>
+          <li>生日蛋糕、蜡烛、打火机、餐具、纸巾</li>
+          <li>垃圾袋(收泡泡纸)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">👤 人员分工</h3>
+        <table>
+          <tr><th>角色</th><th>职责</th></tr>
+          <tr><td>主持人</td><td>串场、控时、念题、喊口令</td></tr>
+          <tr><td>礼品官</td><td>看谁先答对、发放小礼品</td></tr>
+          <tr><td>音控</td><td>音乐、PPT 翻页</td></tr>
+          <tr><td>后勤</td><td>蛋糕、泡泡纸、合影</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card budget">
+      <h3 style="margin-top:0">💰 预算估算(20–40 人,参考)</h3>
+      <table>
+        <tr><th>项目</th><th>说明</th><th>金额</th></tr>
+        <tr><td>小礼品</td><td>纸巾/零食/贴纸等 ×45</td><td>¥400</td></tr>
+        <tr><td>解压泡泡纸</td><td>全员 + 备用</td><td>¥80</td></tr>
+        <tr><td>生日蛋糕</td><td>8–10 寸 ×1</td><td>¥180</td></tr>
+        <tr><td>耗材</td><td>蜡烛、餐具、垃圾袋等</td><td>¥70</td></tr>
+        <tr><td>机动</td><td>备用</td><td>¥70</td></tr>
+        <tr><td><b>合计</b></td><td></td><td><b>¥800</b></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer>季度民主生活会策划案 · 2026 Q2 · 配套现场 PPT 见同目录文件</footer>
+</div>
+
+<script>
+const QUIZ=[
+ {n:1,c:"emoji猜电影",d:2,q:"🦁 ➕ 👑",a:"狮子王 The Lion King"},
+ {n:2,c:"emoji猜歌名",d:2,q:"🌾 ➕ 🌬️",a:"稻香（周杰伦）"},
+ {n:3,c:"emoji猜电视剧",d:2,q:"🐵 ➕ 🐷 ➕ 🧘 ➕ 🐴",a:"西游记"},
+ {n:4,c:"emoji猜综艺",d:2,q:"🌊 ➕ 💃 ➕ 👩",a:"乘风破浪的姐姐"},
+ {n:5,c:"emoji猜电影",d:2,q:"🐭 ➕ 🍝 ➕ 👨‍🍳",a:"美食总动员 Ratatouille"},
+ {n:6,c:"emoji猜歌名",d:2,q:"🌙 ➕ ❤️",a:"月亮代表我的心"},
+
+ {n:7,c:"emoji猜综艺",d:3,q:"🎤 ➕ 🪑 ➕ 🔄",a:"中国好声音"},
+ {n:8,c:"emoji猜电影",d:3,q:"🤡 ➕ 🎈 ➕ 🕳️",a:"小丑回魂 IT"},
+ {n:9,c:"emoji猜歌名",d:3,q:"🐳 ➕ 🌊",a:"大鱼（周深）"},
+ {n:10,c:"emoji猜电视剧",d:3,q:"🌠 ➕ 🌸",a:"流星花园"},
+ {n:11,c:"emoji猜综艺",d:3,q:"🏃 ➕ 🏷️ ➕ ✋",a:"奔跑吧兄弟 / 跑男"},
+ {n:12,c:"emoji猜电影",d:3,q:"🌍 ➕ 🚀 ➕ 🔥",a:"流浪地球"},
+ {n:13,c:"emoji猜歌名",d:3,q:"🦸 ➕ 🌑 ➕ ⚔️",a:"孤勇者（陈奕迅）"},
+ {n:14,c:"emoji猜电视剧",d:3,q:"🦑 ➕ 🔫",a:"鱿鱼游戏"},
+ {n:15,c:"emoji猜综艺",d:3,q:"🧠 ➕ 💪",a:"最强大脑"},
+ {n:16,c:"emoji猜电影",d:3,q:"❄️ ➕ 👸 ➕ ⛄",a:"冰雪奇缘 Frozen"},
+ {n:17,c:"emoji猜歌名",d:3,q:"🐌",a:"蜗牛（周杰伦）"},
+ {n:18,c:"emoji猜电视剧",d:3,q:"👫 ➕ 🛋️ ➕ ☕",a:"老友记 Friends"},
+
+ {n:19,c:"emoji猜综艺",d:4,q:"🏡 ➕ 🌾 ➕ 🍚",a:"向往的生活"},
+ {n:20,c:"emoji猜电影",d:4,q:"🐯 ➕ 🛶 ➕ 🌊",a:"少年派的奇幻漂流 Life of Pi"},
+ {n:21,c:"emoji猜歌名",d:4,q:"🏺 ➕ 🔵🌸",a:"青花瓷（周杰伦）"},
+ {n:22,c:"emoji猜电视剧",d:4,q:"🐉 ➕ 🗡️ ➕ 🪑",a:"权力的游戏 Game of Thrones"},
+ {n:23,c:"emoji猜综艺",d:4,q:"🕵️ ➕ 🔪 ➕ 🎭",a:"明星大侦探"},
+ {n:24,c:"emoji猜电影",d:4,q:"🧑‍🚀 ➕ 🥔 ➕ 🔴",a:"火星救援 The Martian"},
+ {n:25,c:"emoji猜歌名",d:4,q:"❄️ ➕ 🌬️ ➕ 🎶",a:"一剪梅（雪花飘飘北风萧萧）"},
+ {n:26,c:"emoji猜电视剧",d:4,q:"🧪 ➕ 🔵 ➕ 🕶️",a:"绝命毒师 Breaking Bad"},
+ {n:27,c:"emoji猜综艺",d:4,q:"🃏 ➕ 🆚 ➕ 🃏",a:"王牌对王牌"},
+ {n:28,c:"emoji猜歌名",d:4,q:"🏚️ ➕ 💃 ➕ ❄️",a:"漠河舞厅"},
+
+ {n:29,c:"emoji猜电视剧",d:5,q:"🏯 ➕ 👸 ➕ 🗡️",a:"甄嬛传"},
+ {n:30,c:"emoji猜电影",d:5,q:"🌀 ➕ 💤 ➕ 🔝",a:"盗梦空间 Inception"},
+];
+const cats=["全部",...[...new Set(QUIZ.map(x=>x.c))]];
+let cur="全部";
+const fEl=document.getElementById("qfilter");
+cats.forEach(c=>{const b=document.createElement("button");b.textContent=c;if(c==="全部")b.classList.add("active");b.onclick=()=>{cur=c;[...fEl.children].forEach(x=>x.classList.remove("active"));b.classList.add("active");render();};fEl.appendChild(b);});
+const grid=document.getElementById("quizGrid");
+function stars(d){return "★".repeat(d)+"☆".repeat(5-d);}
+function render(){
+  grid.innerHTML="";
+  QUIZ.forEach(x=>{
+    if(cur!=="全部"&&x.c!==cur)return;
+    const d=document.createElement("div");d.className="qcard";
+    const body=x.code?`<code>${x.code.replace(/</g,"&lt;")}</code>`:x.q;
+    d.innerHTML=`<div class="qhead"><span class="qcat">#${x.n} · ${x.c}</span><span class="stars">${stars(x.d)}</span></div><div class="qbody">${body}</div><div class="qans">✔ ${x.a}</div>`;
+    d.onclick=()=>d.classList.toggle("show");
+    grid.appendChild(d);
+  });
+}
+render();
+</script>
+</body>
+</html>
