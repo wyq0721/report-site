@@ -327,220 +327,219 @@
 <body>
   <main class="page">
     <section class="hero">
-      <div class="eyebrow">PL 半年度述职 · 第一版叙事大纲与素材底稿</div>
-      <h1>把团队带到 AI 增强的仓颉编译器工程体系里</h1>
-      <p class="lead">上半年最值得讲的不是“用了很多 AI 工具”，而是把 AI 从个人效率工具推进为工程系统：问题交付有证据链、知识沉淀可复用、评审和复盘形成机制、报告资产能被团队直接使用。下半年要从“我牵引、我验证”转向“团队可复制、过程可度量、工具链可规模化”。</p>
+      <div class="eyebrow">PL 半年度述职 · 共创版底稿</div>
+      <h1>以业务交付为牵引，建设 AI 增强的仓颉编译器团队</h1>
+      <p class="lead">上半年团队在编译性能、兼容性治理、AI 多 Agent 开发范式和工程体系建设上形成了可见成果。我的核心动作不是单点使用 AI，而是把 AI 思维、工程验证、知识沉淀和团队责任田连接起来，让交付更快、质量更可控、能力更可复制；下半年继续承接 Modal Type、编译器插件与 CHIR 库等关键需求。</p>
       <div class="meta">
-        <span class="chip">生成日期：2026-06-23</span>
-        <span class="chip">素材：Codex 记忆 + Claude 历史 + 本地报告产物 + skill usage trace</span>
-        <span class="chip">版本：可汇报 HTML 草案，待补业务数据</span>
+        <span class="chip">生成日期：2026-06-24</span>
+        <span class="chip">听众：直属主管、项目经理、周边团队 PL</span>
+        <span class="chip">素材：用户补充 + Codex/Claude trace + 本地报告产物</span>
+        <span class="chip">版本：业务成果已补充，指标仍待校准</span>
       </div>
       <div class="toc">
-        <a href="#logic">叙事逻辑</a>
-        <a href="#summary">半年度总结</a>
-        <a href="#challenge">关键挑战</a>
-        <a href="#plan">下半年规划</a>
-        <a href="#evidence">trace 证据</a>
-        <a href="#supplement">补充素材清单</a>
+        <a href="#logic">讲稿结构</a>
+        <a href="#summary">上半年讲法</a>
+        <a href="#challenge">挑战讲法</a>
+        <a href="#plan">规划讲法</a>
+        <a href="#evidence">附录证据</a>
+        <a href="#supplement">手动占位</a>
       </div>
     </section>
 
     <section id="logic" class="section">
-      <h2>一、汇报叙事逻辑</h2>
-      <div class="quote">建议主线：上半年从“靠个人经验解决问题”升级到“AI + 编译器工程方法共同驱动交付”；下半年目标是把这套方法标准化，让团队成员都能用同一套知识、工具和验证闭环交付高质量编译器工作。</div>
+      <h2>一、讲稿结构</h2>
+      <div class="quote">开场 30 秒：我上半年重点做了三件事：第一，用编译性能和兼容性治理证明团队业务交付能力；第二，用 ACEHarness、看板、知识库和 Skill 证明团队在沿途下蛋、建设工程体系；第三，用 AI 代码生成比和实际试点证明 AI 已经进入开发过程。下半年我会把这些经验从个人牵引推进到团队可复制、过程可度量、工具链可规模化。</div>
       <div class="grid" style="margin-top:18px">
         <div class="card blue">
-          <div class="label blue">业务发展</div>
-          <h3>讲“交付有落点”</h3>
-          <p>围绕仓颉编译器问题定位、PR 评审与修复、兼容性/安全审计、众包内存分析、QCC 立项等实际问题，把 AI 生成、工具验证和报告沉淀接到业务闭环里。</p>
+          <div class="label blue">第一段</div>
+          <h3>业务结果先讲硬指标</h3>
+          <p>先讲编译性能 40%、包体积 40%、兼容性 1000+ PR 检测和 100+ 拦截，说明团队不是只做探索，而是能交付可度量结果。</p>
         </div>
         <div class="card green">
-          <div class="label green">能力建设</div>
-          <h3>讲“方法可复制”</h3>
-          <p>形成团队共享记忆、Cangjie 专项 agent/skill、CocoIndex 检索、报告站点、skill 调用统计、AI 代码生成错误清单，支撑新人和骨干用更低成本进入复杂领域。</p>
+          <div class="label green">第二段</div>
+          <h3>再讲沿途下蛋和能力沉淀</h3>
+          <p>把性能看板、ACEHarness、兼容性知识库、Skill、责任田和 AI 生成比放到一起讲，强调团队建立的是可复用能力。</p>
         </div>
         <div class="card amber">
-          <div class="label amber">氛围建设</div>
-          <h3>讲“工程文化更硬”</h3>
-          <p>把评审、冒烟、AAR、报告发布、证据链、失败复盘前置，推动团队从“问题过去就算了”转向“问题变成公共知识和下一次的防线”。</p>
+          <div class="label amber">第三段</div>
+          <h3>最后讲挑战和下半年抓手</h3>
+          <p>主动承认度量、梯队、沟通主动性不足，再收束到三类抓手：业务交付、AI 规模化、团队梯队与工程规范。</p>
         </div>
       </div>
     </section>
 
     <section id="summary" class="section">
-      <h2>二、半年度工作总结</h2>
+      <h2>二、半年度总结怎么讲</h2>
+      <div class="quote">这一部分的讲法：先用 3 个数字建立结果感，再用“目标-动作-结果-沉淀”讲 3 个代表性成果，随后补一页 AI 代码生成比，最后回到团队责任田和自我反思。</div>
       <div class="grid">
         <div class="card blue">
-          <div class="num">27</div>
-          <p><strong>报告站点 HTML 资产</strong></p>
-          <p class="small">本地 report-site 已包含 AAR、安全审计、众包内存分析、自动报告等分类。该数字来自本机文件统计，后续可补线上访问与团队引用情况。</p>
+          <div class="num">40%</div>
+          <p><strong>编译性能优化</strong></p>
+          <p class="small">百万混合工程编译耗时从 8min 优化到 5min，优化幅度约 40%，效果持平 Swift；同时 cjc 二进制包体积从 380MB 优化到 212MB。</p>
         </div>
         <div class="card green">
-          <div class="num">7 PR</div>
-          <p><strong>白盒自评基线</strong></p>
-          <p class="small">记忆中已有 PR 数量、文件数和代码量统计基线：7 PR、143 文件、+2461/-41303。需补最新 GitCode 刷新结果。</p>
+          <div class="num">300+</div>
+          <p><strong>ACEHarness 影响人次</strong></p>
+          <p class="small">孵化多 Agent 协作开发平台，在内外部多次分享并推广试点，影响受众 300+ 人次，支撑周边团队完成商用 8+ 需求交付。</p>
         </div>
         <div class="card amber">
-          <div class="num">1110</div>
-          <p><strong>Claude 历史交互 trace</strong></p>
-          <p class="small">2026-04-07 至 2026-06-23 的本地历史记录，主题集中在仓颉编译器、AI/Agent 工程化、PR 检视、报告发布和内存分析。</p>
+          <div class="num">1000+</div>
+          <p><strong>兼容性 PR 检测</strong></p>
+          <p class="small">依托 ACEHarness 平台建设兼容性知识库 + Skill 的自演进能力，累计检测 1000+ PR，拦截不兼容 100+ PR。</p>
         </div>
       </div>
 
-      <h3 style="margin-top:24px">1. 团队上半年取得的进步和成果</h3>
+      <h3 style="margin-top:24px">1. 三个代表性成果的讲稿页纲</h3>
       <table>
         <thead>
           <tr>
-            <th>方向</th>
-            <th>可汇报成果</th>
-            <th>我做的工作和措施</th>
-            <th>结果与证据状态</th>
+            <th>讲稿页</th>
+            <th>一句话结论</th>
+            <th>目标-动作-结果-沉淀</th>
+            <th>讲述重点</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>仓颉编译器问题交付</strong></td>
-            <td>围绕 PR/Issue 做评审、修复、测试、复盘闭环，例如 !1815 方案纰漏后通过 !1832 和 cangjie_test !1799 补救。</td>
-            <td>把 PR 元数据、diff、评论、门禁、linked issue 拉通判断；不只看代码表象，还判断已有检视意见是否合理、是否必须改。</td>
-            <td><span class="status ok">已从 trace 支撑</span>：AAR、PR 评审记忆、报告站点资产均有记录。需补团队整体 PR/Issue 数。</td>
+            <td><strong>成果 1：编译性能优化</strong></td>
+            <td>团队把百万混合工程编译时间从 8min 降到 5min，优化幅度约 40%，效果持平 Swift。</td>
+            <td><strong>目标：</strong>解决大型工程编译效率瓶颈。<br><strong>动作：</strong>牵引团队做性能瓶颈分析，不只做点状优化，还完善 <a href="https://compile-performance-panel.pages.dev/">编译性能数据看板</a> 和百万行工程性能基线看板。<br><strong>结果：</strong>编译耗时 8min -> 5min，cjc 包体积 380MB -> 212MB。<br><strong>沉淀：</strong>形成持续监护性能指标、辅助定位瓶颈的看板能力。</td>
+            <td>这页重点讲“沿途下蛋”：做性能优化的同时，把分析和监护能力沉淀下来。</td>
           </tr>
           <tr>
-            <td><strong>质量与风险治理</strong></td>
-            <td>完成仓颉编译器安全审计报告、兼容性风险评审、Issue 根因与业界对照调研。</td>
-            <td>把审计边界、历史基线、source-to-sink 分析、兼容性轴线纳入固定方法，避免泛化扫描和过度结论。</td>
-            <td><span class="status ok">已从 trace 支撑</span>：安全审计报告、兼容性评审记忆、Issue 3128 HTML 报告。</td>
+            <td><strong>成果 2：ACEHarness 孵化</strong></td>
+            <td>把多 Agent 协作从个人尝试推进为可推广的软件开发新范式。</td>
+            <td><strong>目标：</strong>探索多 Agent 协作的软件开发新范式。<br><strong>动作：</strong>孵化 <a href="https://gitcode.com/Cangjie-SIG/ACEHarness/">ACEHarness</a>，在内外部多次分享和推广试点。<br><strong>结果：</strong>影响 300+ 人次，支撑周边团队完成商用 8+ 需求交付。<br><strong>沉淀：</strong>沉淀任务拆解、角色协同、验证闭环和推广方法。</td>
+            <td>保留占位：支撑团队：[待补团队名]；案例 A：[待补需求名/场景/结果]；案例 B：[待补需求名/场景/结果]。</td>
           </tr>
           <tr>
-            <td><strong>AI 代码生成实践</strong></td>
-            <td>形成仓颉代码生成错误分析和常见错误清单，明确三类高频问题：语法惯性、包/接口导入、API 参数类型或个数。</td>
-            <td>要求 agent 自己消化编译反馈，推动“cjc 编译 -> 读报错 -> 修改”的闭环；同时识别当前反复迭代成本。</td>
-            <td><span class="status ok">已从 trace 支撑</span>：wikishare 和 report-site-drop 中有 HTML 报告。需补实际节省工时或返工次数。</td>
-          </tr>
-          <tr>
-            <td><strong>知识与工具沉淀</strong></td>
-            <td>搭建 team-agent-memory，把 Codex、Claude、Cursor 接到统一知识源；补充 Cangjie gotchas、诊断、LLT、APILevel 等条目。</td>
-            <td>推动共性知识和个人/机器配置分离，建立 governance、taxonomy、access guide、thin adapters 和 symlink 模式。</td>
-            <td><span class="status ok">已从 trace 支撑</span>：仓库结构、治理规则和记忆条目已存在。需补团队实际接入人数。</td>
-          </tr>
-          <tr>
-            <td><strong>报告化与传播</strong></td>
-            <td>把 QCC、AAR、安全审计、内存分析、根因调研转为可浏览 HTML，并放入报告站点或 drop 目录。</td>
-            <td>把“分析结果”转成“团队能读、能转 PPT、能复用”的交付件，建立 report-site 分类和自动报告入口。</td>
-            <td><span class="status ok">已从 trace 支撑</span>：report-site 本地 27 个 HTML，report-site-drop 3 个核心交付。</td>
+            <td><strong>成果 3：兼容性治理</strong></td>
+            <td>完成兼容性运作基础 0-1 建设，把专家经验转成可运行、可迭代的机制。</td>
+            <td><strong>目标：</strong>降低仓颉项目兼容性质量风险。<br><strong>动作：</strong>依托 ACEHarness 平台建设兼容性知识库 + Skill，形成持续自演进能力。<br><strong>结果：</strong>累计检测 1000+ PR，拦截不兼容 100+ PR。<br><strong>沉淀：</strong>形成可复制的兼容性分析入口：<a href="https://frp-fan.com:12102/applications">兼容性应用</a>。</td>
+            <td>这页不展开具体拦截案例，只强调“0-1 基础建设”和“规模化检测能力”。</td>
           </tr>
         </tbody>
       </table>
 
-      <h3 style="margin-top:24px">2. 骨干锻炼、提升与团队优秀基因</h3>
-      <div class="grid two">
+      <h3 style="margin-top:24px">2. AI 代码生成比页怎么讲</h3>
+      <div class="grid">
+        <div class="card blue">
+          <div class="num">47K</div>
+          <p><strong>核心代码</strong></p>
+          <p class="small">核心代码约 47K 行，AI 生成比约 37%。这说明 AI 已进入核心开发过程，但核心逻辑仍需要工程判断、人工设计和严格验证。</p>
+        </div>
         <div class="card green">
-          <div class="label green">已能讲的部分</div>
-          <ul>
-            <li><strong>证据先行</strong>：PR 评审不凭印象，先拉 PR 元数据、diff、评论、门禁、issue，再给结论。</li>
-            <li><strong>复盘透明</strong>：!1815 合入后冒烟发现问题，继续补 !1832，并形成 AAR，而不是只做补丁。</li>
-            <li><strong>知识共享</strong>：把 Cangjie 经验沉淀成共享 memory、wikishare 文档、报告站点和专项 skill。</li>
-            <li><strong>AI 必须验证</strong>：AI 代码生成不是“生成即可信”，而是接入 cjc、测试、codecheck、报告与复盘。</li>
-          </ul>
+          <div class="num">380K</div>
+          <p><strong>非核心代码</strong></p>
+          <p class="small">非核心代码约 380K 行，AI 生成比约 80%，主要覆盖测试、工具、报告、Skill、知识库等更适合规模化生成和快速迭代的资产。</p>
         </div>
         <div class="card amber">
-          <div class="label amber">需要补充的部分</div>
+          <div class="label amber">管理口径</div>
+          <p><strong>讲法：</strong>AI 代码生成比不是为了证明“人不重要”，而是识别不同类型工作的自动化空间。核心代码重在设计和验证，非核心代码重在规模化生产和持续维护。这也是我下半年推进 AI 规模化时要持续度量的基础指标。</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px">3. 团队建设页怎么讲</h3>
+      <div class="grid two">
+        <div class="card green">
+          <div class="label green">讲稿结论：责任田已经清晰</div>
+          <table>
+            <tbody>
+              <tr><td><strong>H</strong></td><td>类型推断维护和开发，主投类型推断责任田和专利孵化。</td></tr>
+              <tr><td><strong>K</strong></td><td>CHIR 责任田，主投 Cangjie 版 CHIR 库和编译器插件实现。</td></tr>
+              <tr><td><strong>S1</strong></td><td>Basic/诊断/增量编译责任田，主投 Modal Type。</td></tr>
+              <tr><td><strong>S2</strong></td><td>主投仓颉社区问题，主投 ACEHarness 孵化和创新。</td></tr>
+              <tr><td><strong>W</strong></td><td>组内 SE/架构师，主投兼容性专项。</td></tr>
+              <tr><td><strong>Z</strong></td><td>SEMA 责任田，主投编译性能优化和项目群 DevTestEngineer 工作，推进增量覆盖率落地，作为后备 SE 培养。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card amber">
+          <div class="label amber">讲稿结论：优秀基因开始成型</div>
           <ul>
-            <li>骨干 A/B/C 各自承担了什么子领域，例如前端、运行时、测试、工具链、内存分析或报告平台。</li>
-            <li>他们在 PR 评审、问题定位、技能沉淀、分享培训上的可举证案例。</li>
-            <li>结果指标：独立解决问题数量、评审有效意见数量、主导交付件数量、新人带教效果。</li>
-            <li>团队氛围反馈：是否形成主动复盘、主动沉淀、主动用 AI 验证的习惯。</li>
+            <li><strong>责任田清晰</strong>：成员围绕类型推断、CHIR、诊断/增量、Modal Type、兼容性、SEMA 等方向形成稳定 owner。</li>
+            <li><strong>沿途下蛋</strong>：业务目标之外，主动沉淀性能看板、知识库、Skill、报告和基线能力。</li>
+            <li><strong>AI 身先士卒</strong>：我先尝试端到端用 AI 开发特性，再把实践经验分享给团队，推动心智和工作模式变化。</li>
+            <li><strong>及时激励</strong>：基本覆盖每个成员的个人贡献和团队贡献，既看交付，也看公共资产贡献。</li>
           </ul>
         </div>
       </div>
 
-      <h3 style="margin-top:24px">3. 不足点与我没做到位的地方</h3>
+      <h3 style="margin-top:24px">4. 反思页怎么讲</h3>
       <div class="grid">
         <div class="card red">
           <div class="label red">度量不足</div>
-          <p>交付件很多，但业务收益、团队复用率、工时节省、缺陷拦截率还没有稳定度量。述职时容易显得“做了很多”，但影响力数字不够硬。</p>
+          <p>虽然已有编译性能、包体积、兼容性拦截等关键数字，但 AI 代码生成比、团队复用率、工时节省、质量拦截率还没有形成稳定口径。下半年需要把“AI 做了什么”变成能持续看护的指标。</p>
         </div>
         <div class="card red">
-          <div class="label red">规模化不足</div>
-          <p>很多机制仍由我牵引或通过个人工作流推动，离“团队每个人自然使用同一套方法”还有距离。下半年要把机制交给骨干和流程。</p>
+          <div class="label red">梯队建设压力</div>
+          <p>团队当前缺乏后备 PL 人选，且由于新鲜血液不足，梯队建设难度较大。我需要更有意识地把任务牵引、跨团队沟通、风险判断和资源协调机会分配给骨干。</p>
         </div>
         <div class="card red">
-          <div class="label red">质量闭环仍有漏网</div>
-          <p>!1815 的纰漏说明评审和自验证仍可能漏掉语义边界。需要把“边界用例设计、冒烟策略、AAR 反哺规则”进一步固化。</p>
+          <div class="label red">主动性与沟通能力不均衡</div>
+          <p>部分同事沟通能力和主动积极性仍待提升。我在及时激励上已基本覆盖到个人贡献和团队贡献，但还需要把预期、反馈和授权做得更结构化。</p>
         </div>
       </div>
     </section>
 
     <section id="challenge" class="section">
-      <h2>三、当前面临的关键挑战</h2>
-      <div class="grid two">
+      <h2>三、关键挑战怎么讲</h2>
+      <div class="quote">这一部分不要铺开讲问题清单，建议只讲三个会真正影响下半年团队上限的挑战：AI 如何规模化、复杂业务如何协同、团队梯队如何补齐。</div>
+      <div class="grid">
         <div class="card blue">
-          <div class="label blue">AI 时代 + 仓颉编译器</div>
-          <h3>挑战 1：通用模型不天然懂仓颉</h3>
-          <p>仓颉是新语言，模型容易带入 C/JS/ArkTS/C++ 语法惯性，常见错误集中在 Option/match、包导入、API 参数与类型。编译器报错较准，但 agent 反复修正仍消耗时间。</p>
-          <p><strong>我要做的改变：</strong>从“让 AI 写代码”升级到“让 AI 带着 Cangjie 上下文、真实 API 索引、cjc/LSP 快反馈、测试清单写代码”。</p>
+          <div class="label blue">挑战一</div>
+          <h3>AI 实践还没有完全团队化</h3>
+          <p><strong>现状：</strong>我已经身先士卒尝试用 AI 端到端开发特性，也通过 ACEHarness、Skill、知识库和报告沉淀形成了方向。</p>
+          <p><strong>风险：</strong>如果只停留在个人经验，AI 对团队效率的提升会不稳定，也难以度量。</p>
+          <p><strong>改变：</strong>把 AI 实践拆成项目级规范、基础设施、知识库、PR 级增量刷新和 Skill 质量维护，让它成为团队工作方式。</p>
         </div>
         <div class="card green">
-          <div class="label green">业务发展阻塞</div>
-          <h3>挑战 2：复杂问题定位依赖现场材料</h3>
-          <p>ICE、性能、内存和兼容性问题往往缺少现场代码、debug 版本、复现环境和足够日志。问题定位启动慢，容易多轮返工。</p>
-          <p><strong>我要做的改变：</strong>围绕信息采集完整率、定位启动时间建立 QCC，沉淀 issue 模板、复现包、debug 指引和历史案例库。</p>
+          <div class="label green">挑战二</div>
+          <h3>关键业务进入复杂协同区</h3>
+          <p><strong>现状：</strong>Modal Type、编译器插件、CHIR 库都不是单点代码修改，而是跨前端、CHIR、运行时、工具链、测试和生态用户的协同工程。</p>
+          <p><strong>风险：</strong>如果接口契约、收益验证、测试边界和生态使用没有前置拉通，后续交付质量和节奏都会受影响。</p>
+          <p><strong>改变：</strong>强化责任田 owner 和跨团队协作机制，把需求交付、收益验证、测试覆盖、兼容性风险和生态使用串成闭环。</p>
         </div>
         <div class="card amber">
-          <div class="label amber">团队能力阻塞</div>
-          <h3>挑战 3：AI 工程能力没有完全组织化</h3>
-          <p>已有共享记忆、agent、skill、报告站点和 hook，但使用方式、数据看板、责任人、质量门禁还不够团队化。</p>
-          <p><strong>我要做的改变：</strong>把工具链变成团队制度：骨干 owner、每周 demo、每月复盘、skill 调用数据、报告复用数据、失败案例反哺。</p>
-        </div>
-        <div class="card red">
-          <div class="label red">质量与节奏阻塞</div>
-          <h3>挑战 4：快交付和高质量之间张力变大</h3>
-          <p>AI 提升了生成速度，也放大了误用 API、漏边界、上下文错配的风险。仓颉编译器又涉及前端、运行时、标准库、测试、文档多仓协同。</p>
-          <p><strong>我要做的改变：</strong>用“短反馈验证 + 全链路门禁 + AAR 反哺”抵消生成速度带来的风险。</p>
+          <div class="label amber">挑战三</div>
+          <h3>后备 PL 和主动性不足会限制团队上限</h3>
+          <p><strong>现状：</strong>团队已有后备 SE 培养对象和多个责任田 owner，但后备 PL 人选不足；部分同事沟通能力和主动积极性仍需提升。</p>
+          <p><strong>风险：</strong>复杂项目会继续依赖我个人牵引，团队规模化承担不够。</p>
+          <p><strong>改变：</strong>把骨干培养从技术 owner 扩展到问题牵引、跨团队沟通、风险经营和团队影响力，给成员更明确的成长台阶。</p>
         </div>
       </div>
     </section>
 
     <section id="plan" class="section">
-      <h2>四、下半年工作规划</h2>
+      <h2>四、下半年规划怎么讲</h2>
+      <div class="quote">下半年我不展开成很多任务点，而是收敛成三个抓手：第一，保证关键业务高质量交付；第二，推进 AI 实践规模化；第三，补齐团队梯队和工程机制。</div>
       <table>
         <thead>
           <tr>
-            <th>关键活动</th>
-            <th>目标</th>
-            <th>动作</th>
-            <th>建议指标</th>
+            <th>抓手</th>
+            <th>为什么抓</th>
+            <th>怎么做</th>
+            <th>交付物 / 指标</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>AI-native Cangjie 开发闭环</strong></td>
-            <td>让 AI 写仓颉代码从“能改”变成“少迭代、可验证、可规模化”。</td>
-            <td>建立 Cangjie 代码生成 benchmark；接入 cjc/LSP/增量构建；沉淀 import/API 检索上下文包；把常见错误清单前置注入。</td>
-            <td>首轮编译通过率、平均修复轮数、单任务耗时、重复错误复发率。</td>
+            <td><strong>抓手一：关键业务高质量交付</strong></td>
+            <td>Modal Type、编译器插件、CHIR 库是下半年核心业务方向，直接关系到仓颉编译器能力扩展和生态使用。</td>
+            <td>用责任田 owner 牵引方案、开发、测试、收益验证和风险闭环；对跨组件需求提前拉通接口契约和测试边界。</td>
+            <td>Modal Type 商用交付节奏；插件/CHIR 库里程碑；关键需求按期交付率；收益验证达成情况。</td>
           </tr>
           <tr>
-            <td><strong>ICE/QCC 定位效率提升</strong></td>
-            <td>把现场问题从“等材料”变成“按模板收敛、按 SOP 启动”。</td>
-            <td>发布信息采集模板、复现包标准、debug 版本指引、历史案例索引；选择 1-2 个真实问题试运行。</td>
-            <td>首轮信息完整率、定位启动时间、返工轮数、历史案例复用次数。</td>
+            <td><strong>抓手二：AI 实践规模化</strong></td>
+            <td>上半年已经证明 AI 能进入代码、测试、工具和报告生产；下半年要从个人实践走向团队复制。</td>
+            <td>建立核心/非核心交付件 AI 代码生成比统计；沉淀端到端 AI 开发案例；推广 ACEHarness 和 Agent 本地闭环；推进社区问题自动化分析和迭代修复。</td>
+            <td>AI 代码生成比持续统计；平均修复轮数；AI 任务成功率；团队成员覆盖率；社区问题自动化分析成功率。</td>
           </tr>
           <tr>
-            <td><strong>骨干 owner 制</strong></td>
-            <td>把复杂能力从 leader 个人牵引转移到团队骨干。</td>
-            <td>按前端、运行时、测试、工具链、AI 工程化、质量审计设 owner；每位 owner 负责一个交付件和一次分享。</td>
-            <td>骨干独立闭环问题数、主导评审数、分享次数、沉淀文档数。</td>
-          </tr>
-          <tr>
-            <td><strong>评审与复盘机制升级</strong></td>
-            <td>减少语义漏网和重复犯错。</td>
-            <td>统一 PR 检视 checklist：metadata/diff/comments/gate/边界用例；逃逸问题必须 AAR；AAR 结论进入共享记忆。</td>
-            <td>有效检视意见数、评审拦截缺陷数、逃逸缺陷数、AAR action 完成率。</td>
-          </tr>
-          <tr>
-            <td><strong>团队知识资产运营</strong></td>
-            <td>让报告、memory、skill 真正被使用，而不是停留在个人文件夹。</td>
-            <td>维护 report-site 分类；把高频问题转成 skill 或 checklist；推广 team-agent-memory 接入；建立月度资产回顾。</td>
-            <td>报告访问/引用次数、skill 调用数、团队接入人数、被复用条目数。</td>
+            <td><strong>抓手三：团队梯队和工程机制</strong></td>
+            <td>后备 PL 不足、主动性不均衡和 AI 质量风险都会限制团队上限，需要靠机制和授权补齐。</td>
+            <td>刷新 issue/PR 模板；落实单 PR 约束；建设类 wiki、commitlint、codecheck、self code review、CI Gate；建设组件契约知识库和 PR 级增量刷新；为公共 Skill 增加质量门禁。</td>
+            <td>模板覆盖率；本地闭环成功率；CI 前拦截问题数；知识库命中率；Skill 回归通过率；骨干独立牵引项目数。</td>
           </tr>
         </tbody>
       </table>
@@ -548,25 +547,26 @@
       <div class="timeline">
         <div class="time">7 月</div>
         <div class="card gray">
-          <strong>基线月：</strong>刷新 PR/Issue/评审/报告数据；确定骨干 owner；把 Cangjie codegen benchmark 和 ICE 信息采集模板定稿。
+          <strong>基线月：</strong>明确 Modal Type、插件/CHIR 库里程碑；固化 AI 代码生成比口径；刷新项目级模板和骨干 owner 目标。
         </div>
         <div class="time">8-9 月</div>
         <div class="card gray">
-          <strong>试运行：</strong>选 2 个真实业务问题跑 AI-native 开发闭环；选 1 个 ICE/复杂问题跑 QCC 模板；形成首轮指标。
+          <strong>试运行：</strong>围绕 Modal Type、编译器插件、社区问题自动化分析选择真实任务试跑 Agent 本地闭环，形成首轮数据。
         </div>
         <div class="time">10-11 月</div>
         <div class="card gray">
-          <strong>规模化：</strong>owner 各自交付一个可复用资产；把评审 checklist、AAR action、skill usage 看板纳入例行节奏。
+          <strong>规模化：</strong>把 issue/PR 模板、codecheck、self review、CI Gate、知识库增量刷新和 Skill 质量门禁纳入团队例行开发。
         </div>
         <div class="time">12 月</div>
         <div class="card gray">
-          <strong>验收：</strong>用指标复盘 AI 代码生成效率、问题定位效率、团队复用率和逃逸缺陷改善，形成年度总结素材。
+          <strong>验收：</strong>用业务交付、AI 代码生成比、质量拦截、社区问题自动化分析和骨干成长结果形成年度总结素材。
         </div>
       </div>
     </section>
 
     <section id="evidence" class="section">
-      <h2>五、trace 证据与素材地图</h2>
+      <h2>五、附录：trace 证据</h2>
+      <div class="quote">这部分不建议主讲，只作为答疑和自查材料。正式述职时前面四部分已经足够，附录只用于支撑“这些判断来自真实工作轨迹”。</div>
       <table>
         <thead>
           <tr>
@@ -612,31 +612,31 @@
     </section>
 
     <section id="supplement" class="section">
-      <h2>六、后续需要你补的素材</h2>
+      <h2>六、手动替换占位</h2>
       <div class="grid two">
         <div class="card amber">
-          <div class="label amber">最关键补充</div>
+          <div class="label amber">正式汇报前替换</div>
           <ol>
-            <li>团队上半年 OKR/重点业务清单，以及哪些是你直接牵引、哪些是骨干负责。</li>
-            <li>团队 PR 数、合入数、Issue 关闭数、缺陷逃逸数、门禁通过率、典型项目里程碑。</li>
-            <li>骨干案例：每个人的成长前后对比、承担的关键任务、独立闭环结果。</li>
-            <li>AI 代码生成落地数据：使用场景、产出件、节省工时、失败案例、返工轮数。</li>
-            <li>报告/文档/skill 的使用证据：被谁用、在哪个评审/复盘/开发活动中用、带来什么改变。</li>
+            <li>ACEHarness 支撑的具体周边团队名称，商用 8+ 需求中最能代表影响力的 1-2 个案例，占位内容已在成果表中预留。</li>
+            <li>AI 代码生成比口径说明：核心代码 47K 行、AI 生成比 37%；非核心代码 380K 行、AI 生成比 80%，需要补充统计口径来源。</li>
+            <li>编译性能看板已补链接，正式材料中只需确认 8min -> 5min、380MB -> 212MB 的口径是否可直接对外讲。</li>
+            <li>下半年关键需求的里程碑口径：Modal Type、编译器插件、CHIR 库分别补一行目标和交付节奏。</li>
+            <li>骨干成长案例：H/K/S1/S2/W/Z 各自最能体现成长或责任田 owner 能力的一件事。</li>
           </ol>
         </div>
         <div class="card green">
-          <div class="label green">可直接变成 PPT 的结构</div>
+          <div class="label green">讲稿页结构</div>
           <ol>
-            <li>封面：AI 增强的仓颉编译器工程体系。</li>
-            <li>一页主线：业务发展、能力建设、氛围建设三条线。</li>
-            <li>三页成果：问题交付、质量治理、知识工具化。</li>
-            <li>两页反思：不足和我没做到位的地方。</li>
-            <li>两页挑战：AI 时代 + 仓颉编译器应该做什么。</li>
-            <li>三页规划：AI-native 开发闭环、QCC、骨干 owner 和度量体系。</li>
+            <li>封面：以业务交付为牵引，建设 AI 增强的仓颉编译器团队。</li>
+            <li>一页总览：业务结果、沿途下蛋、AI 实践、团队建设。</li>
+            <li>三页成果：编译性能/包体积、ACEHarness 推广、兼容性治理、AI 代码生成比。</li>
+            <li>一页团队：责任田、骨干成长、及时激励和优秀基因。</li>
+            <li>一页反思：度量不足、后备 PL 不足、沟通主动性不均衡。</li>
+            <li>两页挑战与规划：三类挑战、三大抓手和下半年时间节奏。</li>
           </ol>
         </div>
       </div>
-      <p class="foot">说明：本报告把 trace 证据和推断分开。凡是涉及团队规模、业务收益、骨干成长、线上使用效果的部分，都应在正式述职前用你补充的事实刷新。</p>
+      <p class="foot">说明：当前版本已经收敛成讲稿结构。正式述职前只需要手动替换 ACEHarness 占位案例、AI 代码生成比统计口径、骨干成长案例和下半年关键需求里程碑。</p>
     </section>
   </main>
 </body>

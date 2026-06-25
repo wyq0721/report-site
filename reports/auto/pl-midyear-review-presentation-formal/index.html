@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 上半年团队工作汇报</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --ink: #18202b;
+      --muted: #687386;
+      --line: #dde3ec;
+      --blue: #2456a6;
+      --green: #20735a;
+      --amber: #966515;
+      --red: #a63a3a;
+      --soft-blue: #eef4ff;
+      --soft-green: #edf8f4;
+      --soft-amber: #fff6e6;
+      --soft-red: #fff0f0;
+      --soft-gray: #f1f4f8;
+      --slide-w: 1160px;
+      --slide-h: 652px;
+      --fs-hero: 34px;
+      --fs-title: 24px;
+      --fs-section: 17px;
+      --fs-body: 14px;
+      --fs-small: 12.5px;
+      --fs-micro: 11.5px;
+      --fs-number: 28px;
+      --fw-strong: 700;
+      --fw-number: 800;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      font-size: var(--fs-body);
+      line-height: 1.65;
+    }
+
+    .page {
+      width: min(calc(100% - 56px), var(--slide-w));
+      max-width: none;
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 100%;
+      height: var(--slide-h);
+      min-height: var(--slide-h);
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(24, 32, 43, 0.06);
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: var(--fs-small);
+      font-weight: var(--fw-strong);
+      letter-spacing: 0;
+      margin-bottom: 10px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.25;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: var(--fs-hero);
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: var(--fs-title);
+      margin: 0 0 18px;
+    }
+
+    h3 {
+      font-size: var(--fs-section);
+      margin: 0 0 10px;
+    }
+
+    p {
+      font-size: var(--fs-body);
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .lead {
+      font-size: var(--fs-section);
+      color: #334155;
+      max-width: 920px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: #fff;
+      color: #475569;
+      font-size: var(--fs-micro);
+      white-space: nowrap;
+    }
+
+    .section {
+      margin-top: 24px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 100%;
+      height: var(--slide-h);
+      min-height: var(--slide-h);
+      overflow: hidden;
+      padding: 28px;
+      box-shadow: 0 8px 24px rgba(24, 32, 43, 0.045);
+    }
+
+    .section.band {
+      box-shadow: none;
+      background: transparent;
+      border: 0;
+      padding: 6px 0 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 18px;
+      min-height: 100%;
+    }
+
+    .card.blue {
+      background: var(--soft-blue);
+      border-color: #cdddf8;
+    }
+
+    .card.green {
+      background: var(--soft-green);
+      border-color: #c9eadf;
+    }
+
+    .card.amber {
+      background: var(--soft-amber);
+      border-color: #efd9aa;
+    }
+
+    .card.red {
+      background: var(--soft-red);
+      border-color: #f0caca;
+    }
+
+    .card.gray {
+      background: var(--soft-gray);
+    }
+
+    .kpi-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+      min-height: 112px;
+      padding: 18px 20px;
+    }
+
+    .kpi-card .num {
+      margin-bottom: 0;
+      min-width: 92px;
+    }
+
+    .kpi-card p {
+      margin-bottom: 4px;
+    }
+
+    .ai-grid {
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #summary-ai h2 {
+      margin-bottom: 14px;
+    }
+
+    #summary-ai h3 {
+      font-size: var(--fs-section);
+      margin-bottom: 8px;
+    }
+
+    .ai-grid .card {
+      padding: 10px 14px;
+      min-height: 0;
+    }
+
+    .ai-grid .num {
+      font-size: var(--fs-title);
+      margin-bottom: 2px;
+    }
+
+    .ai-grid p {
+      margin-bottom: 2px;
+      line-height: 1.35;
+    }
+
+    .ai-grid .small {
+      font-size: var(--fs-micro);
+    }
+
+    .team-card {
+      padding: 12px 18px;
+      min-height: 0;
+    }
+
+    .matrix-table {
+      font-size: var(--fs-micro);
+      line-height: 1.25;
+    }
+
+    .matrix-table td:first-child {
+      font-weight: var(--fw-number);
+      color: #17385f;
+      width: 42px;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+      padding: 4px 6px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #e8eef7;
+      color: #334155;
+      font-size: var(--fs-micro);
+      font-weight: var(--fw-strong);
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: var(--fs-micro);
+      font-weight: var(--fw-strong);
+      margin-bottom: 9px;
+    }
+
+    .label.blue { color: var(--blue); background: #dce9ff; }
+    .label.green { color: var(--green); background: #d8f0e7; }
+    .label.amber { color: var(--amber); background: #ffedc4; }
+    .label.red { color: var(--red); background: #ffdede; }
+    .label.gray { color: #475569; background: #e5eaf1; }
+
+    ul, ol {
+      margin: 8px 0 0 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .quote {
+      border-left: 4px solid var(--blue);
+      padding: 14px 18px;
+      background: var(--soft-blue);
+      color: #27364b;
+      border-radius: 6px;
+      font-size: var(--fs-section);
+      margin-top: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-body);
+      margin-top: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: #334155;
+      background: #f8fafc;
+      font-weight: var(--fw-strong);
+    }
+
+    .outcome-table {
+      font-size: var(--fs-small);
+    }
+
+    .outcome-table th,
+    .outcome-table td {
+      padding: 8px 8px;
+    }
+
+    .num {
+      font-size: var(--fs-number);
+      font-weight: var(--fw-number);
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: var(--fs-small);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    .time {
+      color: var(--blue);
+      font-weight: var(--fw-number);
+      border-top: 2px solid var(--blue);
+      padding-top: 8px;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .toc a {
+      display: block;
+      color: var(--blue);
+      text-decoration: none;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-weight: var(--fw-strong);
+    }
+
+    .status {
+      font-weight: var(--fw-number);
+      white-space: nowrap;
+    }
+
+    .speaker-only,
+    [hidden] {
+      display: none !important;
+    }
+
+    .ok { color: var(--green); }
+    .todo { color: var(--amber); }
+    .risk { color: var(--red); }
+
+    .foot {
+      color: var(--muted);
+      font-size: var(--fs-micro);
+      margin-top: 18px;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: var(--fs-small);
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        padding: 22px 14px 52px;
+        width: 100%;
+      }
+      .hero, .section {
+        padding: 22px;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+      }
+      h1 {
+        font-size: var(--fs-number);
+      }
+      .grid, .grid.two, .toc {
+        grid-template-columns: 1fr;
+      }
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .page {
+        max-width: none;
+        width: var(--slide-w);
+        padding: 0;
+      }
+      .hero, .section {
+        width: var(--slide-w);
+        height: var(--slide-h);
+        min-height: var(--slide-h);
+        margin: 0;
+        break-inside: avoid;
+        break-after: page;
+        box-shadow: none;
+      }
+      .toc {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">2026 上半年团队工作汇报</div>
+      <h1>以业务交付为牵引，建设 AI 增强的仓颉编译器团队</h1>
+      <div class="toc">
+        <a href="#summary">半年度工作总结</a>
+        <a href="#challenge">当前面临的关键挑战</a>
+        <a href="#challenge">下半年工作规划</a>
+      </div>
+    </section>
+
+    <section id="logic" class="section speaker-only" hidden>
+      <h2>一、讲稿结构</h2>
+      <div class="quote">开场 30 秒：我上半年重点做了三件事：第一，用编译性能和兼容性治理证明团队业务交付能力；第二，用 ACEHarness、看板、知识库和 Skill 证明团队在沿途下蛋、建设工程体系；第三，用 AI 代码生成比和实际试点证明 AI 已经进入开发过程。下半年我会把这些经验从个人牵引推进到团队可复制、过程可度量、工具链可规模化。</div>
+      <div class="grid" style="margin-top:18px">
+        <div class="card blue">
+          <div class="label blue">第一段</div>
+          <h3>业务结果先讲硬指标</h3>
+          <p>先讲编译性能 40%、包体积 40%、兼容性 1000+ PR 检测和 100+ 拦截，说明团队不是只做探索，而是能交付可度量结果。</p>
+        </div>
+        <div class="card green">
+          <div class="label green">第二段</div>
+          <h3>再讲沿途下蛋和能力沉淀</h3>
+          <p>把性能看板、ACEHarness、兼容性知识库、Skill、责任田和 AI 生成比放到一起讲，强调团队建立的是可复用能力。</p>
+        </div>
+        <div class="card amber">
+          <div class="label amber">第三段</div>
+          <h3>最后讲挑战和下半年抓手</h3>
+          <p>主动承认度量、梯队、沟通主动性不足，再收束到三类抓手：业务交付、AI 规模化、团队梯队与工程规范。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary" class="section">
+      <h2>一、半年度工作总结</h2>
+      <div class="grid">
+        <div class="card blue kpi-card">
+          <div class="num">40%</div>
+          <div>
+            <p><strong>效率提升</strong></p>
+            <p class="small">编译体验与交付效率</p>
+          </div>
+        </div>
+        <div class="card green kpi-card">
+          <div class="num">300+</div>
+          <div>
+            <p><strong>AI 范式扩散</strong></p>
+            <p class="small">多 Agent 协作影响范围</p>
+          </div>
+        </div>
+        <div class="card amber kpi-card">
+          <div class="num">1000+</div>
+          <div>
+            <p><strong>质量前置</strong></p>
+            <p class="small">PR 级兼容性风险治理</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px">1. 代表性成果</h3>
+      <table class="outcome-table">
+        <thead>
+          <tr>
+            <th>成果项</th>
+            <th>业务结果</th>
+            <th>我的牵引动作</th>
+            <th>工程沉淀</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>成果 1：</strong><br><strong>编译性能优化</strong></td>
+            <td>百万混合工程编译耗时 8min -> 5min，优化幅度约 40%，效果持平 Swift；cjc 包体积 380MB -> 212MB，下降约 44%。</td>
+            <td>牵引性能瓶颈分析，推动从点状优化转为基线化、看板化治理。</td>
+            <td>完善 <a href="https://compile-performance-panel.pages.dev/">编译性能数据看板</a> 和百万行工程性能基线，形成持续监护、瓶颈定位和回归判断能力。</td>
+          </tr>
+          <tr>
+            <td><strong>成果 2：</strong><br><strong>ACEHarness 孵化</strong></td>
+            <td>影响 300+ 人次，支撑周边团队完成商用 8+ 需求交付，推动多 Agent 协作从个人尝试走向团队试点。</td>
+            <td>孵化 <a href="https://gitcode.com/Cangjie-SIG/ACEHarness/">ACEHarness</a>，组织内外部分享和试点推广，推动真实商用需求使用。</td>
+            <td>沉淀任务拆解、角色协同、验证闭环和推广方法。</td>
+          </tr>
+          <tr>
+            <td><strong>成果 3：</strong><br><strong>兼容性治理</strong></td>
+            <td>累计检测 1000+ PR，拦截不兼容 100+ PR，降低兼容性质量风险。</td>
+            <td>牵引兼容性专项从规则梳理、PR 接入到拦截反馈闭环落地。</td>
+            <td>沉淀兼容性知识库 + Skill，把专家经验转成可运行、可迭代的机制，并形成 <a href="https://frp-fan.com:12102/applications">兼容性应用</a> 入口。</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
+
+    <section id="summary-ai" class="section">
+      <h2>一、半年度工作总结（续）</h2>
+      <h3>2. AI 代码生成比与自动化空间</h3>
+      <div class="grid ai-grid">
+        <div class="card blue">
+          <div class="num">47K</div>
+          <p><strong>核心代码</strong></p>
+          <p class="small">AI 生成比约 37%；AI 已进入实现环节，但架构判断、边界设计和质量验证仍由人工主责。</p>
+        </div>
+        <div class="card green">
+          <div class="num">380K</div>
+          <p><strong>非核心代码</strong></p>
+          <p class="small">AI 生成比约 80%；主要覆盖测试、工具、报告、Skill、知识库，规模化生产收益更明确。</p>
+        </div>
+      </div>
+      <h3 style="margin-top:14px">3. 团队责任田与组织能力</h3>
+      <div class="card green team-card">
+          <div class="label green">责任田矩阵：方向、角色、贡献与发展潜力</div>
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>成员</th>
+                <th>责任方向</th>
+                <th>角色定位</th>
+                <th>贡献类型</th>
+                <th>发展潜力</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>H</td><td>类型推断</td><td>方向 owner</td><td>维护开发、专利孵化</td><td>类型系统专家</td></tr>
+              <tr><td>K</td><td>CHIR</td><td>组件 owner</td><td>CHIR 库、编译器插件</td><td>中端架构骨干</td></tr>
+              <tr><td>S1</td><td>Basic / 诊断 / 增量</td><td>需求 owner</td><td>Modal Type</td><td>复杂需求牵引</td></tr>
+              <tr><td>S2</td><td>社区问题 / ACEHarness</td><td>创新 owner</td><td>社区响应、平台孵化</td><td>AI 创新牵引</td></tr>
+              <tr><td>W</td><td>兼容性专项</td><td>SE / 架构师</td><td>质量治理、机制设计</td><td>架构治理牵引</td></tr>
+              <tr><td>Z</td><td>SEMA / 性能 / DevTest</td><td>后备 SE</td><td>性能优化、覆盖率落地</td><td>后备 SE 培养</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:8px; margin-bottom:4px"><strong>激励奖项：</strong></p>
+          <div class="tag-row">
+            <span class="tag">个人贡献奖</span>
+            <span class="tag">专利创新奖</span>
+            <span class="tag">关键组件交付奖</span>
+            <span class="tag">核心需求交付奖</span>
+            <span class="tag">公共平台贡献奖</span>
+            <span class="tag">专项机制建设奖</span>
+            <span class="tag">工程效能贡献奖</span>
+          </div>
+      </div>
+
+    </section>
+
+    <section id="challenge" class="section">
+      <h2>二、关键挑战与下半年规划</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>挑战</th>
+            <th>阻塞点 / 我的短板</th>
+            <th>下半年策略</th>
+            <th>验收指标</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>关键业务复杂协同</strong></td>
+            <td>Modal Type、插件、CHIR 库均依赖跨组件协同；接口契约、收益验证和测试边界前置不足。</td>
+            <td>用责任田 owner 牵引方案、开发、测试、收益验证和风险闭环；对跨组件需求提前拉通接口契约和测试边界。</td>
+            <td>Modal Type 商用交付节奏；插件/CHIR 库里程碑；关键需求按期交付率；收益验证达成情况。</td>
+          </tr>
+          <tr>
+            <td><strong>AI 实践团队化不足</strong></td>
+            <td>个人经验已验证，团队机制未固化；规范、数据闭环和复用机制推进偏晚。</td>
+            <td>建立核心/非核心交付件 AI 代码生成比统计；沉淀端到端 AI 开发案例；推广 ACEHarness 和 Agent 本地闭环。</td>
+            <td>AI 代码生成比持续统计；平均修复轮数；AI 任务成功率；团队成员覆盖率；社区问题自动化分析成功率。</td>
+          </tr>
+          <tr>
+            <td><strong>梯队承载不足</strong></td>
+            <td>后备 PL 和主动牵引能力不足；授权、牵引机会和反馈节奏不够系统。</td>
+            <td>刷新 issue/PR 模板；建设 codecheck、self review、CI Gate；沉淀组件契约知识库；给骨干分配跨团队牵引任务；把公共资产贡献、主动分享和及时激励纳入例行管理。</td>
+            <td>模板覆盖率；CI 前拦截数；知识库命中率；Skill 回归通过率；骨干独立牵引项目数；公共资产贡献和分享覆盖情况。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="evidence" class="section speaker-only" hidden>
+      <h2>五、附录：trace 证据</h2>
+      <div class="quote">这部分不建议主讲，只作为答疑和自查材料。正式述职时前面四部分已经足够，附录只用于支撑“这些判断来自真实工作轨迹”。</div>
+      <table>
+        <thead>
+          <tr>
+            <th>来源</th>
+            <th>观察到的信息</th>
+            <th>可支撑述职点</th>
+            <th>置信度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Claude 历史 <code>history.jsonl</code></td>
+            <td>2026-04-07 至 2026-06-23 共 1110 条；关键词命中：仓颉/工具链 137、AI/Agent 128、PR 检视 102、报告/AAR/HTML 60、内存/性能 27。</td>
+            <td>上半年活动确实集中在仓颉编译器交付、AI 工程化、评审、报告化和内存分析。</td>
+            <td><span class="status ok">高</span></td>
+          </tr>
+          <tr>
+            <td>Codex session index</td>
+            <td>97 个线程，43 个命中 Cangjie、PR、报告、AAR、QCC、记忆、兼容、安全等关键词。</td>
+            <td>Codex 侧工作窗口覆盖编译器构建、PR 检视、QCC、AAR、共享记忆、报告发布等。</td>
+            <td><span class="status ok">高</span></td>
+          </tr>
+          <tr>
+            <td>Codex 记忆</td>
+            <td>记录 team-agent-memory、QCC、PR 白盒自评、PR 1815/1832、安全审计、CocoIndex、skill hook 等历史任务。</td>
+            <td>支撑“AI 思维牵引、工程知识沉淀、评审/复盘机制、业务交付件”。</td>
+            <td><span class="status ok">高</span></td>
+          </tr>
+          <tr>
+            <td>报告站点与 drop 目录</td>
+            <td>report-site 下 27 个 HTML；report-site-drop 下 QCC、Issue 3128、仓颉 AI 代码生成错误分析 3 个 HTML。</td>
+            <td>支撑“交付件很多并用到实处”，但需要补充访问、分享、评审引用等使用效果。</td>
+            <td><span class="status todo">中高</span></td>
+          </tr>
+          <tr>
+            <td>skill usage hook</td>
+            <td>当前日志 11 条：gitcode-pr-review-report 7 次、power-gitcode 2 次、update-config 1 次、cangjie-lang-features 1 次。</td>
+            <td>证明已有可观测化起点，但还只是本机/局部样本，不代表团队全量。</td>
+            <td><span class="status todo">中</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="supplement" class="section speaker-only" hidden>
+      <h2>六、手动替换占位</h2>
+      <div class="grid two">
+        <div class="card amber">
+          <div class="label amber">正式汇报前替换</div>
+          <ol>
+            <li>ACEHarness 支撑的具体周边团队名称，商用 8+ 需求中最能代表影响力的 1-2 个案例，占位内容已在成果表中预留。</li>
+            <li>AI 代码生成比口径说明：核心代码 47K 行、AI 生成比 37%；非核心代码 380K 行、AI 生成比 80%，需要补充统计口径来源。</li>
+            <li>编译性能看板已补链接，正式材料中只需确认 8min -> 5min、380MB -> 212MB 的口径是否可直接对外讲。</li>
+            <li>下半年关键需求的里程碑口径：Modal Type、编译器插件、CHIR 库分别补一行目标和交付节奏。</li>
+            <li>骨干成长案例：H/K/S1/S2/W/Z 各自最能体现成长或责任田 owner 能力的一件事。</li>
+          </ol>
+        </div>
+        <div class="card green">
+          <div class="label green">讲稿页结构</div>
+          <ol>
+            <li>封面：以业务交付为牵引，建设 AI 增强的仓颉编译器团队。</li>
+            <li>一页总览：业务结果、沿途下蛋、AI 实践、团队建设。</li>
+            <li>三页成果：编译性能/包体积、ACEHarness 推广、兼容性治理、AI 代码生成比。</li>
+            <li>一页团队：责任田、骨干成长、及时激励和优秀基因。</li>
+            <li>一页反思：度量不足、后备 PL 不足、沟通主动性不均衡。</li>
+            <li>两页挑战与规划：三类挑战、三大抓手和下半年时间节奏。</li>
+          </ol>
+        </div>
+      </div>
+      <p class="foot">说明：当前版本已经收敛成讲稿结构。正式述职前只需要手动替换 ACEHarness 占位案例、AI 代码生成比统计口径、骨干成长案例和下半年关键需求里程碑。</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24 11:42:47",
+  "generated_at": "2026-06-25 22:09:53",
   "reports": {
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
@@ -15,19 +15,19 @@
       "title": "Issue 3128 根因分析与业界对照调研报告",
       "updated_at": "2026-06-23 15:23:02"
     },
+    "pl_midyear_review_presentation_formal.html": {
+      "sha256": "96c7ec2850bc43078ed292cb081e94b05194a902e841a4e9034caf30f225fb98",
+      "slug": "pl-midyear-review-presentation-formal",
+      "source_name": "pl_midyear_review_presentation_formal.html",
+      "title": "2026 上半年团队工作汇报",
+      "updated_at": "2026-06-25 22:09:53"
+    },
     "pl_midyear_review_report.html": {
-      "sha256": "56daf671820e22507ccf0307cce83eabaf3b0f478c4e30ba8c252fc2b0702a52",
+      "sha256": "45600414a8460f23650b1b398255bf0e5b69acdc910a3cb1d57981153f94560d",
       "slug": "pl-midyear-review-report",
       "source_name": "pl_midyear_review_report.html",
       "title": "2026 上半年 PL 述职材料底稿",
-      "updated_at": "2026-06-24 11:42:47"
-    },
-    "qcc_cangjie_compiler_ice_project_report.html": {
-      "sha256": "55e7dcfc374a9dc9ffd1ac482a10bcfd252dfc41c6306f0e3663ba1c2d8c87b6",
-      "slug": "qcc-cangjie-compiler-ice-project-report",
-      "source_name": "qcc_cangjie_compiler_ice_project_report.html",
-      "title": "QCC立项报告 - 仓颉编译器ICE问题定位效率提升",
-      "updated_at": "2026-06-23 16:44:14"
+      "updated_at": "2026-06-25 22:09:53"
     },
     "qcc_cangjie_compiler_ice_topic_goal_review.html": {
       "sha256": "6accd6b772f85c90978b2be9aa96a0bb8f5359a8062546ad8bbbf78c00ca1aa5",
