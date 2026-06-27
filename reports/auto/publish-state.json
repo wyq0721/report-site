@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25 22:30:44",
+  "generated_at": "2026-06-27 11:03:29",
   "reports": {
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
@@ -30,11 +30,11 @@
       "updated_at": "2026-06-25 22:09:53"
     },
     "qcc_cangjie_compiler_ice_topic_goal_review.html": {
-      "sha256": "6accd6b772f85c90978b2be9aa96a0bb8f5359a8062546ad8bbbf78c00ca1aa5",
+      "sha256": "ee4aa3a35668d7597f3e1d12668970d94fdbabd2bb68733da32c89b852b0a4cf",
       "slug": "qcc-cangjie-compiler-ice-topic-goal-review",
       "source_name": "qcc_cangjie_compiler_ice_topic_goal_review.html",
       "title": "QCC主题及目标评审 - 仓颉编译器ICE定位启动效率提升",
-      "updated_at": "2026-06-24 11:42:47"
+      "updated_at": "2026-06-27 11:03:29"
     },
     "季度民主生活会_策划案.html": {
       "sha256": "800eef5a9897d01165fc0673af2474d56c96fbc0134f7ce917156bd5966af76b",

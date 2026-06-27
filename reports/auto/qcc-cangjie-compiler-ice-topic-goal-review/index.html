@@ -412,129 +412,32 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">01 项目背景</span>
-          <h2>ICE 问题阻塞客户编译链路，且定位高度依赖现场材料</h2>
+          <span class="tag">01 选题背景</span>
+          <h2>ICE 问题不是数量最多，但对客户和研发都最容易形成阻塞</h2>
         </div>
-        <p>当前客户反馈通常只有编译器版本、架构平台和 ICE 日志，能初步判断阶段，但不足以完整复现和定位。</p>
+        <p>客户现场通常只能提供编译器版本、架构平台和 ICE 日志，能判断“在哪个阶段挂”，但不足以还原“为什么挂”。</p>
       </div>
       <div class="grid three">
         <div class="box red">
-          <h3>客户侧影响</h3>
-          <p>ICE 会直接中断编译流程，客户无法通过普通诊断信息自行定位，容易阻塞交付和验证。</p>
+          <h3>客户侧</h3>
+          <p>编译流程被 ICE 直接中断，普通诊断信息无法支撑客户自助规避或定位。</p>
         </div>
         <div class="box amber">
-          <h3>研发侧痛点</h3>
-          <p>缺少最小复现用例时，开发难以从 release 日志直接还原触发路径，需要多轮补充材料。</p>
+          <h3>研发侧</h3>
+          <p>缺少最小复现时，开发难以从 release 日志直接还原触发路径。</p>
         </div>
         <div class="box purple">
-          <h3>协同侧成本</h3>
-          <p>支撑、客户、开发之间反复沟通，等复现材料齐全后才能切 debug 版本或符号化环境分析。</p>
+          <h3>协同侧</h3>
+          <p>支撑、客户、开发之间多轮补充材料，定位启动时间被拉长。</p>
         </div>
       </div>
-      <div class="callout"><strong>立项判断：</strong>本课题不承诺短期消灭所有 ICE，而是先解决“能否更快启动有效分析”的过程质量问题。</div>
+      <div class="callout"><strong>核心矛盾：</strong>当前 ICE 问题的主要瓶颈不是“能不能修”，而是“能不能尽快进入有效分析”。</div>
     </section>
 
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">02 现状访谈</span>
-          <h2>访谈结论集中在信息缺口和流程口径不一致</h2>
-        </div>
-        <p>访谈结论用于识别支撑、开发、测试质量和工具链环节的共同痛点。</p>
-      </div>
-      <table>
-        <thead>
-          <tr><th>角色</th><th>主要痛点</th><th>当前缺失信息</th><th>期望改进</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>客户支撑</td>
-            <td>客户通常能提供截图、版本和错误日志，但完整工程、依赖和复现步骤获取困难。</td>
-            <td>统一问询模板、必填字段、脱敏材料边界。</td>
-            <td>有一份支撑侧可直接使用的 ICE 问询清单。</td>
-          </tr>
-          <tr>
-            <td>编译器开发</td>
-            <td>只有 ICE 错误码和阶段信息时，难以判断根因；缺少最小复现用例时只能做粗分流。</td>
-            <td>完整命令、最小复现、调用栈、编译选项、依赖和缓存状态。</td>
-            <td>首轮材料能支持判断 parser / sema / CHIR / codegen / driver 归属。</td>
-          </tr>
-          <tr>
-            <td>测试 / 质量</td>
-            <td>历史 ICE 修复后用例沉淀不稳定，过程指标缺少固定统计口径。</td>
-            <td>问题闭环状态、复现材料质量、回归用例关联关系。</td>
-            <td>建立 ICE 样本台账和案例库字段规范。</td>
-          </tr>
-          <tr>
-            <td>工具链 / 发布</td>
-            <td>release 包日志和栈信息有限，debug 包、符号化和 crash report 流程不够标准化。</td>
-            <td>符号文件匹配、crash dump、bug report 打包字段。</td>
-            <td>明确 release/debug 版本符号化和调用栈解析流程。</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">03 当前流程与卡点</span>
-          <h2>从客户反馈到开发分析存在多轮等待</h2>
-        </div>
-        <p>当前流程中最容易卡住的是“信息是否足够”和“是否能复现”。</p>
-      </div>
-      <div class="flow">
-        <div class="step"><span class="num">1</span><b>客户反馈</b><span>版本、架构平台、ICE 日志</span></div>
-        <div class="step"><span class="num">2</span><b>支撑收集</b><span>补充环境、场景和工程信息</span></div>
-        <div class="step"><span class="num">3</span><b>开发初判</b><span>判断阶段和责任模块</span></div>
-        <div class="step"><span class="num">4</span><b>补充材料</b><span>索要最小复现、命令、依赖</span></div>
-        <div class="step"><span class="num">5</span><b>本地复现</b><span>对齐 SDK、平台、构建参数</span></div>
-        <div class="step"><span class="num">6</span><b>debug 分析</b><span>切换符号或 debug 版本定位</span></div>
-      </div>
-      <div class="grid three" style="margin-top:18px">
-        <div class="box red"><h3>卡点 1</h3><p>首轮信息只能说明“哪里挂了”，不能说明“为什么挂”。</p></div>
-        <div class="box amber"><h3>卡点 2</h3><p>没有最小复现用例时，开发分析容易停在现象确认阶段。</p></div>
-        <div class="box purple"><h3>卡点 3</h3><p>历史相似问题无法快速检索，经验复用依赖个人记忆。</p></div>
-      </div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">04 选题理由与边界</span>
-          <h2>选题聚焦“定位启动效率”，避免范围过大</h2>
-        </div>
-        <p>ICE 根因分散在多个编译阶段，不适合作为一个 QCC 周期内全部解决的目标。</p>
-      </div>
-      <div class="decision">
-        <div class="box yes">
-          <h3>本课题解决</h3>
-          <ul>
-            <li>ICE 首轮信息不完整</li>
-            <li>问题分流和归属判断慢</li>
-            <li>缺少统一采集模板和问询清单</li>
-            <li>无源码场景下推进路径不清晰</li>
-            <li>历史 ICE 案例复用不足</li>
-          </ul>
-        </div>
-        <div class="box no">
-          <h3>本课题不解决</h3>
-          <ul>
-            <li>一个周期内消除所有 ICE</li>
-            <li>所有编译器模块根因修复</li>
-            <li>客户工程完整复现能力建设</li>
-            <li>大规模编译器架构重构</li>
-            <li>替代模块自身缺陷修复流程</li>
-          </ul>
-        </div>
-      </div>
-      <div class="callout"><strong>推荐主题：</strong>提升仓颉编译器 ICE 问题定位启动效率。</div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">05 现状数据</span>
+          <span class="tag">02 现状数据</span>
           <h2>ICE 在问题总量中占比不高，但难定位比例突出</h2>
         </div>
         <p>统计周期：2025-12-23 至 2026-06-23。统计对象为 Cangjie/cangjie_compiler 仓库 bug issue。</p>
@@ -572,52 +475,8 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">06 成本测算</span>
-          <h2>难定位 ICE 数量不多，但消耗了主要定位启动成本</h2>
-        </div>
-        <p>测算对象只包含“复现与定位启动”成本，不包含根因修复、代码评审、回归验证和发布成本。</p>
-      </div>
-      <div class="grid three">
-        <div class="box green"><h3>28 个</h3><p>复现信息相对完整 ICE，按 1.5 人日/个估算，合计 42 人日。</p></div>
-        <div class="box amber"><h3>14 个</h3><p>难定位 ICE，按 4 人日/个估算，合计 56 人日。</p></div>
-        <div class="box red"><h3>57%</h3><p>难定位 ICE 占 ICE 样本 33.3%，但贡献约 57% 的定位启动成本。</p></div>
-      </div>
-      <table>
-        <thead>
-          <tr><th>类型</th><th>数量</th><th>单问题成本</th><th>半年成本</th><th>成本占比</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>复现信息相对完整 ICE</td>
-            <td>28</td>
-            <td>1.5 人日</td>
-            <td>42 人日</td>
-            <td>43%</td>
-          </tr>
-          <tr>
-            <td>难定位 ICE</td>
-            <td>14</td>
-            <td>4 人日</td>
-            <td>56 人日</td>
-            <td>57%</td>
-          </tr>
-          <tr>
-            <td>ICE 合计</td>
-            <td>42</td>
-            <td>-</td>
-            <td>98 人日</td>
-            <td>100%</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="callout"><strong>结论：</strong>优先提升难定位 ICE 的首轮信息完整率和最小复现获取效率，投入产出比高于平均处理所有编译器问题。</div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">07 投入成本柏拉图</span>
-          <h2>从总投入看，ICE 不是数量最大项，但难定位 ICE 是高成本对象</h2>
+          <span class="tag">03 投入成本柏拉图</span>
+          <h2>从投入成本看，难定位 ICE 是高成本专项对象</h2>
         </div>
         <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与定位启动投入。</p>
       </div>
@@ -643,31 +502,53 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">08 信息完整率口径</span>
-          <h2>当前首轮信息只能支持初判，不足以定义为完整</h2>
+          <span class="tag">04 为什么选这个主题</span>
+          <h2>选题聚焦“定位启动效率”，投入产出比明确</h2>
         </div>
-        <p>用户输入的现状：当前通常只有编译器版本、架构平台、ICE 日志和挂掉阶段；理论上需要最小复现用例才算完整。</p>
+        <p>ICE 根因分散在多个编译阶段，短期不适合作为“消灭 ICE”类课题；定位启动效率更可控、更可量化。</p>
       </div>
-      <table>
-        <thead>
-          <tr><th>字段</th><th>当前可获得性</th><th>是否计入完整标准</th><th>说明</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>编译器 / SDK 版本</td><td>通常有</td><td>必填</td><td>用于定位版本窗口和候选修复。</td></tr>
-          <tr><td>架构平台 / 目标平台</td><td>通常有</td><td>必填</td><td>用于判断平台相关问题。</td></tr>
-          <tr><td>ICE 日志和挂掉阶段</td><td>通常有</td><td>必填</td><td>用于初判 parser / sema / CHIR / codegen / driver。</td></tr>
-          <tr><td>完整编译命令 / 构建入口</td><td>经常缺失</td><td>必填</td><td>影响复现和选项判断。</td></tr>
-          <tr><td>最小复现用例</td><td>经常缺失</td><td>完整判定核心项</td><td>没有该项只能视为“可初判”，不能视为完整。</td></tr>
-          <tr><td>依赖、缓存、工程结构说明</td><td>经常缺失</td><td>选填增强</td><td>用于复杂工程或增量相关问题。</td></tr>
-        </tbody>
-      </table>
-      <div class="callout"><strong>建议口径：</strong>首轮信息完整 = 版本 + 平台 + ICE 日志/阶段 + 完整命令 + 最小复现用例。缺少最小复现时，最多计为“可初判”。</div>
+      <div class="grid three">
+        <div class="box red"><h3>高成本</h3><p>难定位 ICE 单问题定位启动成本按 4 人日估算，是普通功能缺陷的 4 倍。</p></div>
+        <div class="box amber"><h3>可控制</h3><p>模板、问询清单、triage SOP、最小复现指南均由支撑和研发协同可推动。</p></div>
+        <div class="box green"><h3>可扩展</h3><p>形成的采集和分流机制可复用到非 ICE 崩溃、运行时异常和复杂构建失败。</p></div>
+      </div>
+      <div class="callout"><strong>推荐主题：</strong>提升仓颉编译器 ICE 问题定位启动效率。</div>
     </section>
 
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">09 目标设定</span>
+          <span class="tag">05 课题边界</span>
+          <h2>只解决“进入有效分析慢”，不泛化为“解决所有 ICE”</h2>
+        </div>
+        <p>边界收窄后，目标和交付物都能落到 QCC 小组可执行的流程与工具上。</p>
+      </div>
+      <div class="decision">
+        <div class="box yes">
+          <h3>本课题解决</h3>
+          <ul>
+            <li>首轮信息不完整，无法直接进入复现和分析</li>
+            <li>问题阶段和责任模块分流慢</li>
+            <li>客户不能提供完整源码时推进路径不清晰</li>
+            <li>历史 ICE 相似案例难复用</li>
+          </ul>
+        </div>
+        <div class="box no">
+          <h3>本课题不解决</h3>
+          <ul>
+            <li>一个周期内消除所有 ICE</li>
+            <li>所有编译器模块的根因修复</li>
+            <li>客户工程完整复现能力建设</li>
+            <li>大规模编译器架构重构</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">06 目标设定</span>
           <h2>目标聚焦首轮信息质量和定位启动效率</h2>
         </div>
         <p>目标聚焦 QCC 小组可控的过程指标，避免把跨模块根因修复混入本课题范围。</p>
@@ -694,46 +575,15 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">10 典型案例</span>
-          <h2>案例显示最小复现和完整命令能显著降低定位门槛</h2>
+          <span class="tag">07 立项结论</span>
+          <h2>主题成立：问题有数据支撑，改善对象边界清晰</h2>
         </div>
-        <p>以下案例基于公开 issue 信息和立项场景整理，可在正式评审前替换为内部真实案例。</p>
-      </div>
-      <div class="grid two">
-        <div class="box blue">
-          <h3>案例 A：信息相对完整</h3>
-          <p><strong>问题：</strong>#917 release/1.0 部分用例 ICE 11。</p>
-          <ul>
-            <li>提供了 cjc 版本、目标平台、完整命令和具体测试用例路径。</li>
-            <li>开发可直接进入复现和 debug 分析。</li>
-            <li>说明最小复现/明确命令对定位启动帮助明显。</li>
-          </ul>
-        </div>
-        <div class="box red">
-          <h3>案例 B：客户现场类问题</h3>
-          <p><strong>问题：</strong>客户工程触发 ICE，只能提供版本、平台和 ICE 日志。</p>
-          <ul>
-            <li>缺少完整命令、依赖、缓存状态和最小复现。</li>
-            <li>开发只能判断大致阶段，无法确认触发路径。</li>
-            <li>需要支撑多轮补充材料，定位启动时间被拉长。</li>
-          </ul>
-        </div>
-      </div>
-      <div class="callout"><strong>案例结论：</strong>模板需要区分“最低可分析信息”和“完整信息”，避免所有问题都等待完整工程后才启动分析。</div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">11 可行性与预期成果</span>
-          <h2>优先交付模板、SOP 和样本台账</h2>
-        </div>
-        <p>这些成果不依赖大规模编译器改造，QCC 小组可控。</p>
+        <p>该课题以“难定位 ICE”为切入点，目标不是减少所有 ICE 数量，而是降低复现和定位启动成本。</p>
       </div>
       <div class="grid three">
-        <div class="box green"><h3>数据可获取</h3><p>GitCode issue、缺陷单、支撑记录、开发分析记录可形成样本台账。</p></div>
-        <div class="box teal"><h3>改进可落地</h3><p>采集模板、问询清单、triage SOP 可先于工具改造落地。</p></div>
-        <div class="box blue"><h3>协同可组织</h3><p>支撑、开发、测试、质量、工具链都有明确分工。</p></div>
+        <div class="box green"><h3>有必要</h3><p>难定位 ICE 单问题成本高，且会放大客户、支撑和开发之间的等待。</p></div>
+        <div class="box teal"><h3>可度量</h3><p>首轮信息完整率、二次补充比例、定位启动时间都可以形成过程指标。</p></div>
+        <div class="box blue"><h3>可落地</h3><p>模板、SOP、样本台账、最小复现指南均不依赖大规模架构改造。</p></div>
       </div>
       <table>
         <thead><tr><th>预期成果</th><th>用途</th></tr></thead>
@@ -745,26 +595,6 @@
           <tr><td>最小复现/脱敏材料指南</td><td>降低客户提供材料成本。</td></tr>
         </tbody>
       </table>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">12 评审关注问题</span>
-          <h2>评审结论：主题成立，目标可度量</h2>
-        </div>
-        <p>课题边界清晰，指标围绕信息完整、阶段初判、返工比例和启动时间展开。</p>
-      </div>
-      <table>
-        <thead><tr><th>可能追问</th><th>建议回答</th></tr></thead>
-        <tbody>
-          <tr><td>为什么不是“减少 ICE 数量”？</td><td>ICE 根因分散，短周期内不可控；定位启动效率是跨模块可控过程指标。</td></tr>
-          <tr><td>没有客户源码，采集信息是否有用？</td><td>有用。可先完成阶段分流、版本窗口判断、相似案例匹配和符号化分析准备。</td></tr>
-          <tr><td>目标值是否可靠？</td><td>目标值以近 6 个月样本复核结果为基线，并按首轮材料质量进行校准。</td></tr>
-          <tr><td>工具改造超出周期怎么办？</td><td>本周期先交付模板、SOP 和台账；crash report 工具增强作为标准化延伸项。</td></tr>
-        </tbody>
-      </table>
-      <div class="callout"><strong>评审建议：</strong>同意立项，要求下一阶段完成样本人工复核、基线统计和目标值校准。</div>
     </section>
 
     <p class="footer-note">QCC主题及目标评审 · 仓颉编译器 ICE 问题定位启动效率提升</p>
