@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QCC主题及目标评审 - 仓颉编译器ICE定位启动效率提升</title>
+  <title>QCC主题及目标评审 - 仓颉编译器ICE有效分析启动效率提升</title>
   <style>
     :root {
       --ink: #17212b;
@@ -388,7 +388,7 @@
       <div>
         <div class="logo">LOGO</div>
         <div class="kicker">QCC主题及目标评审</div>
-        <h1>提升仓颉编译器 ICE 问题定位启动效率</h1>
+        <h1>提升仓颉编译器 ICE 问题有效分析启动效率</h1>
         <p class="lead">面向无法完整获取客户现场代码的 ICE 问题，建立首轮信息采集、问题分流和目标度量口径，缩短从客户反馈到开发有效分析的时间。</p>
         <div class="meta">
           <div><b>圈名 / 小组</b>待填写</div>
@@ -403,7 +403,7 @@
           <div class="status"><strong>386</strong><span>近 6 个月 bug issue 总数</span></div>
           <div class="status"><strong>10.9%</strong><span>ICE 问题占比</span></div>
           <div class="status"><strong>33.3%</strong><span>信息不全的 ICE 占比</span></div>
-          <div class="status"><strong>56人日</strong><span>信息不全的 ICE 半年定位启动成本</span></div>
+          <div class="status"><strong>56人日</strong><span>信息不全的 ICE 半年有效分析启动成本</span></div>
         </div>
         <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；信息不全的 ICE 指复现信息不独立或缺少完整最小复现材料的 ICE 样本；成本按 4 人日/问题估算。</div>
       </div>
@@ -428,7 +428,7 @@
         </div>
         <div class="box purple">
           <h3>协同侧</h3>
-          <p>支撑、客户、开发之间多轮补充材料，定位启动时间被拉长。</p>
+          <p>支撑、客户、开发之间多轮补充材料，有效分析启动时间被拉长。</p>
         </div>
       </div>
       <div class="callout"><strong>核心矛盾：</strong>当前 ICE 问题的主要瓶颈不是“能不能修”，而是“能不能尽快进入有效分析”。</div>
@@ -488,7 +488,7 @@
           <span class="tag">03 投入成本柏拉图</span>
           <h2>从投入成本看，信息不全的 ICE 是高成本专项对象</h2>
         </div>
-        <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与定位启动投入。</p>
+        <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与有效分析启动投入。</p>
       </div>
       <table>
         <thead>
@@ -545,12 +545,12 @@
       <div class="head">
         <div>
           <span class="tag">05 为什么选这个主题</span>
-          <h2>选题聚焦“定位启动效率”，投入产出比明确</h2>
+          <h2>选题聚焦“有效分析启动效率”，投入产出比明确</h2>
         </div>
-        <p>ICE 根因分散在多个编译阶段，短期不适合作为“消灭 ICE”类课题；定位启动效率更可控、更可量化。</p>
+        <p>ICE 根因分散在多个编译阶段，短期不适合作为“消灭 ICE”类课题；有效分析启动效率更可控、更可量化。</p>
       </div>
       <div class="grid three">
-        <div class="box red"><h3>高成本</h3><p>信息不全的 ICE 单问题定位启动成本按 4 人日估算，是普通功能缺陷的 4 倍。</p></div>
+        <div class="box red"><h3>高成本</h3><p>信息不全的 ICE 单问题有效分析启动成本按 4 人日估算，是普通功能缺陷的 4 倍。</p></div>
         <div class="box amber"><h3>可控制</h3><p>模板、问询清单、triage SOP、最小复现指南均由支撑和研发协同可推动。</p></div>
         <div class="box green"><h3>可扩展</h3><p>形成的采集和分流机制可复用到非 ICE 崩溃、运行时异常和复杂构建失败。</p></div>
       </div>
@@ -591,7 +591,7 @@
       <div class="head">
         <div>
           <span class="tag">07 目标设定</span>
-          <h2>目标聚焦首轮信息质量和定位启动效率</h2>
+          <h2>目标聚焦首轮信息质量和有效分析启动效率</h2>
         </div>
         <p>目标聚焦 QCC 小组可控的过程指标，避免把跨模块根因修复混入本课题范围。</p>
       </div>
@@ -603,7 +603,7 @@
           <tr><td>首轮信息完整率</td><td>待统计</td><td>提升到 60%</td><td>完整标准包含最小复现用例，目标值以可达成和可执行为原则。</td></tr>
           <tr><td>可初判编译阶段比例</td><td>已有版本/平台/阶段日志</td><td>达到 85%</td><td>当前已有阶段日志，目标应高于完整率。</td></tr>
           <tr><td>二次补充信息比例</td><td>待统计</td><td>降低 30%</td><td>依靠模板和问询清单减少返工。</td></tr>
-          <tr><td>定位启动时间</td><td>待统计</td><td>降低 30%</td><td>从客户反馈到开发可有效分析。</td></tr>
+          <tr><td>有效分析启动时间</td><td>待统计</td><td>降低 30%</td><td>从客户反馈到开发可有效分析。</td></tr>
           <tr><td>信息不足挂起比例</td><td>待统计</td><td>降低 20%</td><td>重点改善无源码场景推进能力。</td></tr>
         </tbody>
       </table>
@@ -620,11 +620,11 @@
           <span class="tag">08 立项结论</span>
           <h2>主题成立：问题有数据支撑，改善对象边界清晰</h2>
         </div>
-        <p>该课题以“信息不全的 ICE”为切入点，目标不是减少所有 ICE 数量，而是降低复现和定位启动成本。</p>
+        <p>该课题以“信息不全的 ICE”为切入点，目标不是减少所有 ICE 数量，而是降低复现和有效分析启动成本。</p>
       </div>
       <div class="grid three">
         <div class="box green"><h3>有必要</h3><p>信息不全的 ICE 单问题成本高，且会放大客户、支撑和开发之间的等待。</p></div>
-        <div class="box teal"><h3>可度量</h3><p>首轮信息完整率、二次补充比例、定位启动时间都可以形成过程指标。</p></div>
+        <div class="box teal"><h3>可度量</h3><p>首轮信息完整率、二次补充比例、有效分析启动时间都可以形成过程指标。</p></div>
         <div class="box blue"><h3>可落地</h3><p>模板、SOP、样本台账、最小复现指南均不依赖大规模架构改造。</p></div>
       </div>
       <table>
@@ -639,7 +639,7 @@
       </table>
     </section>
 
-    <p class="footer-note">QCC主题及目标评审 · 仓颉编译器 ICE 问题定位启动效率提升</p>
+    <p class="footer-note">QCC主题及目标评审 · 仓颉编译器 ICE 问题有效分析启动效率提升</p>
   </main>
 </body>
 </html>
