@@ -402,10 +402,10 @@
         <div class="status-grid">
           <div class="status"><strong>386</strong><span>近 6 个月 bug issue 总数</span></div>
           <div class="status"><strong>10.9%</strong><span>ICE 问题占比</span></div>
-          <div class="status"><strong>33.3%</strong><span>难定位 ICE 占比</span></div>
-          <div class="status"><strong>56人日</strong><span>难定位 ICE 半年定位启动成本</span></div>
+          <div class="status"><strong>33.3%</strong><span>信息不全的 ICE 占比</span></div>
+          <div class="status"><strong>56人日</strong><span>信息不全的 ICE 半年定位启动成本</span></div>
         </div>
-        <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；难定位 ICE 指复现信息不独立或缺少完整最小复现材料的 ICE 样本；成本按 4 人日/问题估算。</div>
+        <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；信息不全的 ICE 指复现信息不独立或缺少完整最小复现材料的 ICE 样本；成本按 4 人日/问题估算。</div>
       </div>
     </section>
 
@@ -445,7 +445,7 @@
       <div class="grid three">
         <div class="box blue"><h3>386 个</h3><p>近 6 个月 bug issue 总量。</p></div>
         <div class="box teal"><h3>42 个 / 10.9%</h3><p>ICE 关键词命中 bug issue，占总问题数 10.9%。</p></div>
-        <div class="box amber"><h3>14 个 / 33.3%</h3><p>难定位 ICE 样本，占 ICE 样本 33.3%。</p></div>
+        <div class="box amber"><h3>14 个 / 33.3%</h3><p>信息不全的 ICE 样本，占 ICE 样本 33.3%。</p></div>
       </div>
       <table>
         <thead>
@@ -463,7 +463,7 @@
             <td>42 / 386 = 10.9%</td>
           </tr>
           <tr>
-            <td>难定位 ICE 占比</td>
+            <td>信息不全的 ICE 占比</td>
             <td>ICE 样本中，复现信息不独立或缺少完整最小复现材料的问题。</td>
             <td>14 / 42 = 33.3%</td>
           </tr>
@@ -486,7 +486,7 @@
       <div class="head">
         <div>
           <span class="tag">03 投入成本柏拉图</span>
-          <h2>从投入成本看，难定位 ICE 是高成本专项对象</h2>
+          <h2>从投入成本看，信息不全的 ICE 是高成本专项对象</h2>
         </div>
         <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与定位启动投入。</p>
       </div>
@@ -512,11 +512,11 @@
         </thead>
         <tbody>
           <tr><td>复现信息较完整 ICE：1.5 人日/个</td><td>已有最小用例、命令或附件，主要投入在本地复现、阶段确认和责任模块分流。</td></tr>
-          <tr><td>难定位 ICE：4 人日/个</td><td>缺少独立复现材料，需要支撑补充、环境对齐、最小化尝试和 debug 版本复现。</td></tr>
+          <tr><td>信息不全的 ICE：4 人日/个</td><td>缺少独立复现材料，需要支撑补充、环境对齐、最小化尝试和 debug 版本复现。</td></tr>
           <tr><td>非 ICE 崩溃：2.5 人日/个</td><td>通常需要运行环境、符号栈和触发路径对齐，成本低于无复现 ICE。</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>结论：</strong>总体投入最大的前三类是构建/链接、平台互操作和非 ICE 崩溃；难定位 ICE 虽不是总量最大项，但单问题成本最高，是适合用 QCC 做流程效率提升的专项对象。</div>
+      <div class="callout"><strong>结论：</strong>总体投入最大的前三类是构建/链接、平台互操作和非 ICE 崩溃；信息不全的 ICE 虽不是总量最大项，但单问题成本最高，是适合用 QCC 做流程效率提升的专项对象。</div>
     </section>
 
     <section class="slide">
@@ -535,10 +535,10 @@
           <tr><td>构建/链接/产物问题</td><td>高</td><td>中</td><td>中</td><td>中</td><td>涉及平台和构建系统差异，适合专项工程治理。</td></tr>
           <tr><td>平台/互操作兼容问题</td><td>中高</td><td>中高</td><td>中</td><td>中</td><td>依赖模块设计和兼容性策略，研发属性更强。</td></tr>
           <tr><td>非 ICE 崩溃/运行时异常</td><td>中</td><td>高</td><td>中</td><td>中</td><td>可复用部分采集机制，但根因分散。</td></tr>
-          <tr><td>难定位 ICE</td><td>中</td><td>最高</td><td>高</td><td>高</td><td>瓶颈集中在信息采集、分流和复现准备，适合作为 QCC 主题。</td></tr>
+          <tr><td>信息不全的 ICE</td><td>中</td><td>最高</td><td>高</td><td>高</td><td>瓶颈集中在信息采集、分流和复现准备，适合作为 QCC 主题。</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>筛选结论：</strong>难定位 ICE 不是总成本第一，但最符合 QCC 的跨角色协同、流程标准化、指标可量化和周期内可闭环特征。</div>
+      <div class="callout"><strong>筛选结论：</strong>信息不全的 ICE 不是总成本第一，但最符合 QCC 的跨角色协同、流程标准化、指标可量化和周期内可闭环特征。</div>
     </section>
 
     <section class="slide">
@@ -550,7 +550,7 @@
         <p>ICE 根因分散在多个编译阶段，短期不适合作为“消灭 ICE”类课题；定位启动效率更可控、更可量化。</p>
       </div>
       <div class="grid three">
-        <div class="box red"><h3>高成本</h3><p>难定位 ICE 单问题定位启动成本按 4 人日估算，是普通功能缺陷的 4 倍。</p></div>
+        <div class="box red"><h3>高成本</h3><p>信息不全的 ICE 单问题定位启动成本按 4 人日估算，是普通功能缺陷的 4 倍。</p></div>
         <div class="box amber"><h3>可控制</h3><p>模板、问询清单、triage SOP、最小复现指南均由支撑和研发协同可推动。</p></div>
         <div class="box green"><h3>可扩展</h3><p>形成的采集和分流机制可复用到非 ICE 崩溃、运行时异常和复杂构建失败。</p></div>
       </div>
@@ -620,10 +620,10 @@
           <span class="tag">08 立项结论</span>
           <h2>主题成立：问题有数据支撑，改善对象边界清晰</h2>
         </div>
-        <p>该课题以“难定位 ICE”为切入点，目标不是减少所有 ICE 数量，而是降低复现和定位启动成本。</p>
+        <p>该课题以“信息不全的 ICE”为切入点，目标不是减少所有 ICE 数量，而是降低复现和定位启动成本。</p>
       </div>
       <div class="grid three">
-        <div class="box green"><h3>有必要</h3><p>难定位 ICE 单问题成本高，且会放大客户、支撑和开发之间的等待。</p></div>
+        <div class="box green"><h3>有必要</h3><p>信息不全的 ICE 单问题成本高，且会放大客户、支撑和开发之间的等待。</p></div>
         <div class="box teal"><h3>可度量</h3><p>首轮信息完整率、二次补充比例、定位启动时间都可以形成过程指标。</p></div>
         <div class="box blue"><h3>可落地</h3><p>模板、SOP、样本台账、最小复现指南均不依赖大规模架构改造。</p></div>
       </div>
