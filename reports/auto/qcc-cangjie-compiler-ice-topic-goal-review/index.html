@@ -357,6 +357,30 @@
       background: #fff2f2;
     }
 
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .evidence-card {
+      border: 1px solid var(--line);
+      background: #fbfcfd;
+      padding: 12px;
+    }
+
+    .evidence-card.wide {
+      grid-column: 1 / -1;
+    }
+
+    .evidence-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid #c5d1dc;
+      background: #111;
+    }
+
     .footer-note {
       color: var(--muted);
       text-align: center;
@@ -373,6 +397,8 @@
       .grid.two, .grid.three, .grid.four, .meta, .decision, .flow {
         grid-template-columns: 1fr;
       }
+      .evidence-grid { grid-template-columns: 1fr; }
+      .evidence-card.wide { grid-column: auto; }
       .step:not(:last-child)::after { display: none; }
       .head { flex-direction: column; }
       .metric-row { grid-template-columns: 1fr; gap: 6px; }
@@ -435,7 +461,24 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">02 现状数据</span>
+          <span class="tag">02 客户支撑案例截图</span>
+          <h2>客户现场问题需要多轮补充材料和环境复现</h2>
+        </div>
+        <p>以下为前期收集的客户支撑沟通截图，原图保留。</p>
+      </div>
+      <div class="evidence-grid">
+        <div class="evidence-card wide"><img src="assets/qcc-ice-cases/case-1.png" alt="客户支撑案例截图 1"></div>
+        <div class="evidence-card"><img src="assets/qcc-ice-cases/case-2.png" alt="客户支撑案例截图 2"></div>
+        <div class="evidence-card"><img src="assets/qcc-ice-cases/case-3.png" alt="客户支撑案例截图 3"></div>
+        <div class="evidence-card"><img src="assets/qcc-ice-cases/case-4.png" alt="客户支撑案例截图 4"></div>
+        <div class="evidence-card"><img src="assets/qcc-ice-cases/case-5.png" alt="客户支撑案例截图 5"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">03 现状数据</span>
           <h2>ICE 在问题总量中占比不高，但信息不全比例突出</h2>
         </div>
         <p>统计周期：2025-12-23 至 2026-06-23。统计对象为 Cangjie/cangjie_compiler 仓库 bug issue。</p>
@@ -473,7 +516,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">03 成本帕累托分析</span>
+          <span class="tag">04 成本帕累托分析</span>
           <h2>从投入成本看，信息不全的 ICE 是高成本专项对象</h2>
         </div>
         <p>成本只计算复现和有效分析启动投入，不包含根因修复、评审、回归和发布成本。</p>
@@ -500,7 +543,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">04 候选主题筛选</span>
+          <span class="tag">05 候选主题筛选</span>
           <h2>不是选成本第一项，而是选最适合 QCC 闭环的对象</h2>
         </div>
         <p>QCC 更适合处理跨角色流程、标准化和度量问题；单模块缺陷修复不宜作为本课题主体。</p>
@@ -522,7 +565,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">05 为什么选这个主题</span>
+          <span class="tag">06 为什么选这个主题</span>
           <h2>选题聚焦“有效分析启动效率”，投入成本明确</h2>
         </div>
         <p>ICE 根因分散在多个编译阶段，短期不适合作为“消灭 ICE”类课题；有效分析启动效率更可控、更可量化。</p>
@@ -538,7 +581,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">06 课题边界</span>
+          <span class="tag">07 课题边界</span>
           <h2>只解决“进入有效分析慢”，不泛化为“解决所有 ICE”</h2>
         </div>
         <p>边界收窄后，目标和交付物都能落到 QCC 小组可执行的流程与工具上。</p>
@@ -568,7 +611,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">07 目标设定</span>
+          <span class="tag">08 目标设定</span>
           <h2>目标聚焦 3 个核心过程指标</h2>
         </div>
         <p>围绕首轮信息完整率、二次补充信息比例、有效分析启动时间建立改善目标。</p>
@@ -593,7 +636,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">08 上会前补充附件</span>
+          <span class="tag">09 上会前补充附件</span>
           <h2>补齐证据附件后进入现状调查阶段</h2>
         </div>
         <p>上会前需要补齐以下材料。</p>
