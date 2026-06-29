@@ -405,8 +405,7 @@
           <div class="status"><strong>33.3%</strong><span>信息不全的 ICE 占比</span></div>
           <div class="status"><strong>56人日</strong><span>信息不全的 ICE 半年有效分析启动成本</span></div>
         </div>
-        <div class="callout"><strong>立项判断：</strong>有条件立项。主题真实且聚焦；上会前需补齐样本台账、支撑记录、启动耗时台账和成本估算复核依据。</div>
-        <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；信息不全的 ICE 指无法独立复现或缺少最小复现材料（源码、命令、环境、附件至少缺一项）的 ICE 样本；成本按 4 人日/问题估算。判定口径将在上会前随机抽 5 个样本联合复核。</div>
+        <div class="callout"><strong>立项判断：</strong>有条件立项。主题真实且聚焦，改善对象明确，适合通过跨角色流程标准化推进。</div>
       </div>
     </section>
 
@@ -450,7 +449,7 @@
       </div>
       <table>
         <thead>
-          <tr><th>指标</th><th>计算口径</th><th>数值</th></tr>
+          <tr><th>指标</th><th>口径</th><th>数值</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -470,18 +469,7 @@
           </tr>
         </tbody>
       </table>
-      <table>
-        <thead>
-          <tr><th>数据来源</th><th>当前用途</th><th>立项后验证动作</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>GitCode issue</td><td>确认问题规模、ICE 占比和信息不全样本。</td><td>逐条复核 ICE 样本，剔除误命中和重复问题；上会前抽 5 个验证“信息不全”判定口径。</td></tr>
-          <tr><td>客户支撑记录</td><td>验证是否存在多轮补充材料、无法拿源码等真实场景。</td><td>补充近 3-6 个月支撑侧工单或沟通记录。</td></tr>
-          <tr><td>开发定位记录</td><td>验证复现、环境对齐、debug 分析的实际投入。</td><td>补齐典型 ICE 从反馈到可分析的耗时台账。</td></tr>
-        </tbody>
-      </table>
-      <div class="callout"><strong>样本明细与口径验证：</strong>14 个信息不全 ICE 样本的 issue 编号、所处编译阶段、复现材料缺失项见立项附件《ICE 样本台账》；上会前随机抽 5 个由支撑与开发联合复核“信息不全”判定，确保口径可重复复核。</div>
-      <p class="source">数据来源：<a href="https://gitcode.com/Cangjie/cangjie_compiler/issues">GitCode Cangjie/cangjie_compiler issues</a>，通过 `gc issue list` 按 bug 标签、ICE 关键词和复现字段完整性统计。</p>
+      <p class="source">数据来源：<a href="https://gitcode.com/Cangjie/cangjie_compiler/issues">GitCode Cangjie/cangjie_compiler issues</a>。</p>
     </section>
 
     <section class="slide">
@@ -490,7 +478,7 @@
           <span class="tag">03 成本帕累托分析</span>
           <h2>从投入成本看，信息不全的 ICE 是高成本专项对象</h2>
         </div>
-        <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与有效分析启动投入。</p>
+        <p>成本只计算复现和有效分析启动投入，不包含根因修复、评审、回归和发布成本。</p>
       </div>
       <table>
         <thead>
@@ -506,16 +494,6 @@
           <tr><td>ICE-复现信息较完整</td><td>28</td><td>1.5 人日</td><td>42 人日</td><td>6.4%</td><td>93.4%</td></tr>
           <tr><td>代码质量/安全健壮性</td><td>18</td><td>1.2 人日</td><td>21.6 人日</td><td>3.3%</td><td>96.7%</td></tr>
           <tr><td>诊断/提示问题</td><td>27</td><td>0.8 人日</td><td>21.6 人日</td><td>3.3%</td><td>100%</td></tr>
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr><th>成本假设</th><th>估算依据</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>复现信息较完整 ICE：1.5 人日/个</td><td>已有最小用例、命令或附件，主要投入在本地复现、阶段确认和责任模块分流。</td></tr>
-          <tr><td>信息不全的 ICE：4 人日/个</td><td>缺少独立复现材料，需要支撑补充、环境对齐、最小化尝试和 debug 版本复现。</td></tr>
-          <tr><td>非 ICE 崩溃：2.5 人日/个</td><td>通常需要运行环境、符号栈和触发路径对齐，成本低于无复现 ICE。</td></tr>
         </tbody>
       </table>
       <div class="callout"><strong>结论：</strong>总成本前三为构建/链接、平台互操作、非 ICE 崩溃，但三者根因分散在构建系统、模块兼容和运行时环境，QCC 小组难以在周期内通过流程标准化闭环；信息不全的 ICE 虽总量不大，但单问题成本最高（4 人日），瓶颈集中在信息采集、分流和复现准备这类跨角色流程，最适合用 QCC 承载。</div>
@@ -595,19 +573,18 @@
           <span class="tag">07 目标设定</span>
           <h2>目标聚焦 3 个核心过程指标</h2>
         </div>
-        <p>优先固化首轮信息完整率、二次补充信息比例、有效分析启动时间，避免目标过散。</p>
+        <p>围绕首轮信息完整率、二次补充信息比例、有效分析启动时间建立改善目标。</p>
       </div>
       <table>
         <thead>
-          <tr><th>指标</th><th>当前基线</th><th>目标值</th><th>说明</th></tr>
+          <tr><th>指标</th><th>改善方向</th><th>目标值</th></tr>
         </thead>
         <tbody>
-          <tr><td>首轮信息完整率</td><td>待测（立项后两周内抽样测得）</td><td>相对基线提升 ≥30 个百分点</td><td>完整标准包含最小复现用例；绝对值待基线确定后校准。</td></tr>
-          <tr><td>二次补充信息比例</td><td>待测</td><td>相对基线降低 ≥30%</td><td>依靠模板和问询清单减少返工。</td></tr>
-          <tr><td>有效分析启动时间</td><td>待测</td><td>相对基线降低 ≥30%</td><td>从客户反馈到开发可有效分析的时间。</td></tr>
+          <tr><td>首轮信息完整率</td><td>提升</td><td>相对基线提升 ≥30 个百分点</td></tr>
+          <tr><td>二次补充信息比例</td><td>降低</td><td>相对基线降低 ≥30%</td></tr>
+          <tr><td>有效分析启动时间</td><td>缩短</td><td>相对基线降低 ≥30%</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>基线测定计划：</strong>立项后两周内对 14 个信息不全 ICE 样本抽样测定各指标现值，作为改善前后对比基准；目标值统一采用相对基线的改善幅度，绝对值待基线确定后校准，避免无基线拍脑袋。</div>
       <div style="margin-top:18px">
         <div class="metric-row"><span>首轮信息完整率：相对基线提升</span><div class="bar"><span style="width:60%"></span></div><b>≥30 个百分点</b></div>
         <div class="metric-row"><span>二次补充信息比例：相对基线降低</span><div class="bar"><span style="width:30%"></span></div><b>≥30%</b></div>
@@ -621,21 +598,20 @@
           <span class="tag">08 上会前补充附件</span>
           <h2>补齐证据附件后进入现状调查阶段</h2>
         </div>
-        <p>该主题建议有条件立项，条件是补齐样本、支撑记录、定位耗时和成本复核材料。</p>
+        <p>上会前需要补齐以下材料。</p>
       </div>
       <table>
         <thead>
-          <tr><th>附件</th><th>必须包含</th><th>用途</th></tr>
+          <tr><th>材料</th><th>内容</th></tr>
         </thead>
         <tbody>
-          <tr><td>信息不全 ICE 样本台账</td><td>14 个 issue 编号、编译阶段、缺失材料、补充轮次、处理状态。</td><td>证明问题对象真实，支撑信息不全判定。</td></tr>
-          <tr><td>客户支撑记录</td><td>近 3-6 个月客户沟通或工单记录，尤其是无法拿源码、多轮补充场景。</td><td>证明痛点不是研发内部假设。</td></tr>
-          <tr><td>有效分析启动耗时台账</td><td>典型 ICE 从客户反馈到开发可分析的时间、等待点、责任角色。</td><td>支撑目标基线和改善收益测算。</td></tr>
-          <tr><td>指标基线测定表</td><td>首轮信息完整率、二次补充比例、有效分析启动时间的当前值。</td><td>避免目标无基线，保证后续效果可验证。</td></tr>
-          <tr><td>成本估算复核记录</td><td>4 人日/问题估算依据、样本复核人、复核日期或会议纪要。</td><td>降低评审对成本假设的质疑。</td></tr>
+          <tr><td>信息不全 ICE 样本台账</td><td>14 个 issue 编号、编译阶段、缺失材料、补充轮次、处理状态。</td></tr>
+          <tr><td>客户支撑记录</td><td>近 3-6 个月客户沟通或工单记录，重点覆盖无法拿源码、多轮补充场景。</td></tr>
+          <tr><td>有效分析启动耗时台账</td><td>典型 ICE 从客户反馈到开发可分析的时间、等待点、责任角色。</td></tr>
+          <tr><td>指标基线测定表</td><td>首轮信息完整率、二次补充比例、有效分析启动时间的当前值。</td></tr>
+          <tr><td>成本估算复核记录</td><td>4 人日/问题估算依据、样本复核人、复核日期或会议纪要。</td></tr>
         </tbody>
       </table>
-      <div class="callout"><strong>进入下一阶段条件：</strong>14 条样本、支撑记录和启动耗时台账能够支撑当前判断后，正式进入现状调查与原因分析。</div>
     </section>
 
     <p class="footer-note">QCC主题及目标评审 · 仓颉编译器信息不全 ICE 问题首轮信息完整率提升</p>
