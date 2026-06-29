@@ -405,7 +405,7 @@
           <div class="status"><strong>33.3%</strong><span>信息不全的 ICE 占比</span></div>
           <div class="status"><strong>56人日</strong><span>信息不全的 ICE 半年有效分析启动成本</span></div>
         </div>
-        <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；信息不全的 ICE 指复现信息不独立或缺少完整最小复现材料的 ICE 样本；成本按 4 人日/问题估算。</div>
+        <div class="callout"><strong>统计口径：</strong>总问题数按近 6 个月 bug issue 统计；ICE 占比按 ICE 关键词命中计算；信息不全的 ICE 指无法独立复现或缺少最小复现材料（源码、命令、环境、附件至少缺一项）的 ICE 样本；成本按 4 人日/问题估算。判定口径将在上会前随机抽 5 个样本联合复核。</div>
       </div>
     </section>
 
@@ -427,7 +427,7 @@
           <p>缺少最小复现时，开发难以从 release 日志直接还原触发路径。</p>
         </div>
         <div class="box purple">
-          <h3>协同侧</h3>
+          <h3>支撑侧</h3>
           <p>支撑、客户、开发之间多轮补充材料，有效分析启动时间被拉长。</p>
         </div>
       </div>
@@ -485,7 +485,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">03 投入成本柏拉图</span>
+          <span class="tag">03 成本帕累托分析</span>
           <h2>从投入成本看，信息不全的 ICE 是高成本专项对象</h2>
         </div>
         <p>分类按 issue 标题和正文关键词初步归类，成本只估算复现与有效分析启动投入。</p>
