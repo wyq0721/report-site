@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29 19:49:05",
+  "generated_at": "2026-06-29 19:50:19",
   "reports": {
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
@@ -30,11 +30,11 @@
       "updated_at": "2026-06-25 22:09:53"
     },
     "qcc_cangjie_compiler_ice_topic_goal_review.html": {
-      "sha256": "88c466f8ee6e21cd021cd791651339afb10a0656af94b293eda5be125c5e6c40",
+      "sha256": "6db81f76cc40e9047b7e9e4ca8970e59a792d630ecf50bb1e0043364867b5999",
       "slug": "qcc-cangjie-compiler-ice-topic-goal-review",
       "source_name": "qcc_cangjie_compiler_ice_topic_goal_review.html",
       "title": "QCC主题及目标评审 - 仓颉编译器ICE有效分析启动效率提升",
-      "updated_at": "2026-06-29 19:49:05"
+      "updated_at": "2026-06-29 19:50:19"
     },
     "季度民主生活会_策划案.html": {
       "sha256": "800eef5a9897d01165fc0673af2474d56c96fbc0134f7ce917156bd5966af76b",
