@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-29 21:35:39",
+  "generated_at": "2026-06-29 21:48:06",
   "reports": {
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
@@ -30,11 +30,18 @@
       "updated_at": "2026-06-25 22:09:53"
     },
     "qcc_cangjie_compiler_ice_topic_goal_review.html": {
+      "assets": [
+        "assets/qcc-ice-cases/case-1.png",
+        "assets/qcc-ice-cases/case-2.png",
+        "assets/qcc-ice-cases/case-3.png",
+        "assets/qcc-ice-cases/case-4.png",
+        "assets/qcc-ice-cases/case-5.png"
+      ],
       "sha256": "3e515db02dd245adbcbf8e3c4c421eda44c7a8cd2f637999f419126430955662",
       "slug": "qcc-cangjie-compiler-ice-topic-goal-review",
       "source_name": "qcc_cangjie_compiler_ice_topic_goal_review.html",
       "title": "QCC主题及目标评审 - 信息不全ICE首轮信息完整率提升",
-      "updated_at": "2026-06-29 21:35:39"
+      "updated_at": "2026-06-29 21:48:06"
     },
     "季度民主生活会_策划案.html": {
       "sha256": "800eef5a9897d01165fc0673af2474d56c96fbc0134f7ce917156bd5966af76b",
