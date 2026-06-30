@@ -426,6 +426,21 @@
       max-width: 960px;
     }
 
+    .evidence-stack {
+      display: grid;
+      grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .evidence-stack .portrait {
+      max-width: none;
+    }
+
+    .evidence-stack .short {
+      align-self: start;
+    }
+
     .evidence-card img {
       display: block;
       width: 100%;
@@ -450,6 +465,7 @@
       .grid.two, .grid.three, .grid.four, .meta, .decision, .flow {
         grid-template-columns: 1fr;
       }
+      .evidence-stack { grid-template-columns: 1fr; }
       .evidence-grid { grid-template-columns: 1fr; }
       .evidence-card.wide { grid-column: auto; }
       .step:not(:last-child)::after { display: none; }
@@ -568,22 +584,10 @@
           <span class="tag">05 现场案例（四）</span>
           <h2>客户支撑过程存在多轮补充和环境复现</h2>
         </div>
-        <p>客户工程、SDK 版本、架构平台和编译日志共同决定复现效率。</p>
+        <p>客户工程、SDK 版本、架构平台和复现结果属于同一问题闭环。</p>
       </div>
-      <div class="evidence-single">
+      <div class="evidence-stack">
         <div class="evidence-card portrait"><img src="assets/qcc-ice-cases/case-4.png" alt="客户支撑案例截图 4"></div>
-      </div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">06 现场案例（五）</span>
-          <h2>客户支撑过程存在多轮补充和环境复现</h2>
-        </div>
-        <p>版本替换后仍需确认是否复现，并继续进入根因分析。</p>
-      </div>
-      <div class="evidence-single">
         <div class="evidence-card short"><img src="assets/qcc-ice-cases/case-5.png" alt="客户支撑案例截图 5"></div>
       </div>
     </section>
@@ -591,7 +595,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">07 备选主题来源</span>
+          <span class="tag">06 备选主题来源</span>
           <h2>从 issue 规模和启动成本中形成备选主题</h2>
         </div>
         <p>统计周期：2025-12-23 至 2026-06-23。统计对象为 Cangjie/cangjie_compiler 仓库 bug issue。</p>
@@ -619,7 +623,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">08 因果矩阵选题</span>
+          <span class="tag">07 因果矩阵选题</span>
           <h2>信息不全 ICE 最符合 QCC 承载条件</h2>
         </div>
         <p>评分采用 1 / 3 / 6 / 9 四档；加权得分 = Σ(单项评分 × 权重)，满分 900。</p>
@@ -641,7 +645,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">09 评分依据</span>
+          <span class="tag">08 评分依据</span>
           <h2>评分标准来自问题数据和 QCC 可控性</h2>
         </div>
         <p>同一维度内按 1 / 3 / 6 / 9 拉开差距，避免只按主观偏好选题。</p>
@@ -664,7 +668,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">10 主题边界</span>
+          <span class="tag">09 主题边界</span>
           <h2>选题后先明确课题边界</h2>
         </div>
         <p>课题起点为客户反馈 ICE，终点为开发具备复现和有效分析材料。</p>
@@ -694,7 +698,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">11 流程梳理</span>
+          <span class="tag">10 流程梳理</span>
           <h2>信息不全 ICE 的流转链路集中在 6 个环节</h2>
         </div>
         <p>启动前耗时以 14 个信息不全 ICE 样本估算。</p>
@@ -726,7 +730,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">12 主要流转因素</span>
+          <span class="tag">11 主要流转因素</span>
           <h2>最大卡点是最小复现材料缺失</h2>
         </div>
         <p>样本对象为 14 个信息不全 ICE。</p>
@@ -748,7 +752,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">13 目标设定</span>
+          <span class="tag">12 目标设定</span>
           <h2>围绕最大卡点设定 3 个过程目标</h2>
         </div>
         <p>目标由“最小复现材料缺失”这一主要因素展开。</p>
@@ -779,7 +783,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">14 可行性论证</span>
+          <span class="tag">13 可行性论证</span>
           <h2>目标可通过流程标准化和材料模板落地</h2>
         </div>
         <p>措施集中在首轮采集、支撑问询、triage 分流和最小复现准备。</p>
