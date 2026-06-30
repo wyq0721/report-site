@@ -697,11 +697,17 @@
           <tr><td>有效分析启动时间</td><td>缩短</td><td>相对基线降低 ≥30%</td><td>首轮采集和补齐复现环节等待</td></tr>
         </tbody>
       </table>
-      <div style="margin-top:18px">
-        <div class="metric-row"><span>首轮最小复现材料完整率</span><div class="bar"><span style="width:60%"></span></div><b>+30pp</b></div>
-        <div class="metric-row"><span>二次补充信息比例</span><div class="bar"><span style="width:30%"></span></div><b>-30%</b></div>
-        <div class="metric-row"><span>有效分析启动时间</span><div class="bar"><span style="width:30%"></span></div><b>-30%</b></div>
-      </div>
+      <table class="score-guide">
+        <thead>
+          <tr><th>目标值</th><th>来源依据</th><th>测算逻辑</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>+30 个百分点</td><td>14 个信息不全 ICE 中，8 个缺少可脱敏最小复现工程/源码，占 57.1%。</td><td>通过标准采集模板和脱敏材料清单，优先覆盖最大缺口；目标取主要缺口约一半改善幅度。</td></tr>
+          <tr><td>-30%</td><td>二次补充主要来自命令、依赖、SDK、架构平台、日志阶段等缺失项，合计 42.8%。</td><td>将高频缺失项纳入首轮必填字段，目标取高频缺失项可控改善区间。</td></tr>
+          <tr><td>-30%</td><td>首轮采集和补齐复现合计占启动前耗时 70%。</td><td>改善集中在 70% 主要耗时环节，按其中约四成可压缩空间折算为整体启动时间降低 30%。</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>目标来源：</strong>目标值来自样本主要缺口、流程耗时占比和小组可控措施的组合测算；正式现状调查阶段需用台账固化基线。</div>
     </section>
 
     <section class="slide">
