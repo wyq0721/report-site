@@ -260,6 +260,16 @@
       font-weight: 800;
     }
 
+    .score-guide {
+      font-size: 13px;
+      margin-top: 14px;
+    }
+
+    .score-guide th,
+    .score-guide td {
+      padding: 8px 10px;
+    }
+
     .flow {
       display: grid;
       grid-template-columns: repeat(6, minmax(130px, 1fr));
@@ -524,6 +534,17 @@
           <tr><td>平台/互操作兼容问题</td><td>3</td><td>6</td><td>3</td><td>3</td><td>3</td><td>375</td></tr>
           <tr><td>非 ICE 崩溃/运行时异常</td><td>6</td><td>6</td><td>3</td><td>3</td><td>3</td><td>450</td></tr>
           <tr class="highlight-row"><td>信息不全的 ICE</td><td>9</td><td>9</td><td>9</td><td>9</td><td>9</td><td>900</td></tr>
+        </tbody>
+      </table>
+      <table class="score-guide">
+        <thead>
+          <tr><th>评分</th><th>评分标准</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>9</td><td>该维度表现强：影响直接、成本高、可控性强、周期内可闭环，或指标可直接量化。</td></tr>
+          <tr><td>6</td><td>该维度表现较强：问题明确但受部分外部因素影响，需跨角色配合后闭环。</td></tr>
+          <tr><td>3</td><td>该维度表现一般：有改善价值，但问题分散、依赖较多，短周期闭环不确定。</td></tr>
+          <tr><td>1</td><td>该维度表现弱：影响有限或主要超出小组控制范围，难以形成可度量改善。</td></tr>
         </tbody>
       </table>
       <div class="callout"><strong>选题结论：</strong>确定主题为“提升仓颉编译器信息不全 ICE 问题首轮信息完整率，缩短有效分析启动时间”。</div>
