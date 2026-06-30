@@ -408,17 +408,30 @@
       grid-column: 1 / -1;
     }
 
+    .evidence-single {
+      display: flex;
+      justify-content: center;
+    }
+
+    .evidence-single .evidence-card {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .evidence-single .evidence-card.portrait {
+      max-width: 680px;
+    }
+
+    .evidence-single .evidence-card.short {
+      max-width: 960px;
+    }
+
     .evidence-card img {
       display: block;
       width: 100%;
       height: auto;
       border: 1px solid #c5d1dc;
       background: #111;
-    }
-
-    .evidence-card.compact img {
-      max-height: 310px;
-      object-fit: contain;
     }
 
     .footer-note {
@@ -518,7 +531,7 @@
         </div>
         <p>客户侧反馈通常需要补充代码、依赖、环境和完整编译日志。</p>
       </div>
-      <div class="evidence-grid">
+      <div class="evidence-single">
         <div class="evidence-card wide"><img src="assets/qcc-ice-cases/case-1.png" alt="客户支撑案例截图 1"></div>
       </div>
     </section>
@@ -529,20 +542,56 @@
           <span class="tag">03 现场案例（二）</span>
           <h2>客户支撑过程存在多轮补充和环境复现</h2>
         </div>
-        <p>同类案例体现补充会议、环境对齐、版本替换后复现等重复流转。</p>
+        <p>编译命令、依赖路径和会议补充信息需要完整保留，便于开发复现。</p>
       </div>
-      <div class="evidence-grid">
-        <div class="evidence-card compact"><img src="assets/qcc-ice-cases/case-2.png" alt="客户支撑案例截图 2"></div>
-        <div class="evidence-card compact"><img src="assets/qcc-ice-cases/case-3.png" alt="客户支撑案例截图 3"></div>
-        <div class="evidence-card compact"><img src="assets/qcc-ice-cases/case-4.png" alt="客户支撑案例截图 4"></div>
-        <div class="evidence-card compact"><img src="assets/qcc-ice-cases/case-5.png" alt="客户支撑案例截图 5"></div>
+      <div class="evidence-single">
+        <div class="evidence-card portrait"><img src="assets/qcc-ice-cases/case-2.png" alt="客户支撑案例截图 2"></div>
       </div>
     </section>
 
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">04 备选主题来源</span>
+          <span class="tag">04 现场案例（三）</span>
+          <h2>客户支撑过程存在多轮补充和环境复现</h2>
+        </div>
+        <p>现场复现依赖设备、环境和责任角色协同确认。</p>
+      </div>
+      <div class="evidence-single">
+        <div class="evidence-card"><img src="assets/qcc-ice-cases/case-3.png" alt="客户支撑案例截图 3"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">05 现场案例（四）</span>
+          <h2>客户支撑过程存在多轮补充和环境复现</h2>
+        </div>
+        <p>客户工程、SDK 版本、架构平台和编译日志共同决定复现效率。</p>
+      </div>
+      <div class="evidence-single">
+        <div class="evidence-card portrait"><img src="assets/qcc-ice-cases/case-4.png" alt="客户支撑案例截图 4"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">06 现场案例（五）</span>
+          <h2>客户支撑过程存在多轮补充和环境复现</h2>
+        </div>
+        <p>版本替换后仍需确认是否复现，并继续进入根因分析。</p>
+      </div>
+      <div class="evidence-single">
+        <div class="evidence-card short"><img src="assets/qcc-ice-cases/case-5.png" alt="客户支撑案例截图 5"></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">07 备选主题来源</span>
           <h2>从 issue 规模和启动成本中形成备选主题</h2>
         </div>
         <p>统计周期：2025-12-23 至 2026-06-23。统计对象为 Cangjie/cangjie_compiler 仓库 bug issue。</p>
