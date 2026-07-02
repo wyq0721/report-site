@@ -289,6 +289,22 @@
       padding: 8px 10px;
     }
 
+    .pareto-table .bar-cell {
+      min-width: 190px;
+    }
+
+    .pareto-bar {
+      height: 14px;
+      background: #e7edf3;
+      position: relative;
+    }
+
+    .pareto-bar span {
+      display: block;
+      height: 100%;
+      background: var(--teal);
+    }
+
     .flow {
       display: grid;
       grid-template-columns: repeat(6, minmax(130px, 1fr));
@@ -480,7 +496,7 @@
     <section class="slide cover">
       <div>
         <div class="kicker">QCC主题及目标评审</div>
-        <h1>提升仓颉编译器信息不全 ICE 问题首轮信息完整率，缩短有效分析启动时间</h1>
+        <h1>提升仓颉 ICE 首轮信息完整率</h1>
       </div>
     </section>
 
@@ -594,10 +610,10 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">06 备选主题来源</span>
-          <h2>从 issue 规模和启动成本中形成备选主题</h2>
+          <span class="tag">06 问题类型识别</span>
+          <h2>从 issue 规模和启动成本中识别改善对象</h2>
         </div>
-        <p>统计周期：2025-12-23 至 2026-06-23。统计对象为 Cangjie/cangjie_compiler 仓库 bug issue。</p>
+        <p>这里先做问题类型归类，不直接等同于 QCC 课题；后续再用矩阵筛选改善对象。</p>
       </div>
       <div class="grid four">
         <div class="box blue"><h3>386 个</h3><p>近 6 个月 bug issue 总量。</p></div>
@@ -607,7 +623,7 @@
       </div>
       <table>
         <thead>
-          <tr><th>备选方向</th><th>样本数量</th><th>估算启动成本</th><th>问题特征</th></tr>
+          <tr><th>问题类型</th><th>样本数量</th><th>估算启动成本</th><th>问题特征</th></tr>
         </thead>
         <tbody>
           <tr><td>构建/链接/产物问题</td><td>103</td><td>154.5 人日</td><td>问题规模和总成本最高，根因分散在构建系统、产物和平台差异。</td></tr>
@@ -622,29 +638,7 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">07 因果矩阵选题</span>
-          <h2>信息不全 ICE 最符合 QCC 承载条件</h2>
-        </div>
-        <p>评分采用 1 / 3 / 6 / 9 四档；加权得分 = Σ(单项评分 × 权重)，满分 900。</p>
-      </div>
-      <table>
-        <thead>
-          <tr><th>候选主题</th><th>客户阻塞影响<br>25%</th><th>启动成本<br>25%</th><th>小组可控性<br>20%</th><th>周期闭环<br>15%</th><th>指标可量化<br>15%</th><th>加权得分</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>构建/链接/产物问题</td><td>3</td><td>6</td><td>3</td><td>3</td><td>6</td><td>420</td></tr>
-          <tr><td>平台/互操作兼容问题</td><td>3</td><td>6</td><td>3</td><td>3</td><td>3</td><td>375</td></tr>
-          <tr><td>非 ICE 崩溃/运行时异常</td><td>6</td><td>6</td><td>3</td><td>3</td><td>3</td><td>450</td></tr>
-          <tr class="highlight-row"><td>信息不全的 ICE</td><td>9</td><td>9</td><td>9</td><td>9</td><td>9</td><td>900</td></tr>
-        </tbody>
-      </table>
-      <div class="callout"><strong>选题结论：</strong>确定主题为“提升仓颉编译器信息不全 ICE 问题首轮信息完整率，缩短有效分析启动时间”。</div>
-    </section>
-
-    <section class="slide">
-      <div class="head">
-        <div>
-          <span class="tag">08 评分依据</span>
+          <span class="tag">07 评分依据</span>
           <h2>评分标准来自问题数据和 QCC 可控性</h2>
         </div>
         <p>同一维度内按 1 / 3 / 6 / 9 拉开差距，避免只按主观偏好选题。</p>
@@ -667,7 +661,52 @@
     <section class="slide">
       <div class="head">
         <div>
-          <span class="tag">09 主题边界</span>
+          <span class="tag">08 因果矩阵选题</span>
+          <h2>信息不全 ICE 最适合作为 QCC 改善对象</h2>
+        </div>
+        <p>评分采用 1 / 3 / 6 / 9 四档；加权得分 = Σ(单项评分 × 权重)，满分 900。</p>
+      </div>
+      <table>
+        <thead>
+          <tr><th>问题类型</th><th>客户阻塞影响<br>25%</th><th>启动成本<br>25%</th><th>小组可控性<br>20%</th><th>周期闭环<br>15%</th><th>指标可量化<br>15%</th><th>加权得分</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>构建/链接/产物问题</td><td>3</td><td>6</td><td>3</td><td>3</td><td>6</td><td>420</td></tr>
+          <tr><td>平台/互操作兼容问题</td><td>3</td><td>6</td><td>3</td><td>3</td><td>3</td><td>375</td></tr>
+          <tr><td>非 ICE 崩溃/运行时异常</td><td>6</td><td>6</td><td>3</td><td>3</td><td>3</td><td>450</td></tr>
+          <tr class="highlight-row"><td>信息不全的 ICE</td><td>9</td><td>9</td><td>9</td><td>9</td><td>9</td><td>900</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>选题结论：</strong>从问题类型中选定“信息不全 ICE”作为 QCC 改善对象，课题聚焦首轮信息完整率和有效分析启动时间。</div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">09 柏拉图验证</span>
+          <h2>信息不全 ICE 单项成本高，累计成本进入前四</h2>
+        </div>
+        <p>按复现和有效分析启动投入估算，不包含根因修复、评审、回归和发布成本。</p>
+      </div>
+      <table class="pareto-table">
+        <thead>
+          <tr><th>问题类型</th><th>总成本</th><th>成本占比</th><th>累计占比</th><th>柏拉图占比</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>构建/链接/产物问题</td><td>154.5 人日</td><td>22.3%</td><td>22.3%</td><td class="bar-cell"><div class="pareto-bar"><span style="width:22.3%"></span></div></td></tr>
+          <tr><td>平台/互操作兼容问题</td><td>124 人日</td><td>17.9%</td><td>40.2%</td><td class="bar-cell"><div class="pareto-bar"><span style="width:17.9%"></span></div></td></tr>
+          <tr><td>非 ICE 崩溃/运行时异常</td><td>112.5 人日</td><td>16.2%</td><td>56.4%</td><td class="bar-cell"><div class="pareto-bar"><span style="width:16.2%"></span></div></td></tr>
+          <tr class="highlight-row"><td>信息不全的 ICE</td><td>98 人日</td><td>14.1%</td><td>70.6%</td><td class="bar-cell"><div class="pareto-bar"><span style="width:14.1%"></span></div></td></tr>
+          <tr><td>其他问题合计</td><td>204.2 人日</td><td>29.4%</td><td>100%</td><td class="bar-cell"><div class="pareto-bar"><span style="width:29.4%"></span></div></td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>验证结论：</strong>信息不全 ICE 总量不最大，但按启动成本排序进入前四，且改善点集中在首轮采集、补齐复现和问题分流，适合 QCC 承载。</div>
+    </section>
+
+    <section class="slide">
+      <div class="head">
+        <div>
+          <span class="tag">10 主题边界</span>
           <h2>选题后先明确课题边界</h2>
         </div>
         <p>课题起点为客户反馈 ICE，终点为开发具备复现和有效分析材料。</p>
