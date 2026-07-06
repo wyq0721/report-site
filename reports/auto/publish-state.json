@@ -1,6 +1,14 @@
 {
-  "generated_at": "2026-07-02 11:33:46",
+  "generated_at": "2026-07-06 19:24:05",
   "reports": {
+    "aceharness-external-promotion-report.html": {
+      "assets": [],
+      "sha256": "641a278ab37419352ec8beb6d155a425674603186928cb1695f1df55d3424e98",
+      "slug": "aceharness-external-promotion-report",
+      "source_name": "aceharness-external-promotion-report.html",
+      "title": "ACEHarness | AI Multi-Agent 工程协作平台",
+      "updated_at": "2026-07-06 19:24:05"
+    },
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
       "slug": "cangjie-codegen-error-analysis",
