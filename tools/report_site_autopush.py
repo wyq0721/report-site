@@ -2,8 +2,10 @@
 """Publish dropped HTML reports into cangjie-report-site and push GitHub Pages.
 
 The script scans only top-level *.html files in the drop directory. Each file is
-copied to reports/auto/<slug>/index.html, reports/auto/index.html is regenerated,
-and changes under reports/auto are committed and pushed to origin/main.
+copied to reports/auto/<slug>/index.html, local relative assets referenced by
+the HTML are copied with it, reports/auto/index.html is regenerated, and changes
+under reports/auto are committed and pushed to origin/main. Removing a previously
+published HTML file from the drop directory unpublishes its report.
 """
 
 from __future__ import annotations
@@ -18,7 +20,9 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 DROP_DIR = Path(os.environ.get("REPORT_SITE_DROP_DIR", "/Users/cjdebug/Documents/github/report-site-drop"))
@@ -41,6 +45,13 @@ LOCK_FILE = SITE_ROOT / "reports" / "auto" / ".publish.lock"
 WORK_ROOT = SITE_ROOT
 AUTO_DIR = SITE_ROOT / "reports" / "auto"
 STATE_FILE = AUTO_DIR / "publish-state.json"
+SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]{0,89}$")
+ASSET_ATTR_PATTERN = re.compile(
+    r"""(?:src|href|poster|data-src|data-original)\s*=\s*["']([^"']+)["']""",
+    flags=re.IGNORECASE,
+)
+SRCSET_ATTR_PATTERN = re.compile(r"""srcset\s*=\s*["']([^"']+)["']""", flags=re.IGNORECASE)
+URL_FUNC_PATTERN = re.compile(r"""url\(\s*(['"]?)([^'")]+)\1\s*\)""", flags=re.IGNORECASE)
 HOOK_PATH_ENTRIES = (
     str(Path.home() / ".npm-global" / "bin"),
     "/opt/homebrew/bin",
@@ -120,6 +131,95 @@ def read_text_lossy(path: Path) -> str:
     return data.decode("utf-8", errors="replace")
 
 
+def clean_asset_ref(ref: str) -> str | None:
+    ref = html.unescape(ref).strip()
+    if not ref or ref.startswith("#") or ref.startswith("//"):
+        return None
+
+    parsed = urlsplit(ref)
+    if parsed.scheme or parsed.netloc:
+        return None
+
+    path = unquote(parsed.path).replace("\\", "/")
+    if not path or path.startswith("/") or path.startswith("../"):
+        return None
+
+    parts = [part for part in path.split("/") if part not in ("", ".")]
+    if not parts or any(part == ".." for part in parts):
+        return None
+    if parts[-1].lower().endswith(".html"):
+        return None
+    return "/".join(parts)
+
+
+def extract_asset_refs(text: str) -> set[str]:
+    refs = set()
+    for pattern in (ASSET_ATTR_PATTERN, URL_FUNC_PATTERN):
+        for match in pattern.finditer(text):
+            raw = match.group(match.lastindex or 1)
+            ref = clean_asset_ref(raw)
+            if ref:
+                refs.add(ref)
+
+    for match in SRCSET_ATTR_PATTERN.finditer(text):
+        for item in match.group(1).split(","):
+            raw = item.strip().split()[0] if item.strip() else ""
+            ref = clean_asset_ref(raw)
+            if ref:
+                refs.add(ref)
+    return refs
+
+
+def is_within(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def copy_if_changed(src: Path, dst: Path) -> bool:
+    if dst.exists() and dst.is_file() and src.stat().st_size == dst.stat().st_size and sha256_file(src) == sha256_file(dst):
+        return False
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+    return True
+
+
+def sync_report_assets(src_html: Path, dst_dir: Path) -> tuple[bool, list[str]]:
+    drop_root = DROP_DIR.resolve()
+    asset_refs = extract_asset_refs(read_text_lossy(src_html))
+    copied_assets: set[str] = set()
+    changed = False
+
+    for rel_ref in sorted(asset_refs):
+        src_asset = DROP_DIR / rel_ref
+        if not is_within(src_asset, drop_root) or not src_asset.is_file():
+            continue
+
+        dst_asset = dst_dir / rel_ref
+        if copy_if_changed(src_asset, dst_asset):
+            changed = True
+        copied_assets.add(rel_ref)
+
+    for existing in sorted(dst_dir.rglob("*"), reverse=True):
+        if not existing.is_file():
+            continue
+        rel = existing.relative_to(dst_dir).as_posix()
+        if rel == "index.html" or rel in copied_assets:
+            continue
+        existing.unlink()
+        changed = True
+
+    for directory in sorted((p for p in dst_dir.rglob("*") if p.is_dir()), reverse=True):
+        try:
+            directory.rmdir()
+        except OSError:
+            pass
+
+    return changed, sorted(copied_assets)
+
+
 def extract_title(path: Path) -> str:
     text = read_text_lossy(path)
     for pattern in (r"<title[^>]*>(.*?)</title>", r"<h1[^>]*>(.*?)</h1>"):
@@ -140,6 +240,14 @@ def slug_for(path: Path, digest: str) -> str:
     return slug[:90].strip("-") or ("report-" + digest[:10])
 
 
+def report_slug(path: Path, digest: str, existing: object) -> str:
+    if isinstance(existing, dict):
+        existing_slug = existing.get("slug")
+        if isinstance(existing_slug, str) and SLUG_PATTERN.fullmatch(existing_slug):
+            return existing_slug
+    return slug_for(path, digest)
+
+
 def load_state() -> dict:
     if not STATE_FILE.exists():
         return {"reports": {}}
@@ -154,6 +262,20 @@ def load_state() -> dict:
 
 def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def remove_published_report(slug: object) -> bool:
+    if not isinstance(slug, str) or not SLUG_PATTERN.fullmatch(slug):
+        return False
+
+    report_dir = AUTO_DIR / slug
+    if not report_dir.exists():
+        return False
+    if not report_dir.is_dir():
+        return False
+
+    shutil.rmtree(report_dir)
+    return True
 
 
 def render_auto_index(reports: dict, generated_at: str) -> str:
@@ -222,20 +344,40 @@ def publish_reports() -> bool:
     changed = False
 
     html_files = sorted(p for p in DROP_DIR.glob("*.html") if p.is_file())
+    current_source_names = {src.name for src in html_files}
+    for source_name, item in list(reports.items()):
+        if source_name in current_source_names:
+            continue
+
+        removed = reports.pop(source_name)
+        if not any(report.get("slug") == removed.get("slug") for report in reports.values()):
+            remove_published_report(removed.get("slug"))
+        changed = True
+
     for src in html_files:
         digest = sha256_file(src)
         existing = reports.get(src.name)
-        if existing and existing.get("sha256") == digest:
-            continue
-        slug = slug_for(src, digest)
+        slug = report_slug(src, digest, existing)
         dst_dir = AUTO_DIR / slug
         dst_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst_dir / "index.html")
+        assets_changed, asset_paths = sync_report_assets(src, dst_dir)
+        if (
+            isinstance(existing, dict)
+            and existing.get("sha256") == digest
+            and existing.get("slug") == slug
+            and existing.get("assets", []) == asset_paths
+            and not assets_changed
+        ):
+            continue
+
+        if copy_if_changed(src, dst_dir / "index.html"):
+            changed = True
         reports[src.name] = {
             "source_name": src.name,
             "slug": slug,
             "title": extract_title(src),
             "sha256": digest,
+            "assets": asset_paths,
             "updated_at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
         changed = True
@@ -271,8 +413,29 @@ def commit_and_push() -> None:
     # --no-verify: these are mechanical republish commits, and the global
     # commit-msg hook aborts on a missing `commitlint` in the LaunchAgent env.
     run(["git", "commit", "--no-verify", "-m", f"docs: auto publish reports {msg_date}"])
-    run(["git", "push", "--no-verify", "origin", f"HEAD:{PUBLISH_BRANCH}"])
+    push_with_retry(["git", "push", "--no-verify", "origin", f"HEAD:{PUBLISH_BRANCH}"])
     print(f"Published reports/auto to origin/{PUBLISH_BRANCH}.")
+
+
+def push_with_retry(cmd: list[str], *, attempts: int = 4, delay_seconds: int = 15) -> None:
+    last_error: subprocess.CalledProcessError | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            run(cmd)
+            return
+        except subprocess.CalledProcessError as exc:
+            last_error = exc
+            if attempt >= attempts:
+                break
+            sys.stderr.write(
+                f"Push attempt {attempt}/{attempts} failed; retrying in {delay_seconds}s.\n"
+            )
+            if exc.stderr:
+                sys.stderr.write(exc.stderr + "\n")
+            sys.stderr.flush()
+            time.sleep(delay_seconds)
+    assert last_error is not None
+    raise last_error
 
 
 def main() -> int:
