@@ -1,0 +1,19 @@
+reports/auto/aceharness-external-promotion-report/index.html
+  s_f9a62e154e9eb7::t_f0d96cee9f15dd 649-673,748-749,753-757
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5a0ad79037df9e13a3fbef7f3d0564b6078ee564",
+  "prompts": {},
+  "sessions": {
+    "s_f9a62e154e9eb7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3ac7-7a26-7712-8d63-e03cfc54aa47",
+        "model": "gpt-5.4"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
