@@ -1167,5 +1167,171 @@
       <div class="command" aria-label="快速开始命令">npm install -g @cangjielang/aceharness<br>ace --help<br>ace service<br>ace update beta</div>
     </div>
   </footer>
+
+  <section id="dt-quality-appendix" class="dt-appendix">
+    <div class="shell">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Appendix</div>
+          <p class="section-note">面向 DT 研发效率与质量提升的端到端流程补充图。</p>
+        </div>
+        <h2>附录：ACEHarness 驱动的 DT 质量闭环</h2>
+      </div>
+
+      <div class="dt-appendix-card">
+        <svg class="dt-flow-svg" viewBox="0 0 1200 600" role="img" aria-label="ACEHarness 驱动的 DT 质量闭环流程图">
+          <style>
+            .dt-flow-svg .dg-section-label { font: 900 13px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #334155; }
+            .dt-flow-svg .dg-section-note { font: 11px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #718096; }
+            .dt-flow-svg .dg-title { font: 900 15px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #142033; }
+            .dt-flow-svg .dg-desc { font: 11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #5d6b7c; }
+            .dt-flow-svg .dg-small { font: 10.5px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; fill: #718096; }
+            .dt-flow-svg .dg-stage rect { fill: #e8f7ef; stroke: #11825b; stroke-width: 2; }
+            .dt-flow-svg .dg-input rect { fill: #f8fafc; stroke: #64748b; stroke-width: 2; }
+            .dt-flow-svg .dg-todo rect { fill: #fff3e8; stroke: #e35f16; stroke-width: 2; stroke-dasharray: 6 5; }
+            .dt-flow-svg .dg-gate rect { fill: #fffdf8; stroke: #e35f16; stroke-width: 2; stroke-dasharray: 5 5; }
+            .dt-flow-svg .dg-bus rect { fill: #142238; stroke: #263b56; stroke-width: 2; }
+            .dt-flow-svg .dg-bus .dg-title { fill: #ffffff; font-size: 18px; }
+            .dt-flow-svg .dg-bus .dg-desc { fill: #d6e0ec; font-size: 12px; }
+            .dt-flow-svg .dg-evidence rect { fill: #eef4ff; stroke: #2563eb; stroke-width: 2; }
+            .dt-flow-svg .dg-arrow { fill: none; stroke: #334155; stroke-width: 2.2; }
+            .dt-flow-svg .dg-attach { fill: none; stroke: #6b7c91; stroke-width: 1.5; }
+            .dt-flow-svg .dg-todo-link { fill: none; stroke: #e35f16; stroke-width: 2; stroke-dasharray: 6 6; }
+            .dt-flow-svg .dg-feedback { fill: none; stroke: #2563eb; stroke-width: 2; stroke-dasharray: 5 5; }
+          </style>
+          <defs>
+            <marker id="dt-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"></path>
+            </marker>
+            <marker id="dt-arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#e35f16"></path>
+            </marker>
+            <marker id="dt-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"></path>
+            </marker>
+          </defs>
+
+          <rect x="24" y="56" width="1152" height="376" rx="12" fill="#ffffff" stroke="#d8e1eb"></rect>
+          <text class="dg-section-label" x="42" y="84">质量门禁主流程</text>
+          <text class="dg-section-note" x="42" y="104">DT 设计不依赖实现 PR；最小输入：Spec/特性设计/影响范围；PR/Diff 用于后置校验。</text>
+
+          <path class="dg-arrow" d="M 162 244 L 174 244" marker-end="url(#dt-arrow)"></path>
+          <path class="dg-arrow" d="M 310 244 L 346 244" marker-end="url(#dt-arrow)"></path>
+          <path class="dg-arrow" d="M 482 244 L 518 244" marker-end="url(#dt-arrow)"></path>
+          <path class="dg-arrow" d="M 654 244 L 690 244" marker-end="url(#dt-arrow)"></path>
+          <path class="dg-arrow" d="M 826 244 L 862 244" marker-end="url(#dt-arrow)"></path>
+          <path class="dg-arrow" d="M 998 244 L 1034 244" marker-end="url(#dt-arrow)"></path>
+
+          <path class="dg-attach" d="M 244 280 L 244 320"></path>
+          <path class="dg-attach" d="M 416 280 L 416 320"></path>
+          <path class="dg-attach" d="M 588 280 L 588 320"></path>
+          <path class="dg-attach" d="M 760 280 L 760 320"></path>
+          <path class="dg-attach" d="M 932 280 L 932 320"></path>
+
+          <path class="dg-todo-link" d="M 244 150 L 244 208" marker-end="url(#dt-arrow-orange)"></path>
+          <path class="dg-todo-link" d="M 416 150 L 416 208" marker-end="url(#dt-arrow-orange)"></path>
+          <path class="dg-todo-link" d="M 932 150 L 932 208" marker-end="url(#dt-arrow-orange)"></path>
+          <path class="dg-todo-link" d="M 1104 150 L 1104 208" marker-end="url(#dt-arrow-orange)"></path>
+          <path class="dg-todo-link" d="M 760 398 L 760 282" marker-end="url(#dt-arrow-orange)"></path>
+          <path class="dg-todo-link" d="M 1018 398 C 998 354, 960 320, 932 282" marker-end="url(#dt-arrow-orange)"></path>
+
+          <path class="dg-feedback" d="M 1068 458 C 884 535, 438 530, 284 456" marker-end="url(#dt-arrow-blue)"></path>
+          <text class="dg-small" x="344" y="548">输出集合：DT 设计包、用例资产、执行日志、覆盖率证据、PR 准入报告、补测任务、知识回流项</text>
+
+          <g class="dg-todo" transform="translate(166 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="dg-title" x="78" y="22" text-anchor="middle">Spec 质检 Agent</text>
+            <text class="dg-desc" x="78" y="39" text-anchor="middle">可测性 / 澄清项 · 待建</text>
+          </g>
+
+          <g class="dg-todo" transform="translate(338 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="dg-title" x="78" y="22" text-anchor="middle">DT 评审 Agent</text>
+            <text class="dg-desc" x="78" y="39" text-anchor="middle">矩阵 / 边界 / 风险 · 待建</text>
+          </g>
+
+          <g class="dg-todo" transform="translate(854 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="dg-title" x="78" y="22" text-anchor="middle">覆盖率诊断 Agent</text>
+            <text class="dg-desc" x="78" y="39" text-anchor="middle">缺口解释 / 补测建议 · 待建</text>
+          </g>
+
+          <g class="dg-todo" transform="translate(1026 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="dg-title" x="78" y="22" text-anchor="middle">PR 质量门禁</text>
+            <text class="dg-desc" x="78" y="39" text-anchor="middle">准入结论 / 风险卡点 · 待建</text>
+          </g>
+
+          <g class="dg-input" transform="translate(24 208)">
+            <rect width="138" height="72" rx="8"></rect>
+            <text class="dg-title" x="69" y="25" text-anchor="middle">方案输入</text>
+            <text class="dg-desc" x="69" y="45" text-anchor="middle">Spec / 特性设计</text>
+            <text class="dg-desc" x="69" y="60" text-anchor="middle">影响范围；PR/Diff 可选</text>
+          </g>
+
+          <g class="dg-stage" transform="translate(174 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">SDD 任务包</text>
+            <text class="dg-desc" x="68" y="48" text-anchor="middle">任务理解 · 已有</text>
+          </g>
+
+          <g class="dg-stage" transform="translate(346 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">DT 设计包</text>
+            <text class="dg-desc" x="68" y="48" text-anchor="middle">设计 Skill · 已有</text>
+          </g>
+
+          <g class="dg-stage" transform="translate(518 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">用例资产</text>
+            <text class="dg-desc" x="68" y="48" text-anchor="middle">测试 Skill · 已有</text>
+          </g>
+
+          <g class="dg-stage" transform="translate(690 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">Harness 执行</text>
+            <text class="dg-desc" x="68" y="48" text-anchor="middle">运行平台 · 已有</text>
+          </g>
+
+          <g class="dg-stage" transform="translate(862 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">覆盖率证据</text>
+            <text class="dg-desc" x="68" y="48" text-anchor="middle">增量看板 · 已有</text>
+          </g>
+
+          <g class="dg-gate" transform="translate(1034 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="dg-title" x="68" y="27" text-anchor="middle">方案输出</text>
+            <text class="dg-desc" x="68" y="45" text-anchor="middle">准入报告 / 风险结论</text>
+            <text class="dg-desc" x="68" y="58" text-anchor="middle">补测与回流任务</text>
+          </g>
+
+          <g class="dg-bus" transform="translate(174 320)">
+            <rect width="824" height="64" rx="10"></rect>
+            <text class="dg-title" x="412" y="26" text-anchor="middle">ACEHarness 编排总线（已有）</text>
+            <text class="dg-desc" x="412" y="48" text-anchor="middle">多 Agent 配置 · SDD 流程 · Skill 调用 · 执行调度 · 证据沉淀</text>
+          </g>
+
+          <g class="dg-todo" transform="translate(284 408)">
+            <rect width="238" height="62" rx="8"></rect>
+            <text class="dg-title" x="119" y="26" text-anchor="middle">知识回流 Agent</text>
+            <text class="dg-desc" x="119" y="46" text-anchor="middle">逃逸缺陷 -> 模板/Skill/Agent 进化 · 待建</text>
+          </g>
+
+          <g class="dg-todo" transform="translate(650 408)">
+            <rect width="220" height="62" rx="8"></rect>
+            <text class="dg-title" x="110" y="26" text-anchor="middle">补测任务 Agent</text>
+            <text class="dg-desc" x="110" y="46" text-anchor="middle">覆盖缺口 -> 自动生成补测任务 · 待建</text>
+          </g>
+
+          <g class="dg-evidence" transform="translate(952 408)">
+            <rect width="196" height="62" rx="8"></rect>
+            <text class="dg-title" x="98" y="26" text-anchor="middle">效能度量</text>
+            <text class="dg-desc" x="98" y="46" text-anchor="middle">采纳率 / 达标率 / 闭环时长</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
