@@ -1,6 +1,14 @@
 {
-  "generated_at": "2026-07-07 12:16:17",
+  "generated_at": "2026-07-10 08:57:37",
   "reports": {
+    "ACEHarness-UX优化方向与界面稿.html": {
+      "assets": [],
+      "sha256": "920228bbdd27a1baa11b8ec7309825cb3e7a10caa1796c68e996f9fa0ec43c48",
+      "slug": "aceharness-ux",
+      "source_name": "ACEHarness-UX优化方向与界面稿.html",
+      "title": "ACEHarness · UX 演进方向与期望界面稿",
+      "updated_at": "2026-07-10 08:57:37"
+    },
     "aceharness-external-promotion-report.html": {
       "assets": [],
       "sha256": "76c2db686a44bb6d22f97c4b7f3af43b6ac321903a6c377f9d1ae7c8f8d8facd",

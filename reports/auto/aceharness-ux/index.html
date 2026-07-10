@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACEHarness · UX 演进方向与期望界面稿</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#ffffff; --ink:#1c2333; --sub:#6b7280; --line:#e6e8ee;
+    --blue:#2563eb; --blue-soft:#eaf1ff; --purple:#7c3aed; --green:#16a34a;
+    --amber:#f59e0b; --red:#ef4444; --teal:#0ea5a4;
+    --shadow:0 1px 3px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+  header.top{margin-bottom:8px}
+  .kicker{color:var(--blue);font-weight:700;letter-spacing:.04em;font-size:13px}
+  h1{font-size:30px;margin:6px 0 4px}
+  .lede{color:var(--sub);max-width:760px}
+  h2{font-size:21px;margin:46px 0 6px;display:flex;align-items:center;gap:10px}
+  h2 .num{width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:8px 0}
+  .muted{color:var(--sub);font-size:14px}
+  code{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:13px}
+
+  .prio{display:grid;gap:14px;margin-top:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px 20px}
+  .row{display:grid;grid-template-columns:76px 1fr;gap:16px;align-items:start}
+  .tag{font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;color:#fff;text-align:center;white-space:nowrap}
+  .p0{background:var(--red)} .p1{background:var(--amber)} .p2{background:var(--teal)}
+  .card h3{margin:0 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .src{font-size:11px;font-weight:700;color:#3730a3;background:#eef2ff;border:1px solid #e0e7ff;
+    padding:2px 8px;border-radius:999px}
+  .card .why{color:var(--sub);font-size:14px}
+  .card .do{margin-top:8px;font-size:14px}
+  .card .do b{color:var(--blue)}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-top:14px;font-size:13.5px}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f1f3f7;font-size:12px;letter-spacing:.03em;color:#374151}
+  tr:last-child td{border-bottom:none}
+  td .prod{font-weight:700}
+  .mini-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+
+  .mock{background:var(--panel);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden;margin:14px 0}
+  .mock .bar{background:#f1f3f7;border-bottom:1px solid var(--line);padding:10px 14px;
+    display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .mock .stage{padding:22px;background:linear-gradient(180deg,#fafbfd,#f4f6fa)}
+  .ann{border-left:3px solid var(--green);background:#f0fdf4;padding:10px 14px;border-radius:8px;
+    font-size:13px;color:#14532d;margin:10px 0}
+  .ann b{color:#166534}
+  .bad{border-left:3px solid var(--red);background:#fef2f2;color:#7f1d1d}
+  .bad b{color:#991b1b}
+
+  .steps{display:flex;gap:8px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+  .step{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sub)}
+  .step .n{width:24px;height:24px;border-radius:50%;background:#e5e7eb;color:#6b7280;
+    display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .step.on{color:var(--ink);font-weight:600}
+  .step.on .n{background:var(--blue);color:#fff}
+  .step.done .n{background:var(--green);color:#fff}
+  .sep{flex:1;height:1px;background:var(--line);min-width:16px}
+
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .mode{border:1.5px solid var(--line);border-radius:12px;padding:16px;position:relative;background:#fff}
+  .mode.sel{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+  .mode .rec{position:absolute;top:-10px;right:14px;background:var(--purple);color:#fff;
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .mode .tick{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+  .mode h4{margin:0 0 2px;font-size:15px}
+  .mode .t{color:var(--sub);font-size:12.5px;margin-bottom:8px}
+  .mode ul{margin:0;padding-left:16px;font-size:12.5px;color:#374151}
+  .mode.mini{grid-column:1 / -1;display:flex;gap:12px;align-items:center;padding:12px 16px}
+  .mode.mini .t{margin:0}
+
+  /* template gallery */
+  .tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tpl .t-card{border:1px solid var(--line);border-radius:11px;padding:14px;background:#fff;cursor:pointer}
+  .tpl .t-card:hover{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+  .tpl .ic2{width:30px;height:30px;border-radius:8px;margin-bottom:8px}
+  .tpl h5{margin:0 0 3px;font-size:14px}
+  .tpl .t{color:var(--sub);font-size:12px;margin:0}
+  .chip{display:inline-block;font-size:10.5px;color:#3730a3;background:#eef2ff;border-radius:6px;padding:1px 6px;margin-top:8px}
+
+  .adv{border:1px dashed var(--line);border-radius:12px;margin-top:14px}
+  .adv summary{list-style:none;cursor:pointer;padding:12px 16px;font-size:14px;font-weight:600;
+    display:flex;align-items:center;gap:8px}
+  .adv summary::-webkit-details-marker{display:none}
+  .adv summary .chev{margin-left:auto;color:var(--sub)}
+  .adv .body{padding:0 16px 16px;font-size:13px;color:#374151}
+  .field{margin:12px 0}
+  .field label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px}
+  .field .inp{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fafbfd;font-size:13px}
+
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+  .btn{border:none;border-radius:9px;padding:9px 18px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn.primary{background:var(--blue);color:#fff}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:#374151}
+  .btn.text{background:transparent;color:var(--sub)}
+
+  /* state-machine graph */
+  .graphwrap{display:grid;grid-template-columns:1fr 300px;gap:16px}
+  .canvas{background:
+      radial-gradient(circle, #dfe3ea 1px, transparent 1px) 0 0/22px 22px,
+      #fbfcfe;
+    border:1px solid var(--line);border-radius:12px;position:relative;height:320px;overflow:hidden}
+  .node{position:absolute;background:#fff;border:1.5px solid var(--line);border-radius:10px;
+    padding:8px 12px;font-size:12.5px;font-weight:600;min-width:78px;text-align:center;box-shadow:0 2px 6px rgba(20,30,60,.06)}
+  .node .s{display:block;font-size:10.5px;font-weight:400;color:var(--sub)}
+  .node.done{border-color:var(--green)}
+  .node.done::after{content:"✓";position:absolute;top:-8px;right:-8px;width:18px;height:18px;background:var(--green);color:#fff;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}
+  .node.active{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+  .node.active::after{content:"▶";position:absolute;top:-8px;right:-8px;width:18px;height:18px;background:var(--blue);color:#fff;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center}
+  svg.edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .inspector{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13px}
+  .inspector h5{margin:0 0 8px;font-size:13px}
+  .kv{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--line)}
+  .kv:last-child{border:none}
+  .kv .k{color:var(--sub)}
+  .pill{font-size:11px;padding:2px 8px;border-radius:999px;background:#eaf1ff;color:var(--blue);font-weight:600}
+
+  /* timeline */
+  .timeline{display:flex;gap:0;margin-top:14px;align-items:stretch}
+  .tl{flex:1;border-top:3px solid var(--line);padding-top:8px;position:relative;font-size:11.5px;color:var(--sub)}
+  .tl::before{content:"";position:absolute;top:-8px;left:0;width:11px;height:11px;border-radius:50%;background:var(--line)}
+  .tl.done{border-top-color:var(--green)} .tl.done::before{background:var(--green)}
+  .tl.active{border-top-color:var(--blue)} .tl.active::before{background:var(--blue)}
+  .tl b{display:block;color:var(--ink);font-size:12px}
+  .scrub{margin-top:12px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--green) 62%,var(--line) 62%);position:relative}
+  .scrub .h{position:absolute;left:62%;top:-5px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--blue);transform:translateX(-50%)}
+
+  /* run workspace */
+  .runs{display:grid;grid-template-columns:200px 1fr;gap:14px}
+  .runlist{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
+  .runlist .r{padding:9px 10px;border-radius:8px;font-size:12.5px;display:flex;align-items:center;gap:8px}
+  .runlist .r.sel{background:var(--blue-soft)}
+  .st{width:8px;height:8px;border-radius:50%;flex:none}
+  .st.run{background:var(--blue)} .st.ok{background:var(--green)} .st.wait{background:var(--amber)}
+  .panes{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;height:220px}
+  .pane{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:11px;color:var(--sub);overflow:hidden}
+  .pane .h6{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px}
+  .term{background:#0f172a;color:#93c5b8;font-family:ui-monospace,monospace;font-size:10.5px;border-radius:6px;padding:6px}
+
+  .ia{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .side{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13.5px}
+  .side .brand{font-weight:700;margin-bottom:10px}
+  .grp{color:var(--sub);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 4px}
+  .nav{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px}
+  .nav.act{background:var(--blue-soft);color:var(--blue);font-weight:600}
+  .ic{width:16px;height:16px;border-radius:4px;background:#cbd5e1;flex:none}
+  .nav.act .ic{background:var(--blue)}
+  .col-head{font-weight:700;margin-bottom:8px;font-size:13px}
+  .strike{text-decoration:line-through;color:#b91c1c}
+
+  .home{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+  .qs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+  .qcard{border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;font-size:13px;background:#fff}
+  .qcard .qi{width:26px;height:26px;border-radius:8px;margin:0 auto 6px}
+  .recent{background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px}
+  .recent .it{padding:9px 10px;border-radius:8px;font-size:13px}
+  .empty{text-align:center;padding:26px 10px;color:var(--sub)}
+  .footer{margin-top:50px;color:var(--sub);font-size:13px;text-align:center;border-top:1px solid var(--line);padding-top:18px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">ACEHarness · UX 评审 v2</div>
+    <h1>演进方向 + 期望界面稿（含业界对标）</h1>
+    <p class="lede">基于 rc.1 版本评审，并对标 OpenHands、Devin、LangGraph Studio、Dify、n8n、CrewAI 等同类 harness / agent 编排产品。改版已解决「Agent 标签墙」「首页空状态」；本文档聚焦<b>下一轮高价值演进</b>，把业界成熟模式直接落成可照做的界面稿，用于引导开发。</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--red)"></i>P0 本轮必做</span>
+      <span><i class="sw" style="background:var(--amber)"></i>P1 计划内</span>
+      <span><i class="sw" style="background:var(--teal)"></i>P2 打磨</span>
+      <span><i class="sw" style="background:#6366f1"></i>业界借鉴来源</span>
+      <span><i class="sw" style="background:var(--green)"></i>期望效果标注</span>
+    </div>
+  </header>
+
+  <!-- ============ PRIORITIES ============ -->
+  <h2><span class="num">1</span>演进方向一览</h2>
+  <p class="muted">前两项为本地评审发现，后四项为业界对标后新增 —— 业界护城河已从「能编排」转向<b>看得见、调得动、上手快</b>，这正是 ACEHarness 当前最弱处。</p>
+  <div class="prio">
+
+    <div class="card"><div class="row">
+      <span class="tag p0">P0</span>
+      <div>
+        <h3>可视化状态机图 + 运行回放 <span class="src">借鉴 · LangGraph Studio / OpenHands</span></h3>
+        <div class="why">ACEHarness 已有「状态机 / 阶段 / 跨阶段回退」概念，但界面看不到图。LangGraph Studio 渲染执行图、每个节点可查看状态、checkpoint 存档、「时间旅行」回看每步决策、可在节点前后人工介入。</div>
+        <div class="do"><b>要做：</b>把「运行记录」从列表升级为<b>可视化流程图 + 时间轴回放</b>：节点可点开看输入/输出/状态，支持回退到任一 checkpoint、人工干预后继续。→ 见稿 §4</div>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="row">
+      <span class="tag p0">P0</span>
+      <div>
+        <h3>「新建工作流」向导化 + 模板库开场 <span class="src">借鉴 · n8n / Dify / CrewAI</span></h3>
+        <div class="why">现状弹窗铺开 8+ 字段，且<b style="color:#b91c1c">默认「阶段模式」≠ 推荐「状态机模式」</b>。业界共识：从模板开始、别给空表单（CrewAI 靠模板+角色化把 onboarding 做到最好）。</div>
+        <div class="do"><b>要做：</b>拆 3 步（选模式 → 描述需求 → 高级·折叠），默认项=推荐项；第一步提供<b>模板库</b>（issue→PR、代码审查、红蓝对抗…）。→ 见稿 §3</div>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="row">
+      <span class="tag p1">P1</span>
+      <div>
+        <h3>统一运行工作台 + 多任务并行视图 <span class="src">借鉴 · OpenHands Canvas / Devin Desktop</span></h3>
+        <div class="why">OpenHands 把编辑器/终端/浏览器/预览放一屏，多 agent 各自隔离在 git worktree、一屏可见；Devin Desktop 主打 plan→delegate→review→ship 一个界面完成。</div>
+        <div class="do"><b>要做：</b>运行状态/记录整合为<b>一个运行工作台</b>，左侧多 run 列表、右侧四联窗（流程图/日志/产物/预览），带人工审核检查点。→ 见稿 §5</div>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="row">
+      <span class="tag p1">P1</span>
+      <div>
+        <h3>Agent 角色化抽象 <span class="src">借鉴 · CrewAI</span></h3>
+        <div class="why">CrewAI 用 role / goal / backstory 建模，被评为最直观。ACEHarness 有 63 个 agent、阵营、指挥官，概念更丰富但缺统一心智。</div>
+        <div class="do"><b>要做：</b>Agent 卡片统一为「角色 · 目标 · 擅长」三段式，配首次使用引导。</div>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="row">
+      <span class="tag p1">P1</span>
+      <div>
+        <h3>信息架构精简 + 低代码/代码双模 <span class="src">借鉴 · n8n</span></h3>
+        <div class="why">侧边栏 ~14 项概念重叠（模型管理 vs 引擎管理）。且默认界面即「开发工程师界面」偏 dev；n8n 招牌是可视化节点 + 内联代码双模，兼顾两类人。</div>
+        <div class="do"><b>要做：</b>侧边栏重排四组、合并模型+引擎；工作流保留 yaml（专家）+ 新增可视化画布（非技术），双向同步。→ 见稿 §6</div>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="row">
+      <span class="tag p2">P2</span>
+      <div>
+        <h3>首页去重 + 按钮色彩语义 <span class="src">本地评审</span></h3>
+        <div class="why">首页 9+ 卡片与侧边栏重复、色彩过载；弹窗「取消」为红色（红=危险，误导）。</div>
+        <div class="do"><b>要做：</b>首页保留「快速开始 3 卡 + 最近工作流」；取消改中性，蓝色只留主操作。→ 见稿 §7</div>
+      </div>
+    </div></div>
+
+  </div>
+
+  <!-- ============ BENCHMARK TABLE ============ -->
+  <h2><span class="num">2</span>业界对标一览</h2>
+  <table>
+    <thead><tr><th style="width:150px">产品 / 类型</th><th>值得借鉴的设计</th><th style="width:230px">对应 ACEHarness 改动</th><th style="width:70px">优先级</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="prod">LangGraph Studio</span><br><span class="muted">agent IDE</span></td>
+        <td>执行图可视化、节点状态检查、checkpoint、时间旅行回放、节点前后人工介入</td>
+        <td>「运行记录」→ 可视化状态机图 + 时间轴回放（§4）</td>
+        <td><span class="mini-tag p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><span class="prod">OpenHands</span> / <span class="prod">Devin</span><br><span class="muted">coding-agent harness</span></td>
+        <td>统一工作台（编辑器/终端/浏览器/预览一屏）、多 agent 隔离并行、plan→review→ship 闭环</td>
+        <td>统一运行工作台 + 多任务并行视图（§5）</td>
+        <td><span class="mini-tag p1">P1</span></td>
+      </tr>
+      <tr>
+        <td><span class="prod">n8n</span> / <span class="prod">Dify</span> / <span class="prod">Flowise</span><br><span class="muted">低代码编排</span></td>
+        <td>模板库开场、可视化节点画布、低代码+代码双模、节点级调试</td>
+        <td>向导第一步模板库（§3）+ 可视化画布双模（§6）</td>
+        <td><span class="mini-tag p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><span class="prod">CrewAI</span><br><span class="muted">多 agent 框架</span></td>
+        <td>role/goal/backstory 角色化抽象、公认最佳 onboarding、模板降门槛</td>
+        <td>Agent 卡片角色化三段式 + 上手引导</td>
+        <td><span class="mini-tag p1">P1</span></td>
+      </tr>
+      <tr>
+        <td><span class="prod">AutoGen Studio</span><br><span class="muted">低代码多 agent</span></td>
+        <td>图形界面配置 agent（模型/技能）、无代码给混合团队</td>
+        <td>Agent/Skill 配置的可视化编辑</td>
+        <td><span class="mini-tag p2">P2</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============ WIZARD + TEMPLATE ============ -->
+  <h2><span class="num">3</span>期望稿：新建工作流「向导 + 模板库」</h2>
+  <p class="muted">第一步先给「从模板开始」（业界标配，降空白焦虑），下面才是从零选模式；默认项 = 推荐项。</p>
+
+  <div class="mock">
+    <div class="bar">
+      <span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span>
+      <span style="margin-left:8px">新建工作流 · 步骤 1</span>
+    </div>
+    <div class="stage">
+      <div class="steps">
+        <div class="step on"><span class="n">1</span>选择起点</div><span class="sep"></span>
+        <div class="step"><span class="n">2</span>描述需求</div><span class="sep"></span>
+        <div class="step"><span class="n">3</span>高级选项 <span class="muted">(可选)</span></div>
+      </div>
+
+      <h3 style="margin-top:0">从模板开始 <span class="muted" style="font-weight:400">— 推荐，一键套用最佳实践</span></h3>
+      <div class="tpl">
+        <div class="t-card"><div class="ic2" style="background:linear-gradient(135deg,#2563eb,#0ea5a4)"></div><h5>修复 Issue → PR</h5><p class="t">读取 issue，定位、修复、提交 PR</p><span class="chip">状态机</span></div>
+        <div class="t-card"><div class="ic2" style="background:linear-gradient(135deg,#7c3aed,#2563eb)"></div><h5>代码审查</h5><p class="t">多轮审查 + 修复验证闭环</p><span class="chip">阶段</span></div>
+        <div class="t-card"><div class="ic2" style="background:linear-gradient(135deg,#ef4444,#f59e0b)"></div><h5>红蓝对抗</h5><p class="t">攻击面挖掘 + 防御加固</p><span class="chip">状态机</span></div>
+      </div>
+
+      <div class="ann"><b>期望效果 ①</b> 用户默认从模板起步（n8n/Dify/CrewAI 通用做法），不再面对空需求框；模板已内置模式、Agent 编队、默认参数。</div>
+
+      <details class="adv">
+        <summary>或从零开始，自选模式<span class="chev">▾</span></summary>
+        <div class="body">
+          <div class="modes" style="margin-top:4px">
+            <div class="mode sel"><span class="rec">推荐</span><span class="tick">✓</span><h4>状态机模式</h4><div class="t">智能动态流程 · 适合大多数场景</div><ul><li>问题驱动，自动路由</li><li>支持跨阶段回退</li></ul></div>
+            <div class="mode"><h4>阶段模式</h4><div class="t">固定顺序 · 传统线性流程</div><ul><li>设计→实施→测试→优化</li></ul></div>
+          </div>
+          <div class="ann" style="margin-bottom:0"><b>期望效果 ②</b> 默认选中 = 带「推荐」标签的卡片，消除现状"默认项 ≠ 推荐项"的矛盾。</div>
+        </div>
+      </details>
+
+      <div class="foot">
+        <button class="btn text">取消</button>
+        <div><button class="btn primary">下一步</button></div>
+      </div>
+      <div class="ann bad" style="margin-top:12px"><b>对比现状</b> 名称/文件名/工作区模式/Spec 持久化等全部后移到第 3 步「高级选项」并预填默认；「取消」由红色改中性文字按钮。</div>
+    </div>
+  </div>
+
+  <!-- ============ STATE MACHINE GRAPH ============ -->
+  <h2><span class="num">4</span>期望稿：可视化状态机图 + 时间轴回放 <span class="src" style="font-size:12px">借鉴 · LangGraph Studio</span></h2>
+  <p class="muted">这是本轮最高价值项。让「状态机 / 跨阶段回退」真正看得见、可回退、可人工干预。</p>
+  <div class="mock">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span style="margin-left:8px">运行详情 · workflow-issue-fix-to-pr</span></div>
+    <div class="stage">
+      <div class="graphwrap">
+        <div class="canvas">
+          <svg class="edges">
+            <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker></defs>
+            <line x1="120" y1="55" x2="120" y2="118" stroke="#16a34a" stroke-width="2" marker-end="url(#a)"/>
+            <line x1="120" y1="150" x2="120" y2="200" stroke="#2563eb" stroke-width="2" marker-end="url(#a)"/>
+            <path d="M175,215 C260,215 260,140 210,140" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#a)"/>
+            <line x1="120" y1="248" x2="120" y2="285" stroke="#cbd5e1" stroke-width="2" marker-end="url(#a)"/>
+          </svg>
+          <div class="node done" style="left:70px;top:22px">读取 Issue<span class="s">已完成</span></div>
+          <div class="node done" style="left:66px;top:118px">定位缺陷<span class="s">已完成</span></div>
+          <div class="node active" style="left:70px;top:210px">生成修复<span class="s">进行中</span></div>
+          <div class="node" style="left:198px;top:118px;border-style:dashed">回退重试<span class="s">跨阶段</span></div>
+          <div class="node" style="left:70px;top:290px;opacity:.6">提交 PR<span class="s">待执行</span></div>
+        </div>
+        <div class="inspector">
+          <h5>节点检查器 · 生成修复 <span class="pill">运行中</span></h5>
+          <div class="kv"><span class="k">输入</span><span>缺陷定位结果 ×3</span></div>
+          <div class="kv"><span class="k">Agent</span><span>coder-fixer</span></div>
+          <div class="kv"><span class="k">checkpoint</span><span>#7 已存</span></div>
+          <div class="kv"><span class="k">耗时</span><span>42s</span></div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn ghost" style="padding:6px 12px;font-size:12px">查看状态</button>
+            <button class="btn ghost" style="padding:6px 12px;font-size:12px">回退到此</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scrub"><div class="h"></div></div>
+      <div class="timeline">
+        <div class="tl done"><b>读取 Issue</b>10:02</div>
+        <div class="tl done"><b>定位缺陷</b>10:03</div>
+        <div class="tl active"><b>生成修复</b>10:05 · 现在</div>
+        <div class="tl"><b>提交 PR</b>待执行</div>
+      </div>
+
+      <div class="ann"><b>期望效果</b> ① 执行图上一眼看到当前节点、已完成、可回退分支；② 点节点在右侧检查器看输入/输出/状态/checkpoint；③ 拖时间轴「回放」任一时刻，或「回退到此」重跑 —— 对应你们已宣传的「人工检查点 / 跨阶段回退」。</div>
+    </div>
+  </div>
+
+  <!-- ============ RUN WORKSPACE ============ -->
+  <h2><span class="num">5</span>期望稿：统一运行工作台 <span class="src" style="font-size:12px">借鉴 · OpenHands / Devin</span></h2>
+  <div class="mock">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span style="margin-left:8px">运行工作台</span></div>
+    <div class="stage">
+      <div class="runs">
+        <div class="runlist">
+          <div class="grp" style="margin-top:2px">进行中</div>
+          <div class="r sel"><span class="st run"></span>issue-fix-to-pr</div>
+          <div class="r"><span class="st wait"></span>code-review · 待审核</div>
+          <div class="grp">已完成</div>
+          <div class="r"><span class="st ok"></span>红蓝对抗 #12</div>
+          <div class="r"><span class="st ok"></span>新工作流 #11</div>
+        </div>
+        <div class="panes">
+          <div class="pane"><div class="h6">流程图</div>读取→定位→<b style="color:var(--blue)">修复(运行中)</b>→PR</div>
+          <div class="pane"><div class="h6">实时日志</div><div class="term">$ 定位 3 处缺陷…<br>$ 生成 patch…<br>▶ 运行测试</div></div>
+          <div class="pane"><div class="h6">产物 / 文件变更</div>+ fix/auth.py<br>+ tests/test_auth.py</div>
+          <div class="pane"><div class="h6">预览 / 待办审核</div>⚠ 需人工确认：合并 PR？</div>
+        </div>
+      </div>
+      <div class="ann"><b>期望效果</b> 多个 run 一屏并行可见（各自隔离），右侧四联窗把「流程图 / 日志 / 产物 / 人工审核」合到一处 —— 对应 plan → run → review → ship 闭环，无需在多个页面间跳转。</div>
+    </div>
+  </div>
+
+  <!-- ============ SIDEBAR IA ============ -->
+  <h2><span class="num">6</span>期望稿：侧边栏信息架构重排</h2>
+  <div class="ia">
+    <div>
+      <div class="col-head" style="color:#b91c1c">现状 · 14 项平铺、概念重叠</div>
+      <div class="side">
+        <div class="brand">ACEHarness</div>
+        <div class="grp">控制台</div>
+        <div class="nav"><i class="ic"></i>新建工作流</div>
+        <div class="nav"><i class="ic"></i>对话</div>
+        <div class="nav"><i class="ic"></i>数据概览</div>
+        <div class="nav"><i class="ic"></i>Agent 管理</div>
+        <div class="nav"><i class="ic"></i>Skills/MCP 管理</div>
+        <div class="nav"><i class="ic"></i>系统设置</div>
+        <div class="grp">功能</div>
+        <div class="nav"><i class="ic"></i>一人公司</div>
+        <div class="nav"><i class="ic"></i>工作流管理</div>
+        <div class="nav"><i class="ic"></i><span class="strike">模型管理</span></div>
+        <div class="nav"><i class="ic"></i><span class="strike">引擎管理</span></div>
+        <div class="nav"><i class="ic"></i>定时任务</div>
+        <div class="nav"><i class="ic"></i>运行记录</div>
+        <div class="nav"><i class="ic"></i>知识管理</div>
+        <div class="nav"><i class="ic"></i>API 文档</div>
+      </div>
+    </div>
+    <div>
+      <div class="col-head" style="color:#166534">期望 · 四组、职责清晰</div>
+      <div class="side">
+        <div class="brand">ACEHarness</div>
+        <div class="grp">开始</div>
+        <div class="nav act"><i class="ic"></i>对话</div>
+        <div class="nav"><i class="ic"></i>新建工作流</div>
+        <div class="nav"><i class="ic"></i>一人公司</div>
+        <div class="grp">资产</div>
+        <div class="nav"><i class="ic"></i>工作流</div>
+        <div class="nav"><i class="ic"></i>Agent</div>
+        <div class="nav"><i class="ic"></i>Skills / MCP</div>
+        <div class="nav"><i class="ic"></i>模型与引擎 <span class="muted" style="font-size:11px">（合并）</span></div>
+        <div class="nav"><i class="ic"></i>知识库</div>
+        <div class="grp">运行</div>
+        <div class="nav"><i class="ic"></i>运行工作台 <span class="muted" style="font-size:11px">（§5）</span></div>
+        <div class="nav"><i class="ic"></i>定时任务</div>
+        <div class="nav"><i class="ic"></i>数据概览</div>
+        <div class="grp">系统</div>
+        <div class="nav"><i class="ic"></i>系统设置 · API 文档</div>
+      </div>
+    </div>
+  </div>
+  <div class="ann"><b>期望效果</b> 按「开始 / 资产 / 运行 / 系统」心智直达；模型管理 + 引擎管理合并；运行相关统一进「运行工作台」。</div>
+
+  <!-- ============ HOME ============ -->
+  <h2><span class="num">7</span>期望稿：首页去重（快速开始 + 最近）</h2>
+  <div class="mock">
+    <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span style="margin-left:8px">对话 · 首页</span></div>
+    <div class="stage">
+      <div class="empty" style="padding-bottom:8px">
+        <div style="font-size:34px">🦌</div>
+        <div style="font-weight:700;font-size:16px;color:var(--ink)">开始一个任务对话</div>
+        <div>描述需求、附加文件，或从下方快速开始</div>
+      </div>
+      <div class="home">
+        <div>
+          <div class="grp" style="text-transform:none;font-size:13px;color:var(--ink);font-weight:600">快速开始</div>
+          <div class="qs">
+            <div class="qcard"><div class="qi" style="background:var(--blue)"></div>新建工作流</div>
+            <div class="qcard"><div class="qi" style="background:var(--purple)"></div>创建 Agent</div>
+            <div class="qcard"><div class="qi" style="background:var(--green)"></div>启动运行</div>
+          </div>
+        </div>
+        <div>
+          <div class="grp" style="text-transform:none;font-size:13px;color:var(--ink);font-weight:600">最近工作流</div>
+          <div class="recent">
+            <div class="it">📄 修复 issue 到 PR · <span class="muted">草稿</span></div>
+            <div class="it">📄 新工作流 · <span class="muted">14:44</span></div>
+            <div class="it muted" style="text-align:center;padding:14px">查看全部 →</div>
+          </div>
+        </div>
+      </div>
+      <div class="ann"><b>期望效果</b> 首页只回答「下一步做什么」，不再复制侧边栏；9 张高亮卡收敛为 3 张，视觉噪音大幅下降。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    ACEHarness UX 演进方向 v2 · 含业界对标（OpenHands / Devin / LangGraph Studio / Dify / n8n / CrewAI）· 界面为示意稿，尺寸间距以设计规范为准
+  </div>
+
+</div>
+</body>
+</html>
