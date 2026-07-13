@@ -1,0 +1,19 @@
+reports/auto/ai-native-aar/index.html
+  s_2b32a235c0703a::t_1d78f53927e778 1-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "eddce7a1e7f303f27804205dc11755c0640802f0",
+  "prompts": {},
+  "sessions": {
+    "s_2b32a235c0703a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3924fbab-ffee-4127-ba07-0669c9966ee3",
+        "model": "claude-fable-5"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
