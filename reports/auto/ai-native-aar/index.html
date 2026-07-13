@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Native 开发负向经验复盘（AAR）</title>
+<style>
+:root{
+  --bg:#faf9f6; --ink:#20262e; --ink-2:#5a626e; --line:#e3e0d8;
+  --err:#b3362b; --err-bg:#f9edeb;
+  --warn:#8f6400; --warn-bg:#f7f0dd;
+  --note:#2a6e66; --note-bg:#e8f1ef;
+  --code-bg:#efede6; --accent:#39567f;
+  --mono:"SF Mono",Menlo,Consolas,"Cascadia Mono",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15181d; --ink:#dcdad4; --ink-2:#8f96a1; --line:#2c3138;
+    --err:#e07a6e; --err-bg:#2c1e1c;
+    --warn:#d0a44a; --warn-bg:#292314;
+    --note:#6cb5aa; --note-bg:#172623;
+    --code-bg:#22262c; --accent:#8fb0dd;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#faf9f6; --ink:#20262e; --ink-2:#5a626e; --line:#e3e0d8;
+  --err:#b3362b; --err-bg:#f9edeb;
+  --warn:#8f6400; --warn-bg:#f7f0dd;
+  --note:#2a6e66; --note-bg:#e8f1ef;
+  --code-bg:#efede6; --accent:#39567f;
+}
+:root[data-theme="dark"]{
+  --bg:#15181d; --ink:#dcdad4; --ink-2:#8f96a1; --line:#2c3138;
+  --err:#e07a6e; --err-bg:#2c1e1c;
+  --warn:#d0a44a; --warn-bg:#292314;
+  --note:#6cb5aa; --note-bg:#172623;
+  --code-bg:#22262c; --accent:#8fb0dd;
+}
+html{background:var(--bg)}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.75; font-size:15.5px;
+  max-width:860px; margin:0 auto; padding:48px 28px 80px;
+}
+h1{font-size:26px; line-height:1.35; margin:0 0 6px; letter-spacing:.01em; text-wrap:balance}
+h2{font-size:19px; margin:52px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--line); letter-spacing:.02em}
+h2 .no{color:var(--ink-2); font-family:var(--mono); font-size:14px; margin-right:10px}
+h3{font-size:16px; margin:26px 0 8px}
+p{margin:10px 0}
+.meta{color:var(--ink-2); font-size:13.5px; margin-bottom:4px}
+.meta code, td code, li code, p code{
+  font-family:var(--mono); font-size:.88em; background:var(--code-bg);
+  padding:1px 5px; border-radius:3px; white-space:nowrap;
+}
+a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.lede{
+  font-size:16.5px; margin:22px 0 0; padding:16px 20px;
+  border-left:3px solid var(--accent); background:color-mix(in srgb,var(--accent) 6%,transparent);
+}
+
+/* 编译器诊断风格 callout */
+.diag{display:flex; gap:10px; margin:14px 0; padding:12px 16px; border-radius:4px; font-size:14.5px}
+.diag b.k{font-family:var(--mono); font-weight:600; flex-shrink:0; font-size:13.5px; padding-top:2px}
+.diag.err{background:var(--err-bg)} .diag.err b.k{color:var(--err)}
+.diag.warn{background:var(--warn-bg)} .diag.warn b.k{color:var(--warn)}
+.diag.note{background:var(--note-bg)} .diag.note b.k{color:var(--note)}
+.diag p{margin:0}
+
+/* 时间线 */
+.tl{list-style:none; margin:18px 0; padding:0}
+.tl li{
+  position:relative; padding:0 0 18px 118px; border-left:2px solid var(--line);
+  margin-left:86px;
+}
+.tl li:last-child{padding-bottom:2px}
+.tl li::before{
+  content:""; position:absolute; left:-6px; top:8px; width:10px; height:10px;
+  border-radius:50%; background:var(--ink-2); border:2px solid var(--bg);
+}
+.tl li.e::before{background:var(--err)}
+.tl li.w::before{background:var(--warn)}
+.tl li.g::before{background:var(--note)}
+.tl .d{
+  position:absolute; left:-98px; top:2px; width:80px; text-align:right;
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+.tl .t{font-weight:600}
+.tl .s{color:var(--ink-2); font-size:14px; display:block}
+
+table{border-collapse:collapse; width:100%; margin:14px 0; font-size:14px}
+.tblwrap{overflow-x:auto}
+th,td{text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-size:12.5px; letter-spacing:.06em; color:var(--ink-2); font-weight:600; white-space:nowrap}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; font-size:13px}
+
+ul.tight{margin:8px 0; padding-left:22px}
+ul.tight li{margin:5px 0}
+ul.tight li b{font-weight:600}
+
+table.trace{min-width:780px; font-size:13.5px}
+table.trace td b{display:block; margin-bottom:2px}
+
+footer{margin-top:60px; padding-top:14px; border-top:1px solid var(--line); color:var(--ink-2); font-size:13px}
+</style>
+</head>
+<body>
+
+
+<h1>AI-Native 开发负向经验复盘（AAR）</h1>
+<p class="meta">复盘日期 2026-07-11 · 协作方式：用户 + Agent · 素材：SR-0001 需求交付复盘 + <code>cangjie_compiler</code> ICE 修复链（!1417/!1418 → !1815 → !1832）</p>
+
+<h2><span class="no">01</span>事件一 · 需求开发：SR-0001 API Level（Issue #824）</h2>
+<ul class="tl">
+  <li class="e"><span class="d">05-14</span><span class="t">主特性提交，混入无关链路</span><span class="s">字符串格式落地；同时撞上与本特性无关的 macOS weak-symbol 链接报错，未确认归属就地搭了整条跨模块"修复"链路（Option → Driver → CodeGen）随特性提交（B1）。CI codecheck 反复失败，本地与云端规则不一致。</span></li>
+  <li class="e"><span class="d">05-17→19</span><span class="t">检视砍掉无关链路</span><span class="s">评审一句"这选项加来干啥的？"，weak-symbol 整链被删；另抓出 parsedLevel 判断顺序 bug、CODEOWNERS 漏配。整个交付共收 18 条检视意见，规范类占 7 条（版权、头文件等）——均为 hook 可拦，稀释了对真逻辑问题的评审注意力。</span></li>
+  <li class="w"><span class="d">05-20</span><span class="t">集中返工 + squash</span><span class="s">两处规格返工收口：issue 明确只要 "X.Y.Z" 字符串，第一版却按惯性实现了整数形式——先实现后废弃，新增专用诊断拦截（A1）；<code>apiAvailable</code> 包归属由猜测的 <code>ohos.base</code> 改回 <code>ohos.device_info</code>——开发期一度破坏源兼容，合入前修正、双仓返工（A2）。5 个提交 squash 成 1 个，期间同一 commit amend 30+ 次。</span></li>
+  <li class="w"><span class="d">06-04→05</span><span class="t">事后覆盖率核算</span><span class="s">增量覆盖率 68.9%，低于 80% 规范阈值——核算在合入后才做，彼时无强制卡点，留成欠账。</span></li>
+</ul>
+
+<h2><span class="no">02</span>事件二 · 问题修复：一个 ICE 的三级衍生链</h2>
+<p>三级修复全部由 Agent 完成、本身都是对的，但每一级都<b>低估了上一级修复的语义影响面</b>——两次逸出（性能炸弹、O2 回归）均源于此，而非检视投入多少。</p>
+
+<ul class="tl">
+  <li class="e"><span class="d">03-27</span><span class="t">用户报 ICE（UsersForum #3116）</span><span class="s">STS Beta 用户构建 stats4cj，SIGSEGV。管道算子 + lambda + 重载函数触发。</span></li>
+  <li class="g"><span class="d">04-08→15</span><span class="t">!1417/!1418 修复 ICE 并合入</span><span class="s">根因准确：<code>sum.clear()</code> 破坏 PSet checkpoint 深度 → 越界。改为 softClear() 保持深度一致。验证：复现用例 + 门禁。</span></li>
+  <li class="w"><span class="d">潜伏 48 天</span><span class="t">修好的代码埋下性能炸弹</span><span class="s">旧 bug 除了崩溃，还在静默丢弃 sum 约束——性能正常只是 bug 的副作用。softClear 让约束首次正确存活，欠定泛型候选的占位变量无解，字面量重试链层层相乘。</span></li>
+  <li class="e"><span class="d">06-02</span><span class="t">用户报 issue #927</span><span class="s">加一条未使用的 <code>import std.collection.*</code>，TypeCheck 耗时膨胀两个数量级（复现实测 14.6s，删掉该行 0.10s）。由外部用户发现，非内部性能看护发现。</span></li>
+  <li class="g"><span class="d">06-11→16</span><span class="t">!1815 过滤欠定候选，合入</span><span class="s">修复后 14.6s → 0.11s。本地验证 335 个 LLT 用例逐字节一致、重编 std——但全部只跑默认档。人工评审 1 条实质意见（genArity 匹配漏洞，有效）；评审意见数门禁最终由一条非实质评论满足——该指标只数条数、不辨信息量。</span></li>
+  <li class="e"><span class="d">06-16 夜</span><span class="t">后冒烟抓到回归</span><span class="s"><code>lambda00920.cj</code> 在 O2 下失败：过滤把"结果位受外层约束"的候选也丢了（<code>{a =&gt; a[0] == 1}</code> 中 T 本可由 <code>== 1</code> 推出）。</span></li>
+  <li class="w"><span class="d">06-17</span><span class="t">!1832 六小时合入</span><span class="s">10:39 创建、17:02 合入；评审环节无实质检视，评论数门禁以同样方式满足，质量由后冒烟与新增回归用例兜底，未穿透到用户。</span></li>
+</ul>
+
+
+<h2><span class="no">03</span>问题 → 根因 → 改进措施</h2>
+<div class="tblwrap"><table class="trace">
+<tr><th style="width:27%">问题（案例锚点）</th><th style="width:36%">根因（Agent 行为模式）</th><th style="width:37%">改进措施</th></tr>
+<tr>
+<td>整数形式先实现后废弃（A1）；包归属猜错、开发期一度破坏源兼容（A2，合入前修正）</td>
+<td><b>先验压过规格，缺口补以猜测。</b>已写明的弱表述约束输给训练先验（A1）；spec 没覆盖的外部事实被自信补齐（A2）——两案例中 Agent 均未表达过"不确定"。</td>
+<td><b>spec 前置。</b>硬约束逐条转成负向验收用例（"整数形式必须报错"）——文字约束拦不住先验，验收用例拦得住；外部接口逐项标注「已求证（出处）/ 假设」，假设项先求证再动手。</td>
+</tr>
+<tr>
+<td>无关 weak-symbol "修复"整链混进特性 PR，追问后删除（B1）</td>
+<td><b>改动范围自行蔓延。</b>生成跨模块代码的成本近乎为零，遇到挡路报错倾向就地修通，而不是先问"这是不是本特性该修的问题"。</td>
+<td><b>范围钉死。</b>无关报错单独开 issue 记录，禁止在特性 PR 里顺手修；跨模块/平台方案先用一段话对齐方向，认可后再动手。</td>
+</tr>
+<tr>
+<td>!1417 修 ICE 埋下性能炸弹，潜伏 48 天由用户报出（#927）</td>
+<td><b>不评估"旧 bug 被谁依赖"。</b>Agent 把 bug 当待消除的错误，不会问"错误行为是否已成为其他路径的隐形支柱"（Hyrum 定律）。</td>
+<td><b>修复 PR 模板加一行必填：</b><i>"旧行为是否可能被依赖？修复后哪些路径首次真实生效？"</i>由作者作答、由独立审计核验（审计三问之一）——填了不等于过，防止落回自证闭环。</td>
+</tr>
+<tr>
+<td>!1815 验证 335 用例逐字节一致，仍漏 O2 回归穿透 main</td>
+<td><b>自证闭环：点验证强、面验证弱。</b>修复、回归用例、验证清单同出作者上下文，同一盲区穿透三者；上下文里没有"优化档会改变推断行为"这个假设，清单再长也不会出现 O2——指望作者 Agent 独立检出自己的盲区，结构上不成立。</td>
+<td><b>验证矩阵进机检。</b>门禁对 Sema 相关变更增跑 O2 档（按变更路径触发，控制 CI 成本），本地最少「默认 + O2」两档；语义收窄类改动（过滤/裁剪/短路）必附同机前后性能对比。固化进 CI，不依赖人记得。</td>
+</tr>
+<tr>
+<td>三级修复全链仅 1 条实质检视意见；评论数门禁两次由非实质评论满足</td>
+<td><b>异质视角稀缺，且指标不度量它。</b>两案例所有有效拦截都来自作者之外（weak-symbol 追问、genArity、后冒烟）——第二视角有效但供给不足；门禁只数评论条数、不辨信息量，缺陷首先在指标设计，而非某次操作。</td>
+<td><b>独立 agent 审计（试点）。</b>不共享作者上下文的 agent 固定回答三问：<i>旧行为被谁依赖？验证矩阵缺哪档？语义收窄波及哪些场景？</i>分歧由 reviewer 仲裁。先只对 fix-of-fix 场景试点，度量拦截率/误报率，达标再扩面替代评论数指标；审计 agent 同样有先验盲区，兜底仍是机检矩阵与后冒烟。</td>
+</tr>
+<tr>
+<td>规范意见占近四成；覆盖率欠账；#927 未关闭</td>
+<td><b>模板类错误反复出现 + 质量项无强制闭环点。</b>规范错消耗人的评审带宽；覆盖率核算在合入后才做、80% 只是规范要求而非强制门禁——规则存在但没有卡点。</td>
+<td><b>机器拦规范、闭环有终点。</b>版权 / format / 头文件实现 / CODEOWNERS 进 pre-PR hook；覆盖率核算前置为合入条件（补上缺失的卡点）；修复链完结回归验证并关闭 issue（因果链留在 issue 内，!1815 的做法固化为惯例）。</td>
+</tr>
+</table></div>
+
+<h3>落地排序</h3>
+<div class="tblwrap"><table>
+<tr><th>批次</th><th>措施</th><th>理由与度量</th></tr>
+<tr><td class="num">P0</td><td>机检矩阵（O2 档）· pre-PR hook 拦规范 · 覆盖率卡点前置</td><td>载体现成（CI / hook），成本最低、见效最快。度量：规范类检视意见占比、穿透门禁的回归数。</td></tr>
+<tr><td class="num">P1</td><td>spec 前置 · 修复模板影响面行 · issue 闭环规则</td><td>纯流程与模板改动，无新系统。度量：方向性返工次数 / 特性。</td></tr>
+<tr><td class="num">P2</td><td>独立 agent 审计试点</td><td>成本与误报率未知，先限 fix-of-fix 场景试点一个版本周期。度量：审计拦截率 vs 误报率，达标再扩面。</td></tr>
+</table></div>
+<p>注：本表根因均为两案例（n=2）的归纳，"反复出现"类判断需随后续 PR 数据回验——措施因此按"低成本先行、强措施试点"排序，各批次启动时认领 owner。</p>
+
+<h2><span class="no">04</span>值得保持的</h2>
+<ul class="tight">
+  <li><b>根因分析质量</b>：三级修复的根因（checkpoint 深度、欠定候选、结果位约束）全部准确，PR 描述完整交代了与上一级修复的因果关系。</li>
+  <li><b>测试看护有设计</b>：!1791 的 8 个 LLT 用例带 3 倍裕量的 TIMEOUT 设计，慢 CI 不误报、真回归必超时。</li>
+  <li><b>后冒烟有效</b>：O2 回归在合入当晚即被抓住，止损窗口不到一天。</li>
+  <li><b>过程留痕</b>：备份分支零丢失、检视账本逐条闭环、commit message 引用 note id 可追溯。</li>
+</ul>
+
+<div class="diag note"><b class="k">note:</b><p>一句话收尾：Agent 能把"怎么修"做对；"该不该这样修、修完还会动谁"必须由不共享作者假设的第二视角来守。两个案例里所有穿透到用户的错误，都发生在只有作者一个视角的时候。</p></div>
+
+<footer>数据来源：<a href="https://gitcode.com/Cangjie/wikishare/blob/main/team_compiler/feature_list/v105.0/SR-0001-apilevel-design/SR-0001-aar-string-format-apilevel.md">SR-0001 AAR（wikishare）</a> · cangjie_compiler !1417/!1418/!1815/!1832 及门禁评论 · cangjie_test !1791/!1799 · issue #927 / UsersForum #3116 · 复盘生成于 2026-07-11</footer>
+
+</body>
+</html>
