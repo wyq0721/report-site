@@ -1388,28 +1388,28 @@
           <tbody>
             <tr>
               <td>任务组织</td>
-              <td>以聊天、问答或单点工具调用为主，任务结构依赖用户手动维护。</td>
-              <td>以 Spec、状态机、阶段、审批、回退和运行记录组织任务。</td>
+              <td>聊天 / 问答 / 单点工具</td>
+              <td>Spec / 状态机 / 审批 / 回退</td>
             </tr>
             <tr>
               <td>Agent 协作</td>
-              <td>通常是单助手或简单角色提示。</td>
-              <td>支持 Supervisor 路由、挑战者校验、Judge 裁决、Agora 议场和一人公司办公室。</td>
+              <td>单助手 / 简单角色提示</td>
+              <td>Supervisor / Challenger / Judge / Agora</td>
             </tr>
             <tr>
               <td>执行后端</td>
-              <td>绑定单一模型或单一厂商体验。</td>
-              <td>统一适配多引擎，支持 SDK、stdio、ACP、CLI 和原生 runtime 形态。</td>
+              <td>单模型 / 单厂商体验</td>
+              <td>SDK / stdio / ACP / CLI / Runtime</td>
             </tr>
             <tr>
               <td>知识沉淀</td>
-              <td>上下文多停留在当前会话。</td>
-              <td>角色记忆、项目记忆、工作流经验、Notebook、RAG 和运行产物可长期复用。</td>
+              <td>当前会话上下文</td>
+              <td>Memory / Notebook / RAG / 运行产物</td>
             </tr>
             <tr>
               <td>治理能力</td>
-              <td>审计、准入、诊断和渠道桥接通常需要单独补齐。</td>
-              <td>内置用户体系、模型诊断、运行历史、渠道归属校验、配置管理和 API 文档。</td>
+              <td>治理能力外置</td>
+              <td>用户 / 诊断 / 日志 / 渠道 / API</td>
             </tr>
           </tbody>
         </table>
@@ -1421,31 +1421,31 @@
         <div class="section-head">
           <div>
             <div class="kicker">Adoption</div>
-            <p class="section-note">从单个场景试点开始，逐步沉淀为团队级标准流程。</p>
+            <p class="section-note">先跑一个高价值场景，再沉淀团队资产。</p>
           </div>
-          <h2>从场景试点到团队流程固化，路径清晰</h2>
+          <h2>四步进入团队级使用</h2>
         </div>
 
         <div class="timeline">
           <article class="step">
             <span class="num">D0</span>
             <h3>安装与初始化</h3>
-            <p>安装 npm 包，运行 ace，创建管理员，选择语言、默认工作目录和可用 AI 引擎。验证本地服务、权限边界和 ACE_HOME 数据目录。</p>
+            <p>安装、建管理员、选择工作目录和引擎。</p>
           </article>
           <article class="step">
             <span class="num">D1</span>
             <h3>接入模型与工具</h3>
-            <p>在引擎管理页配置团队可用模型、内部工具、文档知识库或数据查询能力，运行诊断确认流式输出、结构化结果和多轮稳定性。</p>
+            <p>接入模型、工具、知识库和数据查询。</p>
           </article>
           <article class="step">
             <span class="num">W1</span>
             <h3>固化首个工作流</h3>
-            <p>选择一个预算分析、费用审核、报表生成、政策问答、经营分析或研发交付任务，固化为状态机，配置执行、挑战、裁决和人工审批节点。</p>
+            <p>把首个任务固化为可审批工作流。</p>
           </article>
           <article class="step">
             <span class="num">M1</span>
             <h3>形成团队资产</h3>
-            <p>沉淀 Agent 配置、Skill、Notebook、运行复盘、渠道桥接和标准接入清单，让新任务直接复用既有流程资产。</p>
+            <p>沉淀 Agent、Skill、Notebook 和复盘模板。</p>
           </article>
         </div>
       </div>
@@ -1456,16 +1456,16 @@
         <div class="section-head">
           <div>
             <div class="kicker">Enterprise Readiness</div>
-            <p class="section-note">把 AI 试用推进到团队级使用时，治理能力可以同步接上。</p>
+            <p class="section-note">团队级使用，需要同步准备四类治理面。</p>
           </div>
           <h2>面向企业落地的治理准备</h2>
         </div>
 
         <div class="readiness-list">
-          <div class="readiness"><strong>执行引擎就绪检查</strong><span>通过模型/引擎诊断确认连接、流式输出、结构化结果、多轮稳定性和可用模型列表。</span></div>
-          <div class="readiness"><strong>人工门禁与回退</strong><span>高价值业务或研发任务可以配置人工审批、挑战者校验、版本基线、运行恢复和步骤级结果审查。</span></div>
-          <div class="readiness"><strong>渠道与密钥归属</strong><span>飞书、钉钉、微信、Generic Webhook、MCP 和引擎环境变量可纳入用户归属校验与脱敏日志。</span></div>
-          <div class="readiness"><strong>本地数据可控</strong><span>ACE_HOME 统一沉淀配置、缓存、日志、工作区、运行记录和 Notebook，便于私有化部署、数据边界管理和运维管理。</span></div>
+          <div class="readiness"><strong>执行引擎</strong><span>连接、流式、结构化、多轮稳定性。</span></div>
+          <div class="readiness"><strong>人工门禁</strong><span>审批、挑战、版本基线、步骤级审查。</span></div>
+          <div class="readiness"><strong>渠道归属</strong><span>IM、Webhook、MCP、环境变量纳入校验。</span></div>
+          <div class="readiness"><strong>本地数据</strong><span>配置、日志、运行记录、Notebook 本地沉淀。</span></div>
         </div>
       </div>
     </section>
@@ -1476,7 +1476,7 @@
     <div class="shell">
       <div>
         <h2>把一次性 AI 对话，变成可复用的流程生产线。</h2>
-        <p>ACEHarness 适合需要处理复杂业务流程、跨团队协作、规则审核、经营分析、研发交付、长期知识沉淀和本地私有化部署的团队。</p>
+        <p>适合复杂业务流程、研发交付、知识沉淀和本地私有化部署。</p>
         <div class="badge-strip">
           <span>Apache-2.0 with Runtime Library Exception</span>
           <span>Node.js 20+</span>
