@@ -1067,7 +1067,7 @@
         <div class="section-head">
           <div>
             <div class="kicker">Trusted Workflow</div>
-            <p class="section-note">面向财经管理、研发工程等高要求场景，把 AI 输出纳入可治理、可复核、可沉淀的任务闭环。</p>
+            <p class="section-note">高要求场景需要的不是“答案”，而是可信流程。</p>
           </div>
           <h2>面向可信交付的 AI 流程协同</h2>
         </div>
@@ -1075,9 +1075,7 @@
         <div class="trust-intro">
           <div class="panel dark">
             <h3>可信结果来自可治理过程</h3>
-            <p>
-              ACEHarness 将需求、规则、数据、工具、AI 角色和人工审核纳入统一流程。无论是财经分析还是研发工程，平台都能把任务拆成可执行阶段，保留关键依据和审核记录，让结果不仅能生成，也能解释、复核、回退和复用。
-            </p>
+            <p>需求、规则、数据、工具、AI 角色和人工审核进入同一条流程。</p>
             <div class="tag-row">
               <span class="tag">可信</span>
               <span class="tag">可追溯</span>
@@ -1088,16 +1086,16 @@
           </div>
           <div class="trust-outcomes">
             <div class="trust-outcome">
-              <strong>对财经</strong>
-              <span>把月结、预算、费用审核和经营分析变成有依据、有审批、有留痕的 AI 流程。</span>
+              <strong>财经管理</strong>
+              <span>依据清楚，审批留痕。</span>
             </div>
             <div class="trust-outcome">
-              <strong>对研发工程</strong>
-              <span>把修复、迁移、审查和测试变成可重跑、可回退、可验证的工程闭环。</span>
+              <strong>研发工程</strong>
+              <span>可测可回退，可复盘。</span>
             </div>
             <div class="trust-outcome">
-              <strong>对平台</strong>
-              <span>用同一套 Workflow、Agent、Skill 和 Evidence 模型承载不同业务域。</span>
+              <strong>平台治理</strong>
+              <span>统一编排，统一证据。</span>
             </div>
           </div>
         </div>
@@ -1106,37 +1104,37 @@
           <div class="layer-node">
             <b>Workflow</b>
             <span>定义任务模板</span>
-            <em>先把一次需求变成可复用流程。</em>
+            <em>目标 / 输入 / 产出</em>
             <small class="layer-example">财经：预算预测<br>研发：ICE 修复</small>
           </div>
           <div class="layer-node">
             <b>State / Phase</b>
             <span>管理流程阶段</span>
-            <em>把流程拆成有门禁的阶段。</em>
+            <em>阶段 / 门禁 / 回退</em>
             <small class="layer-example">财经：收数/复核<br>研发：复现/验证</small>
           </div>
           <div class="layer-node">
             <b>Step / Subworkflow</b>
             <span>拆出执行动作</span>
-            <em>落到可定位、可重跑的动作。</em>
+            <em>动作 / 子流程 / 重跑</em>
             <small class="layer-example">财经：对账/解释<br>研发：测试/diff</small>
           </div>
           <div class="layer-node">
             <b>Agent</b>
             <span>承担专业分工</span>
-            <em>让生成、挑战、裁决分离。</em>
+            <em>分析 / 执行 / 裁决</em>
             <small class="layer-example">财经：分析/审计<br>研发：Defender/Judge</small>
           </div>
           <div class="layer-node">
             <b>Skill</b>
             <span>封装方法工具</span>
-            <em>沉淀规则、口径和工具调用。</em>
+            <em>规则 / 口径 / 工具</em>
             <small class="layer-example">财经：制度/数据<br>研发：构建/检视</small>
           </div>
           <div class="layer-node">
             <b>Evidence</b>
             <span>形成证据链</span>
-            <em>记录过程、依据和人工确认。</em>
+            <em>日志 / 审批 / 快照</em>
             <small class="layer-example">财经：审批留痕<br>研发：Git baseline</small>
           </div>
         </div>
@@ -1145,37 +1143,19 @@
           <div class="scenario-lane">
             <strong class="lane-title">财经链路</strong>
             <span>月结 / 预算 / 费用审核</span>
-            <span>收数、对账、异常识别</span>
-            <span>口径查询、规则校验</span>
-            <span>分析、挑战、裁决分工</span>
-            <span>制度 / 数据 / 模板 Skill</span>
+            <span>口径 / 数据 / 规则</span>
+            <span>分析 / 复核 / 审批</span>
             <span>可信、可追溯、可审计</span>
           </div>
           <div class="scenario-lane">
             <strong class="lane-title">研发工程链路</strong>
             <span>ICE 修复 / SDK 迁移 / 审查</span>
-            <span>复现、根因、实现、验证</span>
-            <span>预命令、测试、diff</span>
-            <span>Defender、Attacker、Judge</span>
-            <span>构建 / 检视 / 迁移 Skill</span>
+            <span>复现 / 根因 / 修复</span>
+            <span>测试 / diff / 评审</span>
             <span>可回退、可重跑、可验证</span>
           </div>
         </div>
 
-        <div class="value-list" style="margin-top: 18px;">
-          <article class="value-card" data-index="01">
-            <h3>预算与滚动预测</h3>
-            <p>用 Workflow 固化预测口径、历史数据拉取、差异解释和版本确认，Evidence 留下数据来源与人工确认。</p>
-          </article>
-          <article class="value-card" data-index="02">
-            <h3>月结与对账</h3>
-            <p>用 State/Phase 管理关账阶段，用 Step 处理异常科目和跨系统差异，用人工门禁控制最终放行。</p>
-          </article>
-          <article class="value-card" data-index="03">
-            <h3>经营分析与报告</h3>
-            <p>由分析 Agent 提取波动点，挑战 Agent 质疑解释链，报告 Agent 输出管理层摘要，Skill 提供口径和模板。</p>
-          </article>
-        </div>
       </div>
     </section>
 
