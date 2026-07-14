@@ -489,6 +489,118 @@
       font-size: 14px;
     }
 
+    .layer-diagram {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .layer-node {
+      position: relative;
+      min-height: 154px;
+      padding: 16px 14px;
+      border: 1px solid rgba(22, 26, 22, 0.16);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .layer-node::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      transform: translateY(-50%);
+      color: var(--green);
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+      z-index: 2;
+    }
+
+    .layer-node:last-child::after {
+      content: "";
+    }
+
+    .layer-node b,
+    .scenario-row strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .layer-node span {
+      display: block;
+      margin-top: 10px;
+      color: #273226;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .layer-node em {
+      display: block;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-style: normal;
+      line-height: 1.45;
+    }
+
+    .purpose-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .purpose-strip div,
+    .scenario-bridge {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .purpose-strip div {
+      padding: 16px;
+    }
+
+    .purpose-strip strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .purpose-strip span,
+    .scenario-row span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .scenario-bridge {
+      display: grid;
+      gap: 1px;
+      margin-top: 12px;
+      overflow: hidden;
+      background: var(--line);
+    }
+
+    .scenario-row {
+      display: grid;
+      grid-template-columns: 120px repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--surface);
+    }
+
     .route-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
