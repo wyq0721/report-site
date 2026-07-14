@@ -1191,35 +1191,35 @@
         <div class="section-head">
           <div>
             <div class="kicker">Capabilities</div>
-            <p class="section-note">用统一层级把复杂任务从“聊天”变成“流程”。</p>
+            <p class="section-note">上面讲的是层级模型，这里讲 ACEHarness 如何把它真正跑起来。</p>
           </div>
-          <h2>Workflow、State/Phase、Step、Agent、Skill、Evidence 共同构成可执行流程</h2>
+          <h2>从流程设计到执行治理，ACEHarness 提供六类支撑能力</h2>
         </div>
 
         <div class="value-list">
           <article class="value-card" data-index="01">
-            <h3>Workflow：定义业务闭环</h3>
-            <p>把一类复杂任务固化为可复用流程。财经可以是月结、预算、经营分析；Coding 可以是编译器修复、SDK 迁移、代码审查或性能优化。</p>
+            <h3>Spec 与 Workflow 生成</h3>
+            <p>把自然语言需求整理成目标、约束、任务拆分和工作流草案，既能服务预算分析，也能服务编译器修复和 SDK 迁移。</p>
           </article>
           <article class="value-card" data-index="02">
-            <h3>State / Phase：管理流程阶段</h3>
-            <p>状态机模式支持条件跳转、失败回退、人工审批和最大转换次数；阶段模式支持顺序执行、迭代优化和检查点。</p>
+            <h3>状态机与阶段执行</h3>
+            <p>支持 state-machine 和 phase-based 两种模式，承载条件跳转、失败回退、检查点、人工审批、并行分组和子工作流。</p>
           </article>
           <article class="value-card" data-index="03">
-            <h3>Step / Subworkflow：拆出执行动作</h3>
-            <p>Step 是可定位、可重跑的执行单元，可以绑定 Agent，也可以嵌入子 Workflow；Coding 场景还可接入预命令、测试和 diff 审查。</p>
+            <h3>Supervisor 与多 Agent 编排</h3>
+            <p>根据角色、能力、上下文和引擎可用性调度 Agent，支持分析、执行、挑战、报告、裁决等职责分工。</p>
           </article>
           <article class="value-card" data-index="04">
-            <h3>Agents：承担专业分工</h3>
-            <p>Supervisor 根据角色、能力、引擎可用性和上下文，把步骤分派给合适 Agent。一个任务可以组合分析者、执行者、审查者、报告者和裁决者。</p>
+            <h3>Skill、MCP 与工具调用</h3>
+            <p>把制度口径、RAG 检索、SQLite 工作缓存、构建测试、代码迁移、内部 API 等能力封装成 Agent 可调用的工具入口。</p>
           </article>
           <article class="value-card" data-index="05">
-            <h3>Skills：封装方法和工具</h3>
-            <p>Skills 作为 Workflow 通用能力或 Agent 专属能力出现，封装制度口径、RAG 检索、受控数据查询、构建测试、代码迁移和文档生成方法。</p>
+            <h3>运行证据与审查面</h3>
+            <p>运行记录、事件日志、步骤日志、审计日志、人工问题、Git baseline、step diff 和 Notebook 复盘共同形成证据链。</p>
           </article>
           <article class="value-card" data-index="06">
-            <h3>Evidence：形成可信证据链</h3>
-            <p>运行记录、事件日志、步骤日志、审计日志、人工问题、Git baseline、step diff 和 Notebook 复盘共同回答“结果从哪里来”。</p>
+            <h3>多引擎与渠道集成</h3>
+            <p>通过 Engine、ACP、MCP、REST API、飞书、钉钉、微信 Bridge 和 Webhook，把 AI 执行与企业入口连接起来。</p>
           </article>
         </div>
       </div>
