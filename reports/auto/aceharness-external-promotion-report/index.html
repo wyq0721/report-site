@@ -1062,137 +1062,119 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="kicker">Finance Perspective</div>
-            <p class="section-note">面向财经团队，重点不是“AI 会不会写代码”，而是“AI 能不能被纳入流程”。</p>
+            <div class="kicker">Trusted Workflow</div>
+            <p class="section-note">财经关心可信与可追溯，Coding 关心可验证与可回退，本质都是把 AI 纳入可治理流程。</p>
           </div>
-          <h2>把财经工作拆成可执行、可审核、可沉淀的 AI 流程</h2>
+          <h2>同一套流程层级，同时解释财经和 Coding 任务</h2>
         </div>
 
-        <div class="two-col">
+        <div class="trust-intro">
           <div class="panel dark">
-            <h3>财经团队可以怎么理解 ACEHarness</h3>
+            <h3>为什么从财经讲起</h3>
             <p>
-              ACEHarness 更像一个 AI 流程调度台：把预算编制、月结关账、报表解读、费用审核、经营分析、政策问答、异常归因等任务，拆成标准 Workflow，通过 State/Phase 管理流程阶段，再把每个 Step 或子流程交给合适的 Agent、工具和知识库执行。人仍然保留关键审核权，系统负责过程组织、证据沉淀和复用。
+              财经团队不会只问“AI 能不能生成报告”，更会追问数据从哪里来、口径是否一致、谁确认过、出了问题能不能复盘。Coding 任务同样如此：代码为什么这么改、测试是否通过、diff 能否审查、失败后能否回退。ACEHarness 的价值就是把这类任务统一放进可执行、可审核、可沉淀的流程。
             </p>
             <div class="tag-row">
-              <span class="tag">流程编排</span>
-              <span class="tag">角色分工</span>
-              <span class="tag">规则沉淀</span>
-              <span class="tag">人工门禁</span>
-              <span class="tag">证据留痕</span>
+              <span class="tag">可信</span>
+              <span class="tag">可追溯</span>
+              <span class="tag">可验证</span>
+              <span class="tag">可回退</span>
+              <span class="tag">可复用</span>
             </div>
           </div>
-          <div class="architecture">
-            <div class="arch-line">
-              <div class="arch-title">Workflow</div>
-              <div class="arch-body">一类可复用任务模板。实现上支持 state-machine 与 phase-based 两种模式，适合不同复杂度的业务和研发流程。</div>
+          <div class="trust-outcomes">
+            <div class="trust-outcome">
+              <strong>对财经</strong>
+              <span>把月结、预算、费用审核和经营分析变成有依据、有审批、有留痕的 AI 流程。</span>
             </div>
-            <div class="arch-line">
-              <div class="arch-title">State / Phase</div>
-              <div class="arch-body">流程阶段。状态机模式支持条件跳转、回退和人工审批；阶段模式适合顺序执行、迭代优化和检查点确认。</div>
+            <div class="trust-outcome">
+              <strong>对 Coding</strong>
+              <span>把修复、迁移、审查和测试变成可重跑、可回退、可验证的工程闭环。</span>
             </div>
-            <div class="arch-line">
-              <div class="arch-title">Step</div>
-              <div class="arch-body">阶段内的可执行动作。Step 可以调用 Agent，也可以嵌入子 Workflow；并可承载预命令、约束、并发分组和 Spec 任务绑定。</div>
-            </div>
-            <div class="arch-line">
-              <div class="arch-title">Agents</div>
-              <div class="arch-body">承担不同职责的 AI 角色，例如政策解释员、数据分析师、预算助手、审计挑战者、报告撰写员、复核裁决员。</div>
-            </div>
-            <div class="arch-line">
-              <div class="arch-title">Skills</div>
-              <div class="arch-body">可被 Agent 调用的领域方法和工具入口。Skills 归属 Workflow 或 Agent，不直接绑定 Step，便于区分通用规则和角色专长。</div>
-            </div>
-            <div class="arch-line">
-              <div class="arch-title">Evidence</div>
-              <div class="arch-body">运行记录、事件日志、步骤日志、审计日志、人工回答、版本快照和复盘结论，形成可信、可追溯、可复核的证据链。</div>
+            <div class="trust-outcome">
+              <strong>对平台</strong>
+              <span>用同一套 Workflow、Agent、Skill 和 Evidence 模型承载不同业务域。</span>
             </div>
           </div>
         </div>
 
-        <div class="layer-diagram" aria-label="ACEHarness 设计层次图">
+        <div class="layer-diagram story-flow" aria-label="ACEHarness 可信流程层级图">
           <div class="layer-node">
             <b>Workflow</b>
             <span>定义任务模板</span>
-            <em>明确目标、范围、输入、产出和运行模式。</em>
+            <em>先把一次需求变成可复用流程。</em>
+            <small class="layer-example">财经：预算预测<br>Coding：ICE 修复</small>
           </div>
           <div class="layer-node">
             <b>State / Phase</b>
             <span>管理流程阶段</span>
-            <em>承载检查点、条件跳转、回退和人工门禁。</em>
+            <em>把流程拆成有门禁的阶段。</em>
+            <small class="layer-example">财经：收数/复核<br>Coding：复现/验证</small>
           </div>
           <div class="layer-node">
             <b>Step / Subworkflow</b>
             <span>拆出执行动作</span>
-            <em>把任务落到可定位、可重跑、可复核的粒度。</em>
+            <em>落到可定位、可重跑的动作。</em>
+            <small class="layer-example">财经：对账/解释<br>Coding：测试/diff</small>
           </div>
           <div class="layer-node">
             <b>Agent</b>
             <span>承担专业分工</span>
-            <em>让分析、执行、挑战、报告和裁决职责分离。</em>
+            <em>让生成、挑战、裁决分离。</em>
+            <small class="layer-example">财经：分析/审计<br>Coding：Defender/Judge</small>
           </div>
           <div class="layer-node">
             <b>Skill</b>
             <span>封装方法工具</span>
-            <em>沉淀规则、口径、工具调用和领域方法。</em>
+            <em>沉淀规则、口径和工具调用。</em>
+            <small class="layer-example">财经：制度/数据<br>Coding：构建/检视</small>
           </div>
           <div class="layer-node">
             <b>Evidence</b>
             <span>形成证据链</span>
-            <em>记录过程、依据、人工确认和可复盘结果。</em>
+            <em>记录过程、依据和人工确认。</em>
+            <small class="layer-example">财经：审批留痕<br>Coding：Git baseline</small>
           </div>
         </div>
 
-        <div class="purpose-strip">
-          <div>
-            <strong>设计目的</strong>
-            <span>把复杂任务从“临时问答”变成“可运行流程”，先确定边界和阶段，再让 Agent 执行。</span>
+        <div class="scenario-lanes" aria-label="同一套层级的双场景串联">
+          <div class="scenario-lane">
+            <strong class="lane-title">财经链路</strong>
+            <span>月结 / 预算 / 费用审核</span>
+            <span>收数、对账、异常识别</span>
+            <span>口径查询、规则校验</span>
+            <span>分析、挑战、裁决分工</span>
+            <span>制度 / 数据 / 模板 Skill</span>
+            <span>可信、可追溯、可审计</span>
           </div>
-          <div>
-            <strong>核心价值</strong>
-            <span>让结果不仅能生成，还能解释来源、定位步骤、复核依据，并在下一次任务中复用。</span>
+          <div class="scenario-lane">
+            <strong class="lane-title">Coding 链路</strong>
+            <span>ICE 修复 / SDK 迁移 / 审查</span>
+            <span>复现、根因、实现、验证</span>
+            <span>预命令、测试、diff</span>
+            <span>Defender、Attacker、Judge</span>
+            <span>构建 / 检视 / 迁移 Skill</span>
+            <span>可回退、可重跑、可验证</span>
           </div>
         </div>
 
-        <div class="scenario-bridge" aria-label="财经与 Coding 场景映射">
-          <div class="scenario-row">
-            <strong>财经场景</strong>
-            <span>月结、预算、费用审核、经营分析</span>
-            <span>口径、规则、数据来源、人工审批</span>
-            <span>可信、可追溯、可审计、可复核</span>
-          </div>
-          <div class="scenario-row">
-            <strong>Coding 场景</strong>
-            <span>ICE 修复、SDK 迁移、代码审查、性能优化</span>
-            <span>构建、测试、diff、Git baseline</span>
-            <span>可回退、可重跑、可验证、可复盘</span>
-          </div>
+        <div class="panel" style="margin-top: 18px;">
+          <h3>交流时的主线</h3>
+          <p>不要把财经场景讲成 ACEHarness 的另一个分支，而要把它作为“可信流程”的高要求样板：财经要求解释来源、审批留痕和口径一致；Coding 要求测试、diff 和版本回退。两者共同证明 ACEHarness 的核心不是单点生成，而是把 AI 输出放进可治理的任务闭环。</p>
         </div>
 
         <div class="value-list" style="margin-top: 18px;">
           <article class="value-card" data-index="01">
             <h3>预算与滚动预测</h3>
-            <p>把预测口径、历史数据拉取、差异解释、风险提示和版本确认固化为流程，减少靠手工表格和口头经验推进。</p>
+            <p>用 Workflow 固化预测口径、历史数据拉取、差异解释和版本确认，Evidence 留下数据来源与人工确认。</p>
           </article>
           <article class="value-card" data-index="02">
             <h3>月结与对账</h3>
-            <p>把关账清单、异常科目、跨系统差异、责任人确认和复核记录纳入状态机，提升可追踪性和复用性。</p>
+            <p>用 State/Phase 管理关账阶段，用 Step 处理异常科目和跨系统差异，用人工门禁控制最终放行。</p>
           </article>
           <article class="value-card" data-index="03">
             <h3>经营分析与报告</h3>
-            <p>由分析 Agent 提取波动点，挑战 Agent 质疑解释链，报告 Agent 生成面向管理层的结论和行动建议。</p>
-          </article>
-          <article class="value-card" data-index="04">
-            <h3>政策与规则问答</h3>
-            <p>把制度、口径、FAQ 和历史判例沉淀为 Skill 与知识库，让回答带出处、可复核、可持续更新。</p>
-          </article>
-          <article class="value-card" data-index="05">
-            <h3>费用合规与审计</h3>
-            <p>费用审核可以拆成规则匹配、异常识别、材料补充、风险评级和人工裁决，避免 AI 直接给结论而无过程。</p>
-          </article>
-          <article class="value-card" data-index="06">
-            <h3>跨团队协同</h3>
-            <p>飞书、钉钉、微信或 Webhook 可把业务请求接入流程，状态、结论和待办回到原协同渠道。</p>
+            <p>由分析 Agent 提取波动点，挑战 Agent 质疑解释链，报告 Agent 输出管理层摘要，Skill 提供口径和模板。</p>
           </article>
         </div>
       </div>
