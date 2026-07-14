@@ -794,12 +794,21 @@
       .metrics,
       .value-list,
       .route-grid,
-      .timeline {
+      .timeline,
+      .layer-diagram {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .layer-node::after {
+        display: none;
       }
 
       .proof-grid,
       .readiness-list {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-row {
         grid-template-columns: 1fr;
       }
     }
@@ -831,7 +840,9 @@
       .value-list,
       .route-grid,
       .timeline,
-      .case-metrics {
+      .case-metrics,
+      .layer-diagram,
+      .purpose-strip {
         grid-template-columns: 1fr;
       }
 
