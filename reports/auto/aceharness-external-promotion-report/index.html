@@ -1012,54 +1012,64 @@
           </div>
         </div>
 
-        <table class="comparison" style="margin-top: 18px;">
-          <thead>
-            <tr>
-              <th>设计层次</th>
-              <th>财经领域对应</th>
-              <th>Coding / 研发领域对应</th>
-              <th>可信与追溯价值</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Workflow</td>
-              <td>月结关账、预算滚动预测、费用合规审核、经营分析报告。</td>
-              <td>编译器 ICE 修复、SDK API 迁移、代码审查、性能优化、文档生成。</td>
-              <td>把一次任务变成可复用模板，明确范围、输入、产出和执行模式。</td>
-            </tr>
-            <tr>
-              <td>State / Phase</td>
-              <td>收数、对账、异常识别、解释生成、复核、归档等阶段。</td>
-              <td>复现、根因分析、实现修复、构建验证、回归测试、人工评审。</td>
-              <td>每个阶段可设条件、检查点、回退和人工门禁，避免黑箱直出结论。</td>
-            </tr>
-            <tr>
-              <td>Step / Subworkflow</td>
-              <td>拉取口径、计算同比环比、标注异常、生成管理层摘要、等待审批。</td>
-              <td>运行预命令、修改代码、执行测试、生成 diff、触发子流程验证。</td>
-              <td>把动作拆到可定位粒度，失败后可重跑指定步骤或切换到子流程。</td>
-            </tr>
-            <tr>
-              <td>Agents</td>
-              <td>数据分析师、政策解释员、预算助手、审计挑战者、报告撰写员、裁决员。</td>
-              <td>架构师、实现者、测试者、审查者、Defender、Attacker、Judge。</td>
-              <td>职责边界清楚，避免一个 AI 既生成又自证正确。</td>
-            </tr>
-            <tr>
-              <td>Skills</td>
-              <td>制度口径查询、费用规则校验、异常归因模板、报表生成规范、受控数据查询。</td>
-              <td>仓颉规范、构建测试、GitCode PR 检视、RAG 检索、SQLite 工作缓存、代码迁移方法。</td>
-              <td>规则和工具入口可沉淀、可复用、可授权，减少临时提示词和个人经验漂移。</td>
-            </tr>
-            <tr>
-              <td>Evidence</td>
-              <td>数据来源、计算口径、制度依据、人工确认、审批记录、异常解释链。</td>
-              <td>runId、event log、step log、audit log、Git baseline、step diff、测试结果。</td>
-              <td>回答“AI 做了什么、依据是什么、谁确认了、哪里可复核”。</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="layer-diagram" aria-label="ACEHarness 设计层次图">
+          <div class="layer-node">
+            <b>Workflow</b>
+            <span>定义任务模板</span>
+            <em>明确目标、范围、输入、产出和运行模式。</em>
+          </div>
+          <div class="layer-node">
+            <b>State / Phase</b>
+            <span>管理流程阶段</span>
+            <em>承载检查点、条件跳转、回退和人工门禁。</em>
+          </div>
+          <div class="layer-node">
+            <b>Step / Subworkflow</b>
+            <span>拆出执行动作</span>
+            <em>把任务落到可定位、可重跑、可复核的粒度。</em>
+          </div>
+          <div class="layer-node">
+            <b>Agent</b>
+            <span>承担专业分工</span>
+            <em>让分析、执行、挑战、报告和裁决职责分离。</em>
+          </div>
+          <div class="layer-node">
+            <b>Skill</b>
+            <span>封装方法工具</span>
+            <em>沉淀规则、口径、工具调用和领域方法。</em>
+          </div>
+          <div class="layer-node">
+            <b>Evidence</b>
+            <span>形成证据链</span>
+            <em>记录过程、依据、人工确认和可复盘结果。</em>
+          </div>
+        </div>
+
+        <div class="purpose-strip">
+          <div>
+            <strong>设计目的</strong>
+            <span>把复杂任务从“临时问答”变成“可运行流程”，先确定边界和阶段，再让 Agent 执行。</span>
+          </div>
+          <div>
+            <strong>核心价值</strong>
+            <span>让结果不仅能生成，还能解释来源、定位步骤、复核依据，并在下一次任务中复用。</span>
+          </div>
+        </div>
+
+        <div class="scenario-bridge" aria-label="财经与 Coding 场景映射">
+          <div class="scenario-row">
+            <strong>财经场景</strong>
+            <span>月结、预算、费用审核、经营分析</span>
+            <span>口径、规则、数据来源、人工审批</span>
+            <span>可信、可追溯、可审计、可复核</span>
+          </div>
+          <div class="scenario-row">
+            <strong>Coding 场景</strong>
+            <span>ICE 修复、SDK 迁移、代码审查、性能优化</span>
+            <span>构建、测试、diff、Git baseline</span>
+            <span>可回退、可重跑、可验证、可复盘</span>
+          </div>
+        </div>
 
         <div class="value-list" style="margin-top: 18px;">
           <article class="value-card" data-index="01">
