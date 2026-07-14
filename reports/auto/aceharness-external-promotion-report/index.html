@@ -797,7 +797,7 @@
         </div>
         <figure class="hero-visual">
           <img src="https://raw.gitcode.com/Cangjie-SIG/ACEHarness/files/main/public/readme.png" alt="ACEHarness 产品总览">
-          <figcaption class="caption">以 Workflow、Step、Agent、Skill、知识沉淀和执行引擎为核心的统一流程工作台。</figcaption>
+          <figcaption class="caption">以 Workflow、State/Phase、Step/Subworkflow、Agent、Skill、Evidence 和执行引擎为核心的统一流程工作台。</figcaption>
         </figure>
       </div>
 
@@ -862,7 +862,7 @@
           <div class="panel dark">
             <h3>财经团队可以怎么理解 ACEHarness</h3>
             <p>
-              ACEHarness 更像一个 AI 流程调度台：把预算编制、月结关账、报表解读、费用审核、经营分析、政策问答、异常归因等任务，拆成标准 Workflow，再把每一步交给合适的 Agent、工具和知识库执行。人仍然保留关键审核权，系统负责过程组织、证据沉淀和复用。
+              ACEHarness 更像一个 AI 流程调度台：把预算编制、月结关账、报表解读、费用审核、经营分析、政策问答、异常归因等任务，拆成标准 Workflow，通过 State/Phase 管理流程阶段，再把每个 Step 或子流程交给合适的 Agent、工具和知识库执行。人仍然保留关键审核权，系统负责过程组织、证据沉淀和复用。
             </p>
             <div class="tag-row">
               <span class="tag">流程编排</span>
@@ -875,11 +875,15 @@
           <div class="architecture">
             <div class="arch-line">
               <div class="arch-title">Workflow</div>
-              <div class="arch-body">一类可复用业务流程，例如月度经营分析、费用合规审核、预算滚动预测、合同付款校验或管理报表生成。</div>
+              <div class="arch-body">一类可复用任务模板。实现上支持 state-machine 与 phase-based 两种模式，适合不同复杂度的业务和研发流程。</div>
+            </div>
+            <div class="arch-line">
+              <div class="arch-title">State / Phase</div>
+              <div class="arch-body">流程阶段。状态机模式支持条件跳转、回退和人工审批；阶段模式适合顺序执行、迭代优化和检查点确认。</div>
             </div>
             <div class="arch-line">
               <div class="arch-title">Step</div>
-              <div class="arch-body">流程中的阶段动作，例如收集口径、拉取数据、识别异常、生成解释、交叉校验、输出报告、等待人工确认。</div>
+              <div class="arch-body">阶段内的可执行动作。Step 可以调用 Agent，也可以嵌入子 Workflow；并可承载预命令、约束、并发分组和 Spec 任务绑定。</div>
             </div>
             <div class="arch-line">
               <div class="arch-title">Agents</div>
@@ -887,14 +891,63 @@
             </div>
             <div class="arch-line">
               <div class="arch-title">Skills</div>
-              <div class="arch-body">可被 Agent 调用的领域方法和工具入口，例如报表口径查询、费用规则校验、同比环比分析、异常归因模板、文档生成规范。</div>
+              <div class="arch-body">可被 Agent 调用的领域方法和工具入口。Skills 归属 Workflow 或 Agent，不直接绑定 Step，便于区分通用规则和角色专长。</div>
             </div>
             <div class="arch-line">
               <div class="arch-title">Evidence</div>
-              <div class="arch-body">每次执行留下输入、判断依据、工具结果、人工审批、版本记录和复盘结论，形成后续流程优化和知识更新的依据。</div>
+              <div class="arch-body">运行记录、事件日志、步骤日志、审计日志、人工回答、版本快照和复盘结论，形成可信、可追溯、可复核的证据链。</div>
             </div>
           </div>
         </div>
+
+        <table class="comparison" style="margin-top: 18px;">
+          <thead>
+            <tr>
+              <th>设计层次</th>
+              <th>财经领域对应</th>
+              <th>Coding / 研发领域对应</th>
+              <th>可信与追溯价值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Workflow</td>
+              <td>月结关账、预算滚动预测、费用合规审核、经营分析报告。</td>
+              <td>编译器 ICE 修复、SDK API 迁移、代码审查、性能优化、文档生成。</td>
+              <td>把一次任务变成可复用模板，明确范围、输入、产出和执行模式。</td>
+            </tr>
+            <tr>
+              <td>State / Phase</td>
+              <td>收数、对账、异常识别、解释生成、复核、归档等阶段。</td>
+              <td>复现、根因分析、实现修复、构建验证、回归测试、人工评审。</td>
+              <td>每个阶段可设条件、检查点、回退和人工门禁，避免黑箱直出结论。</td>
+            </tr>
+            <tr>
+              <td>Step / Subworkflow</td>
+              <td>拉取口径、计算同比环比、标注异常、生成管理层摘要、等待审批。</td>
+              <td>运行预命令、修改代码、执行测试、生成 diff、触发子流程验证。</td>
+              <td>把动作拆到可定位粒度，失败后可重跑指定步骤或切换到子流程。</td>
+            </tr>
+            <tr>
+              <td>Agents</td>
+              <td>数据分析师、政策解释员、预算助手、审计挑战者、报告撰写员、裁决员。</td>
+              <td>架构师、实现者、测试者、审查者、Defender、Attacker、Judge。</td>
+              <td>职责边界清楚，避免一个 AI 既生成又自证正确。</td>
+            </tr>
+            <tr>
+              <td>Skills</td>
+              <td>制度口径查询、费用规则校验、异常归因模板、报表生成规范、受控数据查询。</td>
+              <td>仓颉规范、构建测试、GitCode PR 检视、RAG 检索、SQLite 工作缓存、代码迁移方法。</td>
+              <td>规则和工具入口可沉淀、可复用、可授权，减少临时提示词和个人经验漂移。</td>
+            </tr>
+            <tr>
+              <td>Evidence</td>
+              <td>数据来源、计算口径、制度依据、人工确认、审批记录、异常解释链。</td>
+              <td>runId、event log、step log、audit log、Git baseline、step diff、测试结果。</td>
+              <td>回答“AI 做了什么、依据是什么、谁确认了、哪里可复核”。</td>
+            </tr>
+          </tbody>
+        </table>
 
         <div class="value-list" style="margin-top: 18px;">
           <article class="value-card" data-index="01">
