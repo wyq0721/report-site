@@ -717,33 +717,78 @@
       font-size: 14px;
     }
 
-    .comparison {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--surface);
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .market-card {
+      display: grid;
+      align-content: start;
+      min-height: 214px;
+      padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .market-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .market-card span {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .market-card p,
+    .market-card em {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .market-card em {
+      display: block;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(22, 26, 22, 0.12);
+      color: #263323;
+      font-style: normal;
+      font-weight: 850;
+    }
+
+    .advantage-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
       overflow: hidden;
     }
 
-    .comparison th,
-    .comparison td {
-      padding: 16px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-      font-size: 14px;
-    }
-
-    .comparison th {
-      background: #eaf2e4;
+    .advantage-strip span {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      background: #f8faf5;
+      color: #203020;
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .comparison tr:last-child td {
-      border-bottom: 0;
+      font-weight: 850;
+      text-align: center;
     }
 
     .command {
@@ -858,6 +903,8 @@
       .value-list,
       .route-grid,
       .timeline,
+      .market-grid,
+      .advantage-strip,
       .layer-diagram {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -907,6 +954,8 @@
       .value-list,
       .route-grid,
       .timeline,
+      .market-grid,
+      .advantage-strip,
       .case-metrics,
       .layer-diagram,
       .purpose-strip,
@@ -959,6 +1008,7 @@
         <a href="#capabilities">能力</a>
         <a href="#proof">案例</a>
         <a href="#integration">集成</a>
+        <a href="#comparison">对比</a>
         <a href="#adoption">落地</a>
         <a href="#readiness">治理</a>
       </nav>
@@ -1340,48 +1390,47 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="kicker">Differentiation</div>
-            <p class="section-note">从“回答问题”升级为“治理任务”。</p>
+            <div class="kicker">Industry Context</div>
+            <p class="section-note">业界已有多类 Agent 产品，ACEHarness 的位置更接近“流程治理层”。</p>
           </div>
-          <h2>核心差异：以流程治理承载 AI 输出</h2>
+          <h2>行业参照：把 Agent 能力装进可治理流程</h2>
         </div>
 
-        <table class="comparison">
-          <thead>
-            <tr>
-              <th>维度</th>
-              <th>常规 AI 助手</th>
-              <th>ACEHarness</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>任务组织</td>
-              <td>聊天 / 问答 / 单点工具</td>
-              <td>Spec / 状态机 / 审批 / 回退</td>
-            </tr>
-            <tr>
-              <td>Agent 协作</td>
-              <td>单助手 / 简单角色提示</td>
-              <td>Supervisor / Challenger / Judge / Agora</td>
-            </tr>
-            <tr>
-              <td>执行后端</td>
-              <td>单模型 / 单厂商体验</td>
-              <td>SDK / stdio / ACP / CLI / Runtime</td>
-            </tr>
-            <tr>
-              <td>知识沉淀</td>
-              <td>当前会话上下文</td>
-              <td>Memory / Notebook / RAG / 运行产物</td>
-            </tr>
-            <tr>
-              <td>治理能力</td>
-              <td>治理能力外置</td>
-              <td>用户 / 诊断 / 日志 / 渠道 / API</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="market-grid">
+          <article class="market-card">
+            <strong>Agent 框架</strong>
+            <span>LangGraph / AutoGen / CrewAI / ADK</span>
+            <p>强在开发者原语、多 Agent 编排、工具调用和运行时能力。</p>
+            <em>ACEHarness 更靠近团队流程、角色分工、证据沉淀和交付入口。</em>
+          </article>
+          <article class="market-card">
+            <strong>AI 应用搭建</strong>
+            <span>Dify / Flowise</span>
+            <p>强在可视化应用、知识库、Chatflow、Agentflow 和发布入口。</p>
+            <em>ACEHarness 更强调状态机、人工门禁、本地工程现场和复盘资产。</em>
+          </article>
+          <article class="market-card">
+            <strong>自动化平台</strong>
+            <span>n8n / Zapier Agents</span>
+            <p>强在连接器、触发器、低代码流程和跨 SaaS 应用执行。</p>
+            <em>ACEHarness 更适合不确定任务中的 Agent 协作、挑战和裁决。</em>
+          </article>
+          <article class="market-card">
+            <strong>Coding Agent</strong>
+            <span>Claude Code / Copilot / Devin</span>
+            <p>强在代码理解、改动生成、PR、迁移、测试和研发自动化。</p>
+            <em>ACEHarness 把研发闭环抽象成通用 Workflow、Skill 和 Evidence。</em>
+          </article>
+        </div>
+
+        <div class="advantage-strip" aria-label="ACEHarness 差异优势">
+          <span>Local-first</span>
+          <span>Multi-engine</span>
+          <span>State Machine</span>
+          <span>Human Gate</span>
+          <span>Evidence Trail</span>
+          <span>Skill Assets</span>
+        </div>
       </div>
     </section>
 
