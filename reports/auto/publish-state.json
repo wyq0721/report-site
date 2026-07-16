@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16 17:15:28",
+  "generated_at": "2026-07-16 17:15:42",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -11,11 +11,11 @@
     },
     "aceharness-external-promotion-report.html": {
       "assets": [],
-      "sha256": "f2153b5dc1b09631edb5a0d4e02567d10d36f12664bf35b14e3f7d5ad1d72786",
+      "sha256": "c06445b16bdec98da06f4fa6fb5a20f9ade98dee2f55a817e03810af4be69c0a",
       "slug": "aceharness-external-promotion-report",
       "source_name": "aceharness-external-promotion-report.html",
       "title": "ACEHarness | AI Multi-Agent 流程协同平台",
-      "updated_at": "2026-07-16 17:15:28"
+      "updated_at": "2026-07-16 17:15:42"
     },
     "ai-native-aar.html": {
       "assets": [],
