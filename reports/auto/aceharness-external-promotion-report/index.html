@@ -255,6 +255,35 @@
       line-height: 1.45;
     }
 
+    .trust-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .trust-proof div {
+      min-height: 92px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .trust-proof strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 17px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .trust-proof span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
     section {
       padding: 64px 0;
       border-bottom: 1px solid var(--line);
@@ -392,6 +421,55 @@
       color: #30382f;
       font-size: 12px;
       font-weight: 750;
+    }
+
+    .transform-map {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .transform-step {
+      min-height: 204px;
+      padding: 18px;
+      background: var(--surface);
+    }
+
+    .transform-step b {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .transform-step strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .transform-step span,
+    .transform-step em {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .transform-step em {
+      margin-top: 10px;
+      color: #213020;
+      font-style: normal;
+      font-weight: 850;
     }
 
     .proof-grid {
@@ -905,6 +983,8 @@
       .timeline,
       .market-grid,
       .advantage-strip,
+      .trust-proof,
+      .transform-map,
       .layer-diagram {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -956,6 +1036,8 @@
       .timeline,
       .market-grid,
       .advantage-strip,
+      .trust-proof,
+      .transform-map,
       .case-metrics,
       .layer-diagram,
       .purpose-strip,
