@@ -538,13 +538,13 @@
 
     .architecture {
       display: grid;
-      gap: 14px;
+      gap: 10px;
     }
 
     .arch-line {
       display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 12px;
+      grid-template-columns: 156px 1fr;
+      gap: 10px;
       align-items: stretch;
     }
 
@@ -560,11 +560,21 @@
       color: #fff;
       background: var(--ink);
       font-weight: 900;
+      line-height: 1.25;
     }
 
     .arch-body {
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .arch-body strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 900;
     }
 
     .layer-diagram {
