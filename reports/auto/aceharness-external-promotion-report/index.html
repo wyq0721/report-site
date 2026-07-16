@@ -577,6 +577,58 @@
       font-weight: 900;
     }
 
+    .arch-map {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .arch-map-row {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f8faf5;
+    }
+
+    .arch-map-row b {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .arch-map-row span {
+      color: #273226;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .arch-map-row:not(:last-child) {
+      position: relative;
+    }
+
+    .arch-map-row:not(:last-child)::after {
+      content: "↓";
+      position: absolute;
+      left: 54px;
+      bottom: -19px;
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 900;
+      z-index: 2;
+    }
+
+    .arch-shot {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
     .layer-diagram {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
