@@ -536,109 +536,57 @@
       line-height: 1.35;
     }
 
-    .architecture {
-      display: grid;
-      gap: 10px;
-    }
-
-    .arch-line {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
-      align-items: stretch;
-    }
-
-    .arch-title {
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      color: #fff;
-      background: var(--ink);
-      font-weight: 900;
-      line-height: 1.25;
-    }
-
-    .arch-map {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .arch-map-row {
-      flex: 1;
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 7px;
-      background: #f8faf5;
-      text-align: center;
-    }
-
-    .arch-map-row b {
-      color: var(--green);
-      font-size: 13px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .arch-map-row span {
-      display: none;
-    }
-
-    .arch-map-row:not(:last-child) {
-      position: relative;
-    }
-
-    .arch-map-row:not(:last-child)::after {
-      content: "→";
-      position: absolute;
-      top: 50%;
-      right: -13px;
-      transform: translateY(-50%);
-      color: var(--green);
-      font-size: 18px;
-      font-weight: 900;
-      z-index: 2;
-    }
-
-    .arch-result {
+    .base-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 14px;
     }
 
-    .arch-result div {
-      padding: 14px;
+    .base-card {
+      min-height: 184px;
+      padding: 22px;
       border: 1px solid var(--line);
-      border-radius: 7px;
+      border-radius: var(--radius);
       background: #fff;
     }
 
-    .arch-result strong {
+    .base-card strong {
       display: block;
-      margin-bottom: 6px;
-      font-size: 15px;
+      margin-bottom: 10px;
+      font-size: 22px;
       font-weight: 900;
       line-height: 1.2;
     }
 
-    .arch-result span {
+    .base-card p {
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
+      font-size: 15px;
+      line-height: 1.48;
     }
 
-    .arch-shot {
-      margin-top: 12px;
-      padding-top: 12px;
+    .base-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 14px;
       border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      background: var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .base-flow span {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      background: #f8faf5;
+      color: #213020;
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
     }
 
     .layer-diagram {
