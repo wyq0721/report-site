@@ -543,20 +543,15 @@
 
     .arch-line {
       display: grid;
-      grid-template-columns: 156px 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr;
+      gap: 0;
       align-items: stretch;
     }
 
-    .arch-title,
-    .arch-body {
-      padding: 16px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      border-radius: 6px;
-    }
-
     .arch-title {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
       color: #fff;
       background: var(--ink);
       font-weight: 900;
@@ -564,34 +559,28 @@
     }
 
     .arch-body {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .arch-body strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--ink);
-      font-size: 15px;
-      font-weight: 900;
+      display: none;
     }
 
     .arch-map {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
     .arch-map-row {
-      display: grid;
-      grid-template-columns: 108px 1fr;
-      gap: 10px;
+      flex: 1;
+      min-height: 72px;
+      display: flex;
       align-items: center;
-      padding: 12px;
+      justify-content: center;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 7px;
       background: #f8faf5;
+      text-align: center;
     }
 
     .arch-map-row b {
@@ -603,9 +592,7 @@
     }
 
     .arch-map-row span {
-      color: #273226;
-      font-size: 14px;
-      line-height: 1.4;
+      display: none;
     }
 
     .arch-map-row:not(:last-child) {
@@ -613,14 +600,43 @@
     }
 
     .arch-map-row:not(:last-child)::after {
-      content: "↓";
+      content: "→";
       position: absolute;
-      left: 54px;
-      bottom: -19px;
+      top: 50%;
+      right: -13px;
+      transform: translateY(-50%);
       color: var(--green);
       font-size: 18px;
       font-weight: 900;
       z-index: 2;
+    }
+
+    .arch-result {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .arch-result div {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+
+    .arch-result strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .arch-result span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
     }
 
     .arch-shot {
@@ -1079,6 +1095,7 @@
       .trust-proof,
       .transform-map,
       .pilot-checks,
+      .arch-result,
       .layer-diagram {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1133,6 +1150,7 @@
       .trust-proof,
       .transform-map,
       .pilot-checks,
+      .arch-result,
       .case-metrics,
       .layer-diagram,
       .purpose-strip,
