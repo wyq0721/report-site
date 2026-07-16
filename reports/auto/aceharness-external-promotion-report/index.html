@@ -1463,38 +1463,42 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="kicker">Architecture</div>
-            <p class="section-note">数据、执行、协作边界可控。</p>
+            <div class="kicker">Operating Base</div>
+            <p class="section-note">这一页说明流程为什么能被接入、运行、审计和复用。</p>
           </div>
-          <h2>本地优先架构，数据、执行和协作都可治理</h2>
+          <h2>ACEHarness 提供一套可治理的 Agent 流程底座</h2>
         </div>
 
         <div class="two-col">
           <div class="architecture">
-            <div class="arch-line">
-              <div class="arch-title">浏览器工作台</div>
-              <div class="arch-body">对话、工作流、Workspace、Notebook、诊断和设置统一入口。</div>
+            <div class="panel dark">
+              <h3>核心表达</h3>
+              <p>任务统一进入流程底座，由 Agent 和工具执行，人工在关键点把关，过程与结果本地留痕。</p>
             </div>
             <div class="arch-line">
-              <div class="arch-title">服务入口</div>
-              <div class="arch-body">页面、API、鉴权、流式事件和运行恢复。</div>
+              <div class="arch-title">任务从哪里进</div>
+              <div class="arch-body"><strong>统一工作台</strong>对话、工作流、Workspace、Notebook 和诊断集中在一个入口。</div>
             </div>
             <div class="arch-line">
-              <div class="arch-title">业务服务</div>
-              <div class="arch-body">工作流、Agent、渠道、知识库、Notebook 和运行历史。</div>
+              <div class="arch-title">流程由谁管</div>
+              <div class="arch-body"><strong>流程编排服务</strong>负责鉴权、状态流转、运行恢复、人工审批和 API 接入。</div>
             </div>
             <div class="arch-line">
-              <div class="arch-title">执行层</div>
-              <div class="arch-body">统一 Engine 接口对接多类 AI 执行后端。</div>
+              <div class="arch-title">Agent 怎么协作</div>
+              <div class="arch-body"><strong>业务协同层</strong>组织 Workflow、Agent、Skill、知识库、渠道和运行历史。</div>
             </div>
             <div class="arch-line">
-              <div class="arch-title">本地数据根</div>
-              <div class="arch-body">配置、日志、工作区、运行记录、Skills 和 Notebook 本地沉淀。</div>
+              <div class="arch-title">能力怎么接入</div>
+              <div class="arch-body"><strong>执行适配层</strong>通过统一 Engine 调用模型、Agent 后端、MCP 工具和内部系统。</div>
+            </div>
+            <div class="arch-line">
+              <div class="arch-title">证据落在哪里</div>
+              <div class="arch-body"><strong>本地数据根</strong>沉淀配置、日志、工作区、运行记录、Skills、Notebook 和版本快照。</div>
             </div>
           </div>
           <figure class="panel">
             <img src="https://raw.gitcode.com/Cangjie-SIG/ACEHarness/files/main/public/images/system-architecture.svg" alt="ACEHarness 系统架构图">
-          <figcaption class="caption">浏览器工作台、服务入口、业务服务、执行层、本地数据根。</figcaption>
+          <figcaption class="caption">从入口、编排、协同、执行到本地证据，支撑同一条可信流程。</figcaption>
           </figure>
         </div>
       </div>
