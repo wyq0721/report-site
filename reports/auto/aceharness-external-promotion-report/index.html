@@ -892,59 +892,57 @@
     }
 
     .ecosystem-map {
-      position: relative;
-      min-height: 300px;
+      display: grid;
+      grid-template-columns: 116px repeat(2, minmax(0, 1fr));
+      gap: 1px;
       margin-bottom: 14px;
-      padding: 34px 46px 70px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(90deg, transparent calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% + 1px), transparent calc(50% + 1px)),
-        linear-gradient(0deg, transparent calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% + 1px), transparent calc(50% + 1px)),
-        rgba(255, 255, 255, 0.72);
+      background: var(--line);
+      overflow: hidden;
       box-shadow: 0 10px 36px rgba(22, 26, 22, 0.06);
     }
 
-    .axis-label {
-      position: absolute;
+    .map-corner,
+    .map-col-title,
+    .map-row-title,
+    .map-cell,
+    .ecosystem-summary {
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .map-corner {
+      min-height: 42px;
+    }
+
+    .map-col-title,
+    .map-row-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #263323;
       font-size: 13px;
       font-weight: 900;
-      line-height: 1;
-      white-space: nowrap;
+      line-height: 1.2;
+      text-align: center;
     }
 
-    .axis-label.top {
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
+    .map-col-title {
+      min-height: 42px;
+      color: var(--green);
     }
 
-    .axis-label.bottom {
-      bottom: 44px;
-      left: 50%;
-      transform: translateX(-50%);
+    .map-row-title {
+      padding: 14px;
+      background: #f8faf5;
     }
 
-    .axis-label.left {
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
+    .map-cell {
+      min-height: 112px;
+      padding: 16px;
     }
 
-    .axis-label.right {
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    .quadrant {
-      position: absolute;
-      padding: 10px;
-      color: #15331f;
-    }
-
-    .quadrant strong {
+    .map-cell strong {
       display: block;
       margin-bottom: 8px;
       color: #104f9c;
@@ -953,7 +951,14 @@
       font-weight: 900;
     }
 
-    .quadrant .pill {
+    .map-cell p {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .map-cell .pill {
       display: inline-flex;
       align-items: center;
       margin: 4px 5px 0 0;
@@ -967,62 +972,41 @@
       line-height: 1;
     }
 
-    .quadrant.framework {
-      left: 82px;
-      bottom: 72px;
-      width: 30%;
+    .map-cell.ace-cell {
+      background: #172018;
+      color: #f4fff0;
     }
 
-    .quadrant.governance {
-      left: 82px;
-      top: 44px;
-      width: 30%;
-    }
-
-    .quadrant.automation {
-      right: 80px;
-      bottom: 72px;
-      width: 34%;
-    }
-
-    .quadrant.ace {
-      right: 78px;
-      top: 44px;
-      width: 34%;
+    .map-cell.ace-cell strong,
+    .map-cell.ace-cell p {
+      color: #f4fff0;
     }
 
     .ace-position {
       display: inline-flex;
       align-items: center;
-      min-height: 54px;
+      min-height: 44px;
       margin-bottom: 8px;
-      padding: 0 24px;
+      padding: 0 18px;
       border-radius: 8px;
-      background: #145a31;
+      background: var(--green);
       color: #fff;
-      box-shadow: 0 16px 34px rgba(20, 90, 49, 0.22);
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 900;
       line-height: 1;
     }
 
     .ace-note {
-      display: inline-block;
-      margin-left: 10px;
-      color: #145a31;
-      font-size: 15px;
+      display: block;
+      color: rgba(244, 255, 240, 0.82);
+      font-size: 13px;
       font-weight: 900;
       line-height: 1.35;
-      vertical-align: middle;
     }
 
     .ecosystem-summary {
-      position: absolute;
-      left: 46px;
-      right: 46px;
-      bottom: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(22, 26, 22, 0.18);
+      grid-column: 1 / -1;
+      padding: 13px 16px;
       color: #145a31;
       font-size: 14px;
       font-weight: 900;
