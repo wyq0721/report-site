@@ -850,7 +850,7 @@
     .market-card {
       display: flex;
       flex-direction: column;
-      min-height: 204px;
+      min-height: 178px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -889,6 +889,144 @@
       color: #263323;
       font-style: normal;
       font-weight: 850;
+    }
+
+    .ecosystem-map {
+      position: relative;
+      min-height: 300px;
+      margin-bottom: 14px;
+      padding: 34px 46px 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, transparent calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% + 1px), transparent calc(50% + 1px)),
+        linear-gradient(0deg, transparent calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% - 1px), rgba(22, 26, 22, 0.24) calc(50% + 1px), transparent calc(50% + 1px)),
+        rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 36px rgba(22, 26, 22, 0.06);
+    }
+
+    .axis-label {
+      position: absolute;
+      color: #263323;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .axis-label.top {
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .axis-label.bottom {
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .axis-label.left {
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .axis-label.right {
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .quadrant {
+      position: absolute;
+      padding: 10px;
+      color: #15331f;
+    }
+
+    .quadrant strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #104f9c;
+      font-size: 17px;
+      line-height: 1.2;
+      font-weight: 900;
+    }
+
+    .quadrant .pill {
+      display: inline-flex;
+      align-items: center;
+      margin: 4px 5px 0 0;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #e9eef3;
+      color: #26323d;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .quadrant.framework {
+      left: 82px;
+      bottom: 50px;
+      width: 30%;
+    }
+
+    .quadrant.governance {
+      left: 82px;
+      top: 44px;
+      width: 30%;
+    }
+
+    .quadrant.automation {
+      right: 80px;
+      bottom: 50px;
+      width: 34%;
+    }
+
+    .quadrant.ace {
+      right: 78px;
+      top: 44px;
+      width: 34%;
+    }
+
+    .ace-position {
+      display: inline-flex;
+      align-items: center;
+      min-height: 54px;
+      margin-bottom: 8px;
+      padding: 0 24px;
+      border-radius: 8px;
+      background: #145a31;
+      color: #fff;
+      box-shadow: 0 16px 34px rgba(20, 90, 49, 0.22);
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .ace-note {
+      display: inline-block;
+      margin-left: 10px;
+      color: #145a31;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.35;
+      vertical-align: middle;
+    }
+
+    .ecosystem-summary {
+      position: absolute;
+      left: 46px;
+      right: 46px;
+      bottom: 8px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(22, 26, 22, 0.18);
+      color: #145a31;
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
     }
 
     .timeline {
