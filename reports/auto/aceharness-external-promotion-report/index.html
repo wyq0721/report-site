@@ -1556,9 +1556,33 @@
           <h2>行业参照：流程治理层</h2>
         </div>
 
-        <div class="panel dark" style="margin-bottom: 14px;">
-          <h3>对比口径</h3>
-          <p>从四类产品看同一个问题：谁负责流程模板、人工门禁、证据链和复用机制。ACEHarness 的位置是流程治理层。</p>
+        <div class="ecosystem-map" aria-label="ACEHarness 在 Agent 生态中的位置">
+          <span class="axis-label top">组织治理</span>
+          <span class="axis-label bottom">单点执行</span>
+          <span class="axis-label left">开发原语</span>
+          <span class="axis-label right">流程资产</span>
+
+          <div class="quadrant governance">
+            <strong>治理增强框架</strong>
+            <span class="pill">CrewAI</span>
+            <span class="pill">ADK</span>
+          </div>
+          <div class="quadrant framework">
+            <strong>底层开发框架</strong>
+            <span class="pill">LangGraph</span>
+            <span class="pill">AutoGen</span>
+          </div>
+          <div class="quadrant automation">
+            <strong>应用与自动化</strong>
+            <span class="pill">Dify / Flowise</span>
+            <span class="pill">n8n / Zapier</span>
+            <span class="pill">Claude Code / Copilot</span>
+          </div>
+          <div class="quadrant ace">
+            <div class="ace-position">ACEHarness</div>
+            <span class="ace-note">流程编排 / 人工门禁 / 证据沉淀</span>
+          </div>
+          <div class="ecosystem-summary">框架解决 Agent 怎么造；ACEHarness 解决 Agent 怎么进入团队流程。</div>
         </div>
 
         <div class="market-grid">
