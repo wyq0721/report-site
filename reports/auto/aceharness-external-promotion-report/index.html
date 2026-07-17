@@ -535,6 +535,43 @@
       margin-bottom: 18px;
     }
 
+    .trust-summary {
+      min-height: 218px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trust-actions {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .trust-action {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      padding: 9px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .trust-action strong {
+      color: #f4fff0;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .trust-action span {
+      color: rgba(244, 255, 240, 0.76);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
     .trust-outcomes {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1147,15 +1184,13 @@
         </div>
 
         <div class="trust-intro">
-          <div class="panel dark">
+          <div class="panel dark trust-summary">
             <h3>可信结果来自可治理过程</h3>
             <p>需求、规则、数据、工具、AI 角色和人工审核进入同一条流程。</p>
-            <div class="tag-row">
-              <span class="tag">可信</span>
-              <span class="tag">可追溯</span>
-              <span class="tag">可验证</span>
-              <span class="tag">可回退</span>
-              <span class="tag">可复用</span>
+            <div class="trust-actions" aria-label="可信流程的治理动作">
+              <div class="trust-action"><strong>统一输入</strong><span>规则、数据、工具进入同一流程。</span></div>
+              <div class="trust-action"><strong>人工门禁</strong><span>关键判断保留审批和挑战。</span></div>
+              <div class="trust-action"><strong>证据沉淀</strong><span>日志、快照、结论可追溯。</span></div>
             </div>
           </div>
           <div class="trust-outcomes">
@@ -1213,7 +1248,7 @@
           </div>
         </div>
 
-        <div class="scenario-lanes" aria-label="同一套层级的多场景串联">
+        <div class="scenario-lanes" aria-label="同一套层级的业务场景串联">
           <div class="scenario-lane">
             <strong class="lane-title">财经链路</strong>
             <span>月结 / 预算 / 费用审核</span>
@@ -1227,13 +1262,6 @@
             <span>复现 / 根因 / 修复</span>
             <span>测试 / diff / 评审</span>
             <span>可回退、可重跑、可验证</span>
-          </div>
-          <div class="scenario-lane">
-            <strong class="lane-title">平台支撑链路</strong>
-            <span>模型 / 工具 / 密钥 / 渠道</span>
-            <span>准入 / 诊断 / 权限</span>
-            <span>日志 / 审计 / API</span>
-            <span>可管控、可审计、可扩展</span>
           </div>
         </div>
 
