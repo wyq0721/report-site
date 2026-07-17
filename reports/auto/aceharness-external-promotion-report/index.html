@@ -490,6 +490,14 @@
       line-height: 1.35;
     }
 
+    .transfer-label {
+      margin-top: 16px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+
     .layer-diagram {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1402,8 +1410,8 @@
               <p>两类 ICE 问题覆盖复现、根因、挑战裁决、最小修复和回归验证。</p>
             </div>
             <div class="case-metrics">
-              <div><strong>240/240</strong><span>LLT 通过</span></div>
-              <div><strong>38/38</strong><span>回归通过</span></div>
+              <div><strong>240/240</strong><span>LLT 单元用例</span></div>
+              <div><strong>38/38</strong><span>回归测试用例</span></div>
               <div><strong>9.7</strong><span>质量评分</span></div>
             </div>
           </article>
@@ -1414,12 +1422,12 @@
                 <h3>AST 析构内存优化</h3>
                 <span class="label">Performance</span>
               </div>
-              <p>生命周期建模，风险审查，内存优化闭环。</p>
+              <p>对象生命周期分析，风险审查，内存优化闭环。</p>
             </div>
             <div class="case-metrics">
               <div><strong>30%</strong><span>峰值下降</span></div>
-              <div><strong>Model</strong><span>生命周期建模</span></div>
-              <div><strong>Review</strong><span>安全审查</span></div>
+              <div><strong>对象流转</strong><span>生命周期分析</span></div>
+              <div><strong>安全确认</strong><span>风险审查</span></div>
             </div>
           </article>
 
@@ -1429,12 +1437,12 @@
                 <h3>鸿蒙 SDK API 全流程开发</h3>
                 <span class="label">SDK</span>
               </div>
-              <p>Gap 分析、实现、验证、文档端到端交付。</p>
+              <p>Gap 分析、实现、接口校验、文档端到端交付。</p>
             </div>
             <div class="case-metrics">
               <div><strong>2h05m</strong><span>交付耗时</span></div>
               <div><strong>11</strong><span>执行步骤</span></div>
-              <div><strong>26</strong><span>符号验证</span></div>
+              <div><strong>26</strong><span>API 校验项</span></div>
             </div>
           </article>
         </div>
@@ -1442,13 +1450,14 @@
         <div class="panel" style="margin-top: 18px;">
           <h3>从研发实战迁移到业务流程</h3>
           <p>案例验证的是复现、挑战、回退、验收和留痕这一组流程能力；预算、审计、月结等业务试点可按同一套口径验收。</p>
+          <div class="transfer-label">可迁移能力</div>
           <div class="tag-row">
-            <span class="tag">根因分析</span>
+            <span class="tag">复现定位</span>
             <span class="tag">方案挑战</span>
-            <span class="tag">人工回退</span>
-            <span class="tag">回归验证</span>
-            <span class="tag">证据沉淀</span>
-            <span class="tag">周期 / 返工 / 复用率</span>
+            <span class="tag">人工门禁</span>
+            <span class="tag">回退重跑</span>
+            <span class="tag">验证留痕</span>
+            <span class="tag">指标验收</span>
           </div>
         </div>
       </div>
