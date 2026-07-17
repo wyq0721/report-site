@@ -145,8 +145,8 @@
     }
 
     h1 {
-      max-width: 780px;
-      font-size: clamp(42px, 7.2vw, 92px);
+      max-width: 760px;
+      font-size: clamp(40px, 6.8vw, 84px);
       line-height: 0.96;
       letter-spacing: 0;
       font-weight: 900;
@@ -180,7 +180,7 @@
     }
 
     section {
-      padding: 64px 0;
+      padding: 56px 0;
       border-bottom: 1px solid var(--line);
     }
 
@@ -189,7 +189,7 @@
       grid-template-columns: 0.38fr 1fr;
       gap: 40px;
       align-items: end;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .kicker {
@@ -201,7 +201,7 @@
     }
 
     h2 {
-      font-size: clamp(28px, 4.4vw, 56px);
+      font-size: clamp(28px, 4vw, 50px);
       line-height: 1.04;
       font-weight: 900;
     }
@@ -214,14 +214,14 @@
     .two-col {
       display: grid;
       grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-      gap: 28px;
+      gap: 24px;
     }
 
     .panel {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 26px;
+      padding: 24px;
       box-shadow: 0 10px 36px rgba(22, 26, 22, 0.06);
     }
 
@@ -229,6 +229,13 @@
       background: #172018;
       color: #f4fff0;
       border-color: #172018;
+    }
+
+    .positioning-card {
+      min-height: 238px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .panel h3,
