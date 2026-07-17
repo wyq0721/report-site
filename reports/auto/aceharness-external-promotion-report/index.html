@@ -857,6 +857,57 @@
       height: auto;
     }
 
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .market-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 152px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .market-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .market-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .market-card p,
+    .market-card em {
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    .market-card em {
+      display: block;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(22, 26, 22, 0.12);
+      color: #263323;
+      font-style: normal;
+      font-weight: 850;
+    }
+
     .timeline {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1029,6 +1080,7 @@
       .value-list,
       .route-grid,
       .timeline,
+      .market-grid,
       .transform-map,
       .pilot-checks,
       .layer-diagram {
@@ -1078,6 +1130,7 @@
       .value-list,
       .route-grid,
       .timeline,
+      .market-grid,
       .transform-map,
       .pilot-checks,
       .case-metrics,
