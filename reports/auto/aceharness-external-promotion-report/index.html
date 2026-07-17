@@ -278,7 +278,7 @@
     }
 
     .value-card {
-      min-height: 138px;
+      min-height: 164px;
       position: relative;
       padding: 20px;
       background: var(--surface);
@@ -311,6 +311,28 @@
       z-index: 1;
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .cap-tags {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .cap-tags span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(15, 127, 85, 0.1);
+      color: #0f5f41;
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1;
     }
 
     .tag-row {
@@ -1282,26 +1304,32 @@
           <article class="value-card" data-index="01">
             <h3>流程模板 Workflow</h3>
             <p>固化目标、输入、产出、阶段、回退点和验收口径。</p>
+            <div class="cap-tags"><span>模板化</span><span>标准化</span></div>
           </article>
           <article class="value-card" data-index="02">
             <h3>AI 角色 Agent</h3>
             <p>承担分析、执行、挑战、裁决和报告分工。</p>
+            <div class="cap-tags"><span>分工化</span><span>职责化</span></div>
           </article>
           <article class="value-card" data-index="03">
             <h3>领域方法包 Skill</h3>
             <p>封装制度口径、数据查询、构建测试和业务规则。</p>
+            <div class="cap-tags"><span>方法化</span><span>资产化</span></div>
           </article>
           <article class="value-card" data-index="04">
             <h3>执行与集成入口</h3>
             <p>连接模型、Agent 后端、MCP 工具、渠道和内部系统。</p>
+            <div class="cap-tags"><span>接入化</span><span>编排化</span></div>
           </article>
           <article class="value-card" data-index="05">
             <h3>状态机与人工门禁</h3>
             <p>承载条件跳转、失败回退、审批确认和运行恢复。</p>
+            <div class="cap-tags"><span>阶段化</span><span>门禁化</span></div>
           </article>
           <article class="value-card" data-index="06">
             <h3>证据链 Evidence</h3>
             <p>沉淀日志、步骤记录、审计结论、Notebook 和版本快照。</p>
+            <div class="cap-tags"><span>留痕化</span><span>审计化</span></div>
           </article>
         </div>
       </div>
