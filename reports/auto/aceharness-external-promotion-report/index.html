@@ -891,126 +891,20 @@
       font-weight: 850;
     }
 
-    .ecosystem-map {
-      display: grid;
-      grid-template-columns: 116px repeat(2, minmax(0, 1fr));
-      gap: 1px;
-      margin-bottom: 14px;
+    .ecosystem-figure {
+      width: min(100%, 1040px);
+      margin: 0 auto;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 42px rgba(22, 26, 22, 0.08);
       overflow: hidden;
-      box-shadow: 0 10px 36px rgba(22, 26, 22, 0.06);
     }
 
-    .map-corner,
-    .map-col-title,
-    .map-row-title,
-    .map-cell,
-    .ecosystem-summary {
-      background: rgba(255, 255, 255, 0.84);
-    }
-
-    .map-corner {
-      min-height: 42px;
-    }
-
-    .map-col-title,
-    .map-row-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #263323;
-      font-size: 13px;
-      font-weight: 900;
-      line-height: 1.2;
-      text-align: center;
-    }
-
-    .map-col-title {
-      min-height: 42px;
-      color: var(--green);
-    }
-
-    .map-row-title {
-      padding: 14px;
-      background: #f8faf5;
-    }
-
-    .map-cell {
-      min-height: 112px;
-      padding: 16px;
-    }
-
-    .map-cell strong {
+    .ecosystem-figure svg {
       display: block;
-      margin-bottom: 8px;
-      color: #104f9c;
-      font-size: 17px;
-      line-height: 1.2;
-      font-weight: 900;
-    }
-
-    .map-cell p {
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .map-cell .pill {
-      display: inline-flex;
-      align-items: center;
-      margin: 4px 5px 0 0;
-      min-height: 26px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: #e9eef3;
-      color: #26323d;
-      font-size: 12px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .map-cell.ace-cell {
-      background: #172018;
-      color: #f4fff0;
-    }
-
-    .map-cell.ace-cell strong,
-    .map-cell.ace-cell p {
-      color: #f4fff0;
-    }
-
-    .ace-position {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      margin-bottom: 8px;
-      padding: 0 18px;
-      border-radius: 8px;
-      background: var(--green);
-      color: #fff;
-      font-size: 24px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .ace-note {
-      display: block;
-      color: rgba(244, 255, 240, 0.82);
-      font-size: 13px;
-      font-weight: 900;
-      line-height: 1.35;
-    }
-
-    .ecosystem-summary {
-      grid-column: 1 / -1;
-      padding: 13px 16px;
-      color: #145a31;
-      font-size: 14px;
-      font-weight: 900;
-      text-align: center;
+      width: 100%;
+      height: auto;
     }
 
     .timeline {
