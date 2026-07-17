@@ -874,6 +874,23 @@
       min-height: 154px;
     }
 
+    .pilot-principles {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pilot-principles span {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.09);
+      color: rgba(244, 255, 240, 0.82);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.3;
+    }
+
     .pilot-checks {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1521,7 +1538,12 @@
         <div class="pilot-summary">
           <div class="panel dark">
             <h3>试点原则</h3>
-            <p>优先选择边界清楚、复核明确、可量化验收的流程；能力接入、人工门禁和推广判断同步设计。</p>
+            <p>先验证一条可衡量流程，再决定是否推广。</p>
+            <div class="pilot-principles">
+              <span>边界清楚</span>
+              <span>复核明确</span>
+              <span>指标可验收</span>
+            </div>
           </div>
           <div class="panel">
             <h3>推荐试点对象</h3>
@@ -1560,17 +1582,6 @@
           </article>
         </div>
 
-        <div class="panel" style="margin-top: 16px;">
-          <h3>推广前检查</h3>
-          <p>试点通过后，再确认执行、门禁、渠道和数据四类治理面，避免从单点试用直接放大风险。</p>
-        </div>
-
-        <div class="readiness-list" style="margin-top: 12px;">
-          <div class="readiness"><strong>执行引擎</strong><span>连接、流式、结构化、多轮稳定性。</span></div>
-          <div class="readiness"><strong>人工门禁</strong><span>审批、挑战、版本基线、步骤级审查。</span></div>
-          <div class="readiness"><strong>渠道归属</strong><span>IM、Webhook、工具协议、环境变量纳入校验。</span></div>
-          <div class="readiness"><strong>本地数据</strong><span>配置、日志、运行记录、复盘记录本地沉淀。</span></div>
-        </div>
       </div>
     </section>
 
