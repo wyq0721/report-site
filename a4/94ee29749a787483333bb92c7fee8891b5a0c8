@@ -1,0 +1,21 @@
+reports/auto/index.html
+  s_5e86e5f4d8dea9::t_18346135314d47 37,80
+reports/auto/publish-state.json
+  s_5e86e5f4d8dea9::t_e2863505991aee 2,14,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a494ee29749a787483333bb92c7fee8891b5a0c8",
+  "prompts": {},
+  "sessions": {
+    "s_5e86e5f4d8dea9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f6dc2-5023-76c2-9f57-102fd6a0ec76",
+        "model": "gpt-5.4"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
