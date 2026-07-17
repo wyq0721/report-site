@@ -537,15 +537,42 @@
 
     .trust-outcomes {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
     .trust-outcome {
+      position: relative;
+      min-height: 112px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--surface);
+    }
+
+    .trust-outcome.platform-base {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      min-height: 94px;
+      background: rgba(15, 127, 85, 0.08);
+      border-color: rgba(15, 127, 85, 0.24);
+    }
+
+    .trust-outcome.platform-base::before {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 22%;
+      right: 22%;
+      height: 13px;
+      border-left: 2px solid rgba(15, 127, 85, 0.36);
+      border-right: 2px solid rgba(15, 127, 85, 0.36);
+      border-bottom: 2px solid rgba(15, 127, 85, 0.36);
+      border-radius: 0 0 8px 8px;
+      pointer-events: none;
     }
 
     .trust-outcome strong,
@@ -964,6 +991,14 @@
         grid-template-columns: 1fr;
       }
 
+      .trust-outcome.platform-base {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-outcome.platform-base::before {
+        display: none;
+      }
+
       h1 {
         font-size: 43px;
       }
@@ -1132,9 +1167,9 @@
               <strong>研发流程</strong>
               <span>可测可回退，可复盘。</span>
             </div>
-            <div class="trust-outcome">
+            <div class="trust-outcome platform-base">
               <strong>平台支撑</strong>
-              <span>模型、工具、权限统一纳管。</span>
+              <span>统一接入模型、工具、权限和证据，为不同业务流程提供共享底座。</span>
             </div>
           </div>
         </div>
