@@ -1080,6 +1080,26 @@
         text-align: left;
       }
 
+      .hero,
+      main > section[id] {
+        min-height: auto;
+        align-items: flex-start;
+      }
+
+      main > section[id]::before {
+        bottom: 12px;
+        font-size: 48px;
+      }
+
+      main > section[id]::after {
+        bottom: 12px;
+      }
+
+      .section-head {
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+      }
+
       .value-list,
       .route-grid,
       .timeline,
