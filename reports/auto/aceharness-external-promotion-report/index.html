@@ -1198,6 +1198,30 @@
         padding-bottom: 14px;
       }
 
+      .ecosystem-map {
+        min-height: 330px;
+        padding-left: 34px;
+        padding-right: 34px;
+      }
+
+      .quadrant.framework,
+      .quadrant.governance {
+        left: 54px;
+        width: 36%;
+      }
+
+      .quadrant.automation,
+      .quadrant.ace {
+        right: 54px;
+        width: 40%;
+      }
+
+      .ace-position {
+        min-height: 46px;
+        padding: 0 18px;
+        font-size: 23px;
+      }
+
       .value-list,
       .route-grid,
       .timeline,
@@ -1267,6 +1291,28 @@
 
       .trust-outcome.platform-base::before {
         display: none;
+      }
+
+      .ecosystem-map {
+        display: grid;
+        gap: 12px;
+        min-height: 0;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .ecosystem-map .axis-label {
+        display: none;
+      }
+
+      .ecosystem-map .quadrant,
+      .ecosystem-summary {
+        position: static;
+        width: auto;
+      }
+
+      .ecosystem-summary {
+        padding-top: 12px;
       }
 
       h1 {
