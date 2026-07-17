@@ -206,6 +206,10 @@
       font-weight: 900;
     }
 
+    .section-head h2 {
+      text-align: right;
+    }
+
     .section-note {
       color: var(--muted);
       font-size: 16px;
@@ -340,6 +344,8 @@
     }
 
     .transform-step {
+      display: flex;
+      flex-direction: column;
       min-height: 176px;
       padding: 18px;
       background: var(--surface);
@@ -363,18 +369,35 @@
       font-weight: 900;
     }
 
-    .transform-step span,
-    .transform-step em {
-      display: block;
+    .compare-line {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 8px;
       color: var(--muted);
       font-size: 13px;
       line-height: 1.42;
     }
 
-    .transform-step em {
+    .compare-line + .compare-line {
       margin-top: 10px;
+    }
+
+    .compare-line span {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .compare-line p {
+      color: var(--muted);
+    }
+
+    .compare-line.now {
+      margin-top: auto;
+      padding-top: 10px;
+    }
+
+    .compare-line.now p {
       color: #213020;
-      font-style: normal;
       font-weight: 850;
     }
 
@@ -873,6 +896,10 @@
         grid-template-columns: 1fr;
       }
 
+      .section-head h2 {
+        text-align: left;
+      }
+
       .value-list,
       .route-grid,
       .timeline,
@@ -973,7 +1000,7 @@
       </a>
       <nav class="nav" aria-label="页面导航">
         <a href="#positioning">定位</a>
-        <a href="#transformation">改造</a>
+        <a href="#transformation">流程升级</a>
         <a href="#comparison">对比</a>
         <a href="#finance">可信流程</a>
         <a href="#capabilities">能力</a>
@@ -1032,8 +1059,8 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="kicker">Transformation</div>
-            <p class="section-note">不是新建一个 AI 岛，而是升级已有流程。</p>
+            <div class="kicker">Workflow Upgrade</div>
+            <p class="section-note">在既有流程中引入 AI 分工、门禁和证据。</p>
           </div>
           <h2>从人工串联到 Agent 分工</h2>
         </div>
@@ -1042,32 +1069,32 @@
           <div class="transform-step">
             <b>01 Input</b>
             <strong>任务进入</strong>
-            <span>原来：人工转述需求和背景。</span>
-            <em>现在：流程模板固化目标、输入和产出。</em>
+            <div class="compare-line"><span>原来</span><p>人工转述需求和背景。</p></div>
+            <div class="compare-line now"><span>现在</span><p>流程模板固化目标、输入和产出。</p></div>
           </div>
           <div class="transform-step">
             <b>02 Analyze</b>
             <strong>分析执行</strong>
-            <span>原来：人手查资料、查数据、跑工具。</span>
-            <em>现在：AI 角色调用领域方法、数据、工具和知识库。</em>
+            <div class="compare-line"><span>原来</span><p>人手查资料、查数据、跑工具。</p></div>
+            <div class="compare-line now"><span>现在</span><p>AI 角色调用领域方法、数据、工具和知识库。</p></div>
           </div>
           <div class="transform-step">
             <b>03 Gate</b>
             <strong>复核审批</strong>
-            <span>原来：口头确认，过程难复盘。</span>
-            <em>现在：挑战评审和人工门禁明确卡点和责任。</em>
+            <div class="compare-line"><span>原来</span><p>口头确认，过程难复盘。</p></div>
+            <div class="compare-line now"><span>现在</span><p>挑战评审和人工门禁明确卡点和责任。</p></div>
           </div>
           <div class="transform-step">
             <b>04 Recover</b>
             <strong>回退重跑</strong>
-            <span>原来：失败后重新组织上下文。</span>
-            <em>现在：流程阶段保留检查点和重跑边界。</em>
+            <div class="compare-line"><span>原来</span><p>失败后重新组织上下文。</p></div>
+            <div class="compare-line now"><span>现在</span><p>流程阶段保留检查点和重跑边界。</p></div>
           </div>
           <div class="transform-step">
             <b>05 Asset</b>
             <strong>沉淀复用</strong>
-            <span>原来：经验散落在聊天和文档里。</span>
-            <em>现在：证据链、复盘记录和领域方法包变成团队资产。</em>
+            <div class="compare-line"><span>原来</span><p>经验散落在聊天和文档里。</p></div>
+            <div class="compare-line now"><span>现在</span><p>证据链、复盘记录和领域方法包变成团队资产。</p></div>
           </div>
         </div>
 
