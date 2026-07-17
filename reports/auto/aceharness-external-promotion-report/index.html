@@ -1183,27 +1183,17 @@
       }
 
       .ecosystem-map {
-        min-height: 330px;
-        padding-left: 34px;
-        padding-right: 34px;
+        grid-template-columns: 92px repeat(2, minmax(0, 1fr));
       }
 
-      .quadrant.framework,
-      .quadrant.governance {
-        left: 54px;
-        width: 36%;
-      }
-
-      .quadrant.automation,
-      .quadrant.ace {
-        right: 54px;
-        width: 40%;
+      .map-cell {
+        min-height: 124px;
       }
 
       .ace-position {
-        min-height: 46px;
-        padding: 0 18px;
-        font-size: 23px;
+        min-height: 40px;
+        padding: 0 14px;
+        font-size: 20px;
       }
 
       .value-list,
@@ -1279,24 +1269,27 @@
 
       .ecosystem-map {
         display: grid;
-        gap: 12px;
-        min-height: 0;
-        padding: 18px;
-        background: rgba(255, 255, 255, 0.72);
+        grid-template-columns: 1fr;
+        gap: 10px;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
       }
 
-      .ecosystem-map .axis-label {
+      .map-corner,
+      .map-col-title,
+      .map-row-title {
         display: none;
       }
 
-      .ecosystem-map .quadrant,
+      .map-cell,
       .ecosystem-summary {
-        position: static;
-        width: auto;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
       }
 
       .ecosystem-summary {
-        padding-top: 12px;
+        grid-column: auto;
       }
 
       h1 {
@@ -1587,31 +1580,38 @@
         </div>
 
         <div class="ecosystem-map" aria-label="ACEHarness 在 Agent 生态中的位置">
-          <span class="axis-label top">组织治理</span>
-          <span class="axis-label bottom">单点执行</span>
-          <span class="axis-label left">开发原语</span>
-          <span class="axis-label right">流程资产</span>
+          <div class="map-corner"></div>
+          <div class="map-col-title">开发原语</div>
+          <div class="map-col-title">流程资产</div>
 
-          <div class="quadrant governance">
+          <div class="map-row-title">组织治理</div>
+          <div class="map-cell">
             <strong>治理增强框架</strong>
+            <p>在 Agent 原语上增强协作、角色和治理能力。</p>
             <span class="pill">CrewAI</span>
             <span class="pill">ADK</span>
           </div>
-          <div class="quadrant framework">
+          <div class="map-cell ace-cell">
+            <div class="ace-position">ACEHarness</div>
+            <p>把流程模板、人工门禁和证据链沉淀为团队资产。</p>
+            <span class="ace-note">流程编排 / 人工门禁 / 证据沉淀</span>
+          </div>
+
+          <div class="map-row-title">单点执行</div>
+          <div class="map-cell">
             <strong>底层开发框架</strong>
+            <p>提供图、状态、工具调用和多 Agent 原语。</p>
             <span class="pill">LangGraph</span>
             <span class="pill">AutoGen</span>
           </div>
-          <div class="quadrant automation">
+          <div class="map-cell">
             <strong>应用与自动化</strong>
+            <p>面向应用搭建、连接自动化或垂直研发执行。</p>
             <span class="pill">Dify / Flowise</span>
             <span class="pill">n8n / Zapier</span>
             <span class="pill">Claude Code / Copilot</span>
           </div>
-          <div class="quadrant ace">
-            <div class="ace-position">ACEHarness</div>
-            <span class="ace-note">流程编排 / 人工门禁 / 证据沉淀</span>
-          </div>
+
           <div class="ecosystem-summary">框架解决 Agent 怎么造；ACEHarness 解决 Agent 怎么进入团队流程。</div>
         </div>
 
