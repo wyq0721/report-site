@@ -179,9 +179,98 @@
       color: var(--ink);
     }
 
+    main {
+      counter-reset: slide;
+    }
+
     section {
-      padding: 56px 0;
+      padding: 64px 0;
       border-bottom: 1px solid var(--line);
+    }
+
+    .hero,
+    main > section[id] {
+      min-height: calc(100vh - 58px);
+      display: flex;
+      align-items: center;
+      scroll-margin-top: 58px;
+    }
+
+    main > section[id] {
+      counter-increment: slide;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--slide-bg, rgba(255, 255, 255, 0.46));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    main > section[id] > .shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    main > section[id]::before {
+      content: counter(slide, decimal-leading-zero);
+      position: absolute;
+      right: max(20px, calc((100% - 1180px) / 2));
+      bottom: 22px;
+      color: var(--slide-number, rgba(15, 127, 85, 0.08));
+      font-size: clamp(54px, 8vw, 108px);
+      font-weight: 900;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main > section[id]::after {
+      content: "";
+      position: absolute;
+      left: max(20px, calc((100% - 1180px) / 2));
+      right: max(20px, calc((100% - 1180px) / 2));
+      bottom: 18px;
+      height: 1px;
+      background: rgba(15, 127, 85, 0.22);
+      z-index: 0;
+    }
+
+    #positioning {
+      --slide-bg: rgba(255, 255, 255, 0.56);
+      --slide-number: rgba(15, 127, 85, 0.08);
+    }
+
+    #transformation {
+      --slide-bg: rgba(15, 127, 85, 0.055);
+      --slide-number: rgba(15, 127, 85, 0.09);
+    }
+
+    #finance {
+      --slide-bg: rgba(47, 111, 219, 0.07);
+      --slide-number: rgba(47, 111, 219, 0.09);
+    }
+
+    #capabilities {
+      --slide-bg: rgba(255, 255, 255, 0.62);
+      --slide-number: rgba(15, 127, 85, 0.08);
+    }
+
+    #comparison {
+      --slide-bg: rgba(255, 204, 77, 0.1);
+      --slide-number: rgba(226, 81, 63, 0.08);
+    }
+
+    #proof {
+      --slide-bg: rgba(255, 255, 255, 0.5);
+      --slide-number: rgba(226, 81, 63, 0.08);
+    }
+
+    #integration {
+      --slide-bg: rgba(47, 111, 219, 0.055);
+      --slide-number: rgba(47, 111, 219, 0.08);
+    }
+
+    #adoption {
+      --slide-bg: rgba(15, 127, 85, 0.06);
+      --slide-number: rgba(15, 127, 85, 0.09);
     }
 
     .section-head {
@@ -189,7 +278,9 @@
       grid-template-columns: 0.38fr 1fr;
       gap: 40px;
       align-items: end;
-      margin-bottom: 22px;
+      margin-bottom: 30px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(22, 26, 22, 0.1);
     }
 
     .kicker {
