@@ -109,16 +109,13 @@
     }
 
     .hero {
-      padding: 72px 0 44px;
+      padding: 92px 0 84px;
       border-bottom: 1px solid var(--line);
       overflow: hidden;
     }
 
     .hero-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.78fr);
-      gap: 42px;
-      align-items: center;
+      max-width: 880px;
     }
 
     .eyebrow {
@@ -155,14 +152,6 @@
       font-weight: 900;
     }
 
-    .hero-lede {
-      max-width: 720px;
-      margin-top: 24px;
-      color: #343b33;
-      font-size: 20px;
-      line-height: 1.48;
-    }
-
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -188,100 +177,6 @@
     .action.secondary {
       background: var(--surface);
       color: var(--ink);
-    }
-
-    .hero-visual {
-      position: relative;
-      padding: 16px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .hero-visual::before {
-      content: "Agent Centric Engineering Harness";
-      position: absolute;
-      top: -18px;
-      left: 18px;
-      padding: 4px 10px;
-      background: var(--yellow);
-      border: 1px solid var(--ink);
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .hero-visual img {
-      border-radius: 6px;
-      border: 1px solid rgba(22, 26, 22, 0.1);
-    }
-
-    .caption {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1px;
-      margin-top: 44px;
-      border: 1px solid var(--line);
-      background: var(--line);
-    }
-
-    .metric {
-      min-height: 108px;
-      padding: 18px;
-      background: var(--surface);
-    }
-
-    .metric strong {
-      display: block;
-      font-size: 25px;
-      line-height: 1;
-      font-weight: 900;
-    }
-
-    .metric span {
-      display: block;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .trust-proof {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .trust-proof div {
-      min-height: 92px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.82);
-    }
-
-    .trust-proof strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 17px;
-      line-height: 1.2;
-      font-weight: 900;
-    }
-
-    .trust-proof span {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
     }
 
     section {
