@@ -1438,68 +1438,112 @@
           <h2>行业参照：流程治理层</h2>
         </div>
 
-        <div class="ecosystem-map" aria-label="ACEHarness 在 Agent 生态中的位置">
-          <div class="map-corner"></div>
-          <div class="map-col-title">开发原语</div>
-          <div class="map-col-title">流程资产</div>
+        <figure class="ecosystem-figure" aria-label="ACEHarness 在 Agent 生态中的位置">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="ecosystem-title ecosystem-desc">
+            <title id="ecosystem-title">ACEHarness 在 Agent 生态中的位置</title>
+            <desc id="ecosystem-desc">二维象限图：横轴从开发原语到流程资产，纵轴从单点执行到组织治理，ACEHarness 位于流程编排与治理平台象限。</desc>
+            <defs>
+              <pattern id="ecosystem-small-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+                <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#dfe6d7" stroke-width="1" opacity="0.7"/>
+              </pattern>
+              <filter id="ecosystem-soft-shadow" x="-20%" y="-30%" width="140%" height="160%">
+                <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#203226" flood-opacity="0.14"/>
+              </filter>
+              <filter id="ecosystem-ace-glow" x="-35%" y="-60%" width="170%" height="220%">
+                <feDropShadow dx="0" dy="0" stdDeviation="16" flood-color="#0f7f55" flood-opacity="0.34"/>
+                <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#203226" flood-opacity="0.18"/>
+              </filter>
+              <marker id="ecosystem-axis-arrow" markerWidth="16" markerHeight="16" refX="12" refY="8" orient="auto" markerUnits="strokeWidth">
+                <path d="M 2 2 L 12 8 L 2 14" fill="none" stroke="#263042" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+              <style>
+                .ecosystem-svg-text { font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+                .ecosystem-bg { fill: #f7f9f5; }
+                .ecosystem-grid { fill: url(#ecosystem-small-grid); }
+                .ecosystem-ink { fill: #151a16; }
+                .ecosystem-title-text { font-size: 54px; font-weight: 900; letter-spacing: 0; }
+                .ecosystem-panel { fill: #ffffff; stroke: #dbe2d2; stroke-width: 1.4; }
+                .ecosystem-panel-ace { fill: #edf7f1; stroke: #b8d8c5; stroke-width: 1.4; }
+                .ecosystem-divider { stroke: #263042; stroke-width: 2; stroke-dasharray: 8 10; opacity: 0.22; }
+                .ecosystem-axis { stroke: #263042; stroke-width: 3.8; stroke-linecap: round; marker-end: url(#ecosystem-axis-arrow); }
+                .ecosystem-axis-label { fill: #151a16; font-size: 24px; font-weight: 900; }
+                .ecosystem-quad-label { fill: #114c83; font-size: 28px; font-weight: 900; letter-spacing: 0.03em; }
+                .ecosystem-chip { fill: #e8eef5; stroke: #d2dbe5; stroke-width: 1.2; }
+                .ecosystem-chip-text { fill: #172033; font-size: 24px; font-weight: 850; }
+                .ecosystem-ace { fill: #165b35; }
+                .ecosystem-ace-text { fill: #ffffff; font-size: 48px; font-weight: 900; }
+                .ecosystem-ace-pill { fill: #ffffff; stroke: #a9d5bd; stroke-width: 1.3; }
+                .ecosystem-ace-pill-text { fill: #0f5f41; font-size: 21px; font-weight: 900; }
+              </style>
+            </defs>
 
-          <div class="map-row-title">组织治理</div>
-          <div class="map-cell">
-            <strong>治理增强框架</strong>
-            <p>在 Agent 原语上增强协作、角色和治理能力。</p>
-            <span class="pill">CrewAI</span>
-            <span class="pill">ADK</span>
-          </div>
-          <div class="map-cell ace-cell">
-            <div class="ace-position">ACEHarness</div>
-            <p>把流程模板、人工门禁和证据链沉淀为团队资产。</p>
-            <span class="ace-note">流程编排 / 人工门禁 / 证据沉淀</span>
-          </div>
+            <rect class="ecosystem-bg" width="1600" height="900"/>
+            <rect class="ecosystem-grid" width="1600" height="900"/>
 
-          <div class="map-row-title">单点执行</div>
-          <div class="map-cell">
-            <strong>底层开发框架</strong>
-            <p>提供图、状态、工具调用和多 Agent 原语。</p>
-            <span class="pill">LangGraph</span>
-            <span class="pill">AutoGen</span>
-          </div>
-          <div class="map-cell">
-            <strong>应用与自动化</strong>
-            <p>面向应用搭建、连接自动化或垂直研发执行。</p>
-            <span class="pill">Dify / Flowise</span>
-            <span class="pill">n8n / Zapier</span>
-            <span class="pill">Claude Code / Copilot</span>
-          </div>
+            <text class="ecosystem-svg-text ecosystem-title-text ecosystem-ink" x="800" y="66" text-anchor="middle">ACEHarness 在 Agent 生态中的位置</text>
 
-          <div class="ecosystem-summary">构建类产品侧重 Agent 生成与执行；ACEHarness 聚焦进入团队流程后的编排、门禁与留痕。</div>
-        </div>
+            <g transform="translate(150 125)">
+              <rect class="ecosystem-panel" x="0" y="0" width="1300" height="590" rx="10"/>
+              <rect class="ecosystem-panel-ace" x="650" y="0" width="650" height="295" rx="10"/>
+              <line class="ecosystem-divider" x1="650" y1="0" x2="650" y2="590"/>
+              <line class="ecosystem-divider" x1="0" y1="295" x2="1300" y2="295"/>
 
-        <div class="market-grid">
-          <article class="market-card">
-            <strong>Agent 框架</strong>
-            <span>LangGraph / AutoGen</span>
-            <p>适合开发者自建 Agent 原语；业务准入、审计和组织角色需要自建。</p>
-            <em>ACEHarness 差异：流程模板 / 人工门禁 / 证据链。</em>
-          </article>
-          <article class="market-card">
-            <strong>AI 应用搭建</strong>
-            <span>Dify / Flowise</span>
-            <p>适合可视化应用、知识库和发布入口；复杂任务复核与复盘需要加强。</p>
-            <em>ACEHarness 差异：状态机 / 多 Agent / 运行复盘。</em>
-          </article>
-          <article class="market-card">
-            <strong>自动化平台</strong>
-            <span>n8n / Zapier Agents</span>
-            <p>适合连接器、触发器和跨 SaaS 执行；判断型任务仍需要 Agent 分工。</p>
-            <em>ACEHarness 差异：挑战 / 裁决 / 人工门禁。</em>
-          </article>
-          <article class="market-card">
-            <strong>研发 Agent</strong>
-            <span>Claude Code / Copilot</span>
-            <p>适合单点研发自动化、代码补全和 PR 辅助；跨团队治理需要统一编排层。</p>
-            <em>ACEHarness 差异：研发闭环沉淀为可复用流程资产。</em>
-          </article>
-        </div>
+              <text class="ecosystem-svg-text ecosystem-quad-label" x="95" y="82">治理增强框架</text>
+              <text class="ecosystem-svg-text ecosystem-quad-label" x="790" y="82">流程编排与治理平台</text>
+              <text class="ecosystem-svg-text ecosystem-quad-label" x="95" y="480">底层开发框架</text>
+              <text class="ecosystem-svg-text ecosystem-quad-label" x="820" y="480">应用与自动化</text>
+
+              <g filter="url(#ecosystem-soft-shadow)">
+                <rect class="ecosystem-chip" x="115" y="178" width="250" height="54" rx="12"/>
+                <text class="ecosystem-svg-text ecosystem-chip-text" x="240" y="214" text-anchor="middle">CrewAI / ADK</text>
+              </g>
+
+              <g filter="url(#ecosystem-soft-shadow)">
+                <rect class="ecosystem-chip" x="90" y="505" width="320" height="54" rx="12"/>
+                <text class="ecosystem-svg-text ecosystem-chip-text" x="250" y="541" text-anchor="middle">LangGraph / AutoGen</text>
+              </g>
+
+              <g filter="url(#ecosystem-ace-glow)">
+                <rect class="ecosystem-ace" x="785" y="122" width="380" height="96" rx="20"/>
+                <text class="ecosystem-svg-text ecosystem-ace-text" x="975" y="183" text-anchor="middle">ACEHarness</text>
+              </g>
+
+              <g>
+                <rect class="ecosystem-ace-pill" x="760" y="238" width="140" height="40" rx="20"/>
+                <text class="ecosystem-svg-text ecosystem-ace-pill-text" x="830" y="265" text-anchor="middle">流程编排</text>
+                <rect class="ecosystem-ace-pill" x="915" y="238" width="140" height="40" rx="20"/>
+                <text class="ecosystem-svg-text ecosystem-ace-pill-text" x="985" y="265" text-anchor="middle">人工门禁</text>
+                <rect class="ecosystem-ace-pill" x="1070" y="238" width="140" height="40" rx="20"/>
+                <text class="ecosystem-svg-text ecosystem-ace-pill-text" x="1140" y="265" text-anchor="middle">证据沉淀</text>
+              </g>
+
+              <g filter="url(#ecosystem-soft-shadow)">
+                <rect class="ecosystem-chip" x="765" y="440" width="235" height="54" rx="12"/>
+                <text class="ecosystem-svg-text ecosystem-chip-text" x="882" y="476" text-anchor="middle">Dify / Flowise</text>
+              </g>
+
+              <g filter="url(#ecosystem-soft-shadow)">
+                <rect class="ecosystem-chip" x="1030" y="440" width="235" height="54" rx="12"/>
+                <text class="ecosystem-svg-text ecosystem-chip-text" x="1148" y="476" text-anchor="middle">n8n / Zapier</text>
+              </g>
+
+              <g filter="url(#ecosystem-soft-shadow)">
+                <rect class="ecosystem-chip" x="815" y="520" width="420" height="54" rx="12"/>
+                <text class="ecosystem-svg-text ecosystem-chip-text" x="1025" y="556" text-anchor="middle">Claude Code / Copilot / Devin</text>
+              </g>
+            </g>
+
+            <g>
+              <line class="ecosystem-axis" x1="190" y1="755" x2="1365" y2="755"/>
+              <text class="ecosystem-svg-text ecosystem-axis-label" x="190" y="742" text-anchor="start">开发原语</text>
+              <text class="ecosystem-svg-text ecosystem-axis-label" x="1305" y="742" text-anchor="middle">流程资产</text>
+
+              <line class="ecosystem-axis" x1="100" y1="715" x2="100" y2="165"/>
+              <text class="ecosystem-svg-text ecosystem-axis-label" x="100" y="160" text-anchor="middle">组织治理</text>
+              <text class="ecosystem-svg-text ecosystem-axis-label" x="100" y="745" text-anchor="middle">单点执行</text>
+            </g>
+          </svg>
+        </figure>
       </div>
     </section>
 
