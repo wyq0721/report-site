@@ -677,9 +677,9 @@
     }
 
     .market-card {
-      display: grid;
-      align-content: start;
-      min-height: 214px;
+      display: flex;
+      flex-direction: column;
+      min-height: 204px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -712,7 +712,7 @@
 
     .market-card em {
       display: block;
-      margin-top: 12px;
+      margin-top: auto;
       padding-top: 12px;
       border-top: 1px solid rgba(22, 26, 22, 0.12);
       color: #263323;
@@ -1092,8 +1092,8 @@
         <div class="market-grid">
           <article class="market-card">
             <strong>Agent 框架</strong>
-            <span>LangGraph / AutoGen / CrewAI / ADK</span>
-            <p>适合开发者自建 Agent 原语；业务准入、审计和组织角色通常要自建。</p>
+            <span>LangGraph / AutoGen</span>
+            <p>适合开发者自建 Agent 原语；业务准入、审计和组织角色需要自建。</p>
             <em>ACEHarness 差异：流程模板 / 人工门禁 / 证据链。</em>
           </article>
           <article class="market-card">
@@ -1110,9 +1110,9 @@
           </article>
           <article class="market-card">
             <strong>研发 Agent</strong>
-            <span>Claude Code / Copilot / Devin</span>
-            <p>适合单点研发自动化和 PR 交付；跨团队流程治理需要外层承载。</p>
-            <em>ACEHarness 差异：研发闭环抽象为通用流程资产。</em>
+            <span>Claude Code / Copilot</span>
+            <p>适合单点研发自动化、代码补全和 PR 辅助；跨团队治理需要统一编排层。</p>
+            <em>ACEHarness 差异：研发闭环沉淀为可复用流程资产。</em>
           </article>
         </div>
       </div>
