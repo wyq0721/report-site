@@ -1223,6 +1223,22 @@
         padding-bottom: 14px;
       }
 
+      .orchestration-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .runtime-flow {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .runtime-step::after {
+        display: none;
+      }
+
+      .orchestration-details {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .value-list,
       .route-grid,
       .timeline,
@@ -1271,6 +1287,15 @@
 
       .hero {
         padding-top: 46px;
+      }
+
+      .runtime-flow,
+      .orchestration-details {
+        grid-template-columns: 1fr;
+      }
+
+      .spec-lines span {
+        grid-template-columns: 1fr;
       }
 
       .value-list,
