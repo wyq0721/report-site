@@ -1335,6 +1335,7 @@
       <nav class="nav" aria-label="页面导航">
         <a href="#positioning">产品定位</a>
         <a href="#transformation">流程升级</a>
+        <a href="#orchestration">编排细节</a>
         <a href="#finance">可信流程</a>
         <a href="#capabilities">能力底座</a>
         <a href="#comparison">行业对比</a>
@@ -1432,6 +1433,82 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <section id="orchestration">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Orchestration</div>
+            <p class="section-note">把任务拆清楚、派出去、验回来、留得住。</p>
+          </div>
+          <h2>Workflow 编排如何运行</h2>
+        </div>
+
+        <div class="orchestration-grid">
+          <div class="panel dark workflow-spec-card">
+            <h3>Workflow = 可运行任务蓝图</h3>
+            <p>目标、输入、阶段、步骤、角色、工具、门禁和证据进入同一份流程配置。</p>
+            <div class="spec-lines">
+              <span><b>Workflow</b><em>目标 / 输入 / 产出 / 验收口径</em></span>
+              <span><b>State / Phase</b><em>阶段 / 转移 / 检查点 / 回退边界</em></span>
+              <span><b>Step</b><em>任务 / Agent / Skill / 子流程</em></span>
+            </div>
+          </div>
+
+          <div class="runtime-flow" aria-label="Workflow 运行时编排链路">
+            <div class="runtime-step">
+              <b>01 Define</b>
+              <strong>定义流程</strong>
+              <span>固化目标、上下文、阶段顺序和验收口径。</span>
+              <em>从口头任务变成可运行配置</em>
+            </div>
+            <div class="runtime-step">
+              <b>02 Dispatch</b>
+              <strong>分派角色</strong>
+              <span>Step 绑定 Agent，Agent 获得角色职责和执行后端。</span>
+              <em>谁分析、谁执行、谁裁决</em>
+            </div>
+            <div class="runtime-step">
+              <b>03 Execute</b>
+              <strong>调用能力</strong>
+              <span>Agent 按需读取 Skill，调用模型、工具、数据和知识库。</span>
+              <em>方法和工具随流程注入</em>
+            </div>
+            <div class="runtime-step">
+              <b>04 Gate</b>
+              <strong>门禁复核</strong>
+              <span>阶段检查点、迭代评审和人工确认控制继续或回退。</span>
+              <em>关键判断不黑箱跳过</em>
+            </div>
+            <div class="runtime-step">
+              <b>05 Record</b>
+              <strong>留痕复用</strong>
+              <span>步骤输出、事件、审计、快照和子流程结果沉淀下来。</span>
+              <em>下一次可恢复、可追溯</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="orchestration-details">
+          <div class="orchestration-detail">
+            <strong>状态机推进</strong>
+            <span>支持阶段、条件转移、检查点和失败回退。</span>
+          </div>
+          <div class="orchestration-detail">
+            <strong>子流程嵌套</strong>
+            <span>复杂任务可把一个 Workflow 当作 Step 复用。</span>
+          </div>
+          <div class="orchestration-detail">
+            <strong>并发与迭代</strong>
+            <span>支持并发分支、挑战评审和多轮修正。</span>
+          </div>
+          <div class="orchestration-detail">
+            <strong>运行可恢复</strong>
+            <span>已完成步骤可跳过，等待审批可恢复到原位置。</span>
+          </div>
+        </div>
       </div>
     </section>
 
