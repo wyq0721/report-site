@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-20 20:56:12",
+  "generated_at": "2026-07-21 17:28:43",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -16,6 +16,14 @@
       "source_name": "aceharness-external-promotion-report.html",
       "title": "ACEHarness | AI Multi-Agent 流程协同平台",
       "updated_at": "2026-07-20 20:56:12"
+    },
+    "aceharness_sdd_quality_loop.html": {
+      "assets": [],
+      "sha256": "df5ae9a05112f1a1dd6d30ddbee8c229428f6012a343db738993f0ac84607a1b",
+      "slug": "aceharness-sdd-quality-loop",
+      "source_name": "aceharness_sdd_quality_loop.html",
+      "title": "ACEHarness 驱动的 DT 质量闭环方案",
+      "updated_at": "2026-07-21 17:28:43"
     },
     "ai-native-aar.html": {
       "assets": [],

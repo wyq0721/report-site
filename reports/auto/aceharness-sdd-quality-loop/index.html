@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACEHarness 驱动的 DT 质量闭环方案</title>
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --paper: #ffffff;
+      --ink: #142033;
+      --muted: #5d6b7c;
+      --line: #d7e0eb;
+      --navy: #142238;
+      --green: #11825b;
+      --green-soft: #e8f7ef;
+      --orange: #e35f16;
+      --orange-soft: #fff3e8;
+      --blue: #2563eb;
+      --blue-soft: #eef4ff;
+      --shadow: 0 18px 48px rgba(20, 32, 51, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .viewport {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+
+    .slide {
+      width: min(1280px, 100%);
+      min-height: 720px;
+      padding: 24px 26px 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 30px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+      max-width: 860px;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-top: 3px;
+      color: #26364a;
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .swatch {
+      width: 24px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .swatch.existing {
+      background: var(--green-soft);
+      border: 2px solid var(--green);
+    }
+
+    .swatch.todo {
+      background: var(--orange-soft);
+      border: 2px dashed var(--orange);
+    }
+
+    .swatch.bus {
+      background: var(--navy);
+      border: 2px solid var(--navy);
+    }
+
+    .diagram-wrap {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fbfdff 0%, #f7fafc 100%);
+      overflow: hidden;
+    }
+
+    .diagram {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 610px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 900;
+      fill: #334155;
+    }
+
+    .section-note {
+      font-size: 11px;
+      fill: #718096;
+    }
+
+    .title {
+      font-size: 15px;
+      font-weight: 900;
+      fill: var(--ink);
+    }
+
+    .desc {
+      font-size: 11.5px;
+      fill: var(--muted);
+    }
+
+    .small {
+      font-size: 10.5px;
+      fill: #718096;
+    }
+
+    .stage rect {
+      fill: var(--green-soft);
+      stroke: var(--green);
+      stroke-width: 2;
+    }
+
+    .input rect {
+      fill: #f8fafc;
+      stroke: #64748b;
+      stroke-width: 2;
+    }
+
+    .todo rect {
+      fill: var(--orange-soft);
+      stroke: var(--orange);
+      stroke-width: 2;
+      stroke-dasharray: 6 5;
+    }
+
+    .gate rect {
+      fill: #fffdf8;
+      stroke: var(--orange);
+      stroke-width: 2;
+      stroke-dasharray: 5 5;
+    }
+
+    .bus rect {
+      fill: var(--navy);
+      stroke: #263b56;
+      stroke-width: 2;
+    }
+
+    .bus .title {
+      fill: #ffffff;
+      font-size: 18px;
+    }
+
+    .bus .desc {
+      fill: #d6e0ec;
+      font-size: 12px;
+    }
+
+    .evidence rect {
+      fill: var(--blue-soft);
+      stroke: var(--blue);
+      stroke-width: 2;
+    }
+
+    .arrow {
+      fill: none;
+      stroke: #334155;
+      stroke-width: 2.2;
+    }
+
+    .attach {
+      fill: none;
+      stroke: #6b7c91;
+      stroke-width: 1.5;
+    }
+
+    .todo-link {
+      fill: none;
+      stroke: var(--orange);
+      stroke-width: 2;
+      stroke-dasharray: 6 6;
+    }
+
+    .feedback {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 2;
+      stroke-dasharray: 5 5;
+    }
+
+    @media (max-width: 980px) {
+      .slide {
+        min-height: auto;
+      }
+
+      .header {
+        grid-template-columns: 1fr;
+      }
+
+      .legend {
+        flex-wrap: wrap;
+      }
+
+      .diagram {
+        min-height: 760px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+
+      body,
+      .viewport {
+        background: #ffffff;
+      }
+
+      .viewport {
+        min-height: auto;
+        padding: 0;
+      }
+
+      .slide {
+        width: 100%;
+        min-height: auto;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewport">
+    <section class="slide" aria-label="ACEHarness 驱动的 DT 质量闭环方案">
+      <header class="header">
+        <div>
+          <h1>ACEHarness 驱动的 DT 质量闭环方案</h1>
+          <p class="subtitle">
+            以 SDD 任务为主线，ACEHarness 作为编排总线，把已有的 DT 设计、测试 Skill、运行平台和覆盖率看板串成质量证据链。DT 设计不等待实现 PR 完成；实现 PR/Diff 作为后续校验、诊断和补测输入。
+          </p>
+        </div>
+        <div class="legend" aria-label="图例">
+          <span class="legend-item"><span class="swatch existing"></span>已有能力</span>
+          <span class="legend-item"><span class="swatch todo"></span>待建设能力</span>
+          <span class="legend-item"><span class="swatch bus"></span>ACEHarness 总线</span>
+        </div>
+      </header>
+
+      <div class="diagram-wrap">
+        <svg class="diagram" viewBox="0 0 1200 600" role="img" aria-label="ACEHarness 驱动的 DT 质量闭环流程图">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"></path>
+            </marker>
+            <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#e35f16"></path>
+            </marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"></path>
+            </marker>
+          </defs>
+
+          <rect x="24" y="56" width="1152" height="376" rx="12" fill="#ffffff" stroke="#d8e1eb"></rect>
+          <text class="section-label" x="42" y="84">质量门禁主流程</text>
+          <text class="section-note" x="42" y="104">DT 设计不依赖实现 PR；最小输入：Spec/特性设计/影响范围；PR/Diff 用于后置校验。</text>
+
+          <path class="arrow" d="M 162 244 L 174 244" marker-end="url(#arrow)"></path>
+          <path class="arrow" d="M 310 244 L 346 244" marker-end="url(#arrow)"></path>
+          <path class="arrow" d="M 482 244 L 518 244" marker-end="url(#arrow)"></path>
+          <path class="arrow" d="M 654 244 L 690 244" marker-end="url(#arrow)"></path>
+          <path class="arrow" d="M 826 244 L 862 244" marker-end="url(#arrow)"></path>
+          <path class="arrow" d="M 998 244 L 1034 244" marker-end="url(#arrow)"></path>
+
+          <path class="attach" d="M 244 280 L 244 320"></path>
+          <path class="attach" d="M 416 280 L 416 320"></path>
+          <path class="attach" d="M 588 280 L 588 320"></path>
+          <path class="attach" d="M 760 280 L 760 320"></path>
+          <path class="attach" d="M 932 280 L 932 320"></path>
+
+          <path class="todo-link" d="M 244 150 L 244 208" marker-end="url(#arrow-orange)"></path>
+          <path class="todo-link" d="M 416 150 L 416 208" marker-end="url(#arrow-orange)"></path>
+          <path class="todo-link" d="M 932 150 L 932 208" marker-end="url(#arrow-orange)"></path>
+          <path class="todo-link" d="M 1104 150 L 1104 208" marker-end="url(#arrow-orange)"></path>
+          <path class="todo-link" d="M 760 398 L 760 282" marker-end="url(#arrow-orange)"></path>
+          <path class="todo-link" d="M 1018 398 C 998 354, 960 320, 932 282" marker-end="url(#arrow-orange)"></path>
+
+          <path class="feedback" d="M 1068 458 C 884 535, 438 530, 284 456" marker-end="url(#arrow-blue)"></path>
+          <text class="small" x="344" y="548">输出集合：DT 设计包、用例资产、执行日志、覆盖率证据、PR 准入报告、补测任务、知识回流项</text>
+
+          <g class="todo" transform="translate(166 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="title" x="78" y="22" text-anchor="middle">Spec 质检 Agent</text>
+            <text class="desc" x="78" y="39" text-anchor="middle">可测性 / 澄清项 · 待建</text>
+          </g>
+
+          <g class="todo" transform="translate(338 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="title" x="78" y="22" text-anchor="middle">DT 评审 Agent</text>
+            <text class="desc" x="78" y="39" text-anchor="middle">矩阵 / 边界 / 风险 · 待建</text>
+          </g>
+
+          <g class="todo" transform="translate(854 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="title" x="78" y="22" text-anchor="middle">覆盖率诊断 Agent</text>
+            <text class="desc" x="78" y="39" text-anchor="middle">缺口解释 / 补测建议 · 待建</text>
+          </g>
+
+          <g class="todo" transform="translate(1026 108)">
+            <rect width="156" height="50" rx="8"></rect>
+            <text class="title" x="78" y="22" text-anchor="middle">PR 质量门禁</text>
+            <text class="desc" x="78" y="39" text-anchor="middle">准入结论 / 风险卡点 · 待建</text>
+          </g>
+
+          <g class="input" transform="translate(24 208)">
+            <rect width="138" height="72" rx="8"></rect>
+            <text class="title" x="69" y="25" text-anchor="middle">方案输入</text>
+            <text class="desc" x="69" y="45" text-anchor="middle">Spec / 特性设计</text>
+            <text class="desc" x="69" y="60" text-anchor="middle">影响范围；PR/Diff 可选</text>
+          </g>
+
+          <g class="stage" transform="translate(174 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">SDD 任务包</text>
+            <text class="desc" x="68" y="48" text-anchor="middle">任务理解 · 已有</text>
+          </g>
+
+          <g class="stage" transform="translate(346 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">DT 设计包</text>
+            <text class="desc" x="68" y="48" text-anchor="middle">设计 Skill · 已有</text>
+          </g>
+
+          <g class="stage" transform="translate(518 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">用例资产</text>
+            <text class="desc" x="68" y="48" text-anchor="middle">测试 Skill · 已有</text>
+          </g>
+
+          <g class="stage" transform="translate(690 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">Harness 执行</text>
+            <text class="desc" x="68" y="48" text-anchor="middle">运行平台 · 已有</text>
+          </g>
+
+          <g class="stage" transform="translate(862 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">覆盖率证据</text>
+            <text class="desc" x="68" y="48" text-anchor="middle">增量看板 · 已有</text>
+          </g>
+
+          <g class="gate" transform="translate(1034 212)">
+            <rect width="136" height="64" rx="8"></rect>
+            <text class="title" x="68" y="27" text-anchor="middle">方案输出</text>
+            <text class="desc" x="68" y="45" text-anchor="middle">准入报告 / 风险结论</text>
+            <text class="desc" x="68" y="58" text-anchor="middle">补测与回流任务</text>
+          </g>
+
+          <g class="bus" transform="translate(174 320)">
+            <rect width="824" height="64" rx="10"></rect>
+            <text class="title" x="412" y="26" text-anchor="middle">ACEHarness 编排总线（已有）</text>
+            <text class="desc" x="412" y="48" text-anchor="middle">多 Agent 配置 · SDD 流程 · Skill 调用 · 执行调度 · 证据沉淀</text>
+          </g>
+
+          <g class="todo" transform="translate(284 408)">
+            <rect width="238" height="62" rx="8"></rect>
+            <text class="title" x="119" y="26" text-anchor="middle">知识回流 Agent</text>
+            <text class="desc" x="119" y="46" text-anchor="middle">逃逸缺陷 -> 模板/Skill/Agent 进化 · 待建</text>
+          </g>
+
+          <g class="todo" transform="translate(650 408)">
+            <rect width="220" height="62" rx="8"></rect>
+            <text class="title" x="110" y="26" text-anchor="middle">补测任务 Agent</text>
+            <text class="desc" x="110" y="46" text-anchor="middle">覆盖缺口 -> 自动生成补测任务 · 待建</text>
+          </g>
+
+          <g class="evidence" transform="translate(952 408)">
+            <rect width="196" height="62" rx="8"></rect>
+            <text class="title" x="98" y="26" text-anchor="middle">效能度量</text>
+            <text class="desc" x="98" y="46" text-anchor="middle">采纳率 / 达标率 / 闭环时长</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
