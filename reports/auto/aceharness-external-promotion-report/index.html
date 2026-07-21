@@ -1466,73 +1466,73 @@
         <div class="section-head">
           <div>
             <div class="kicker">Orchestration</div>
-            <p class="section-note">从模板配置视角，说明任务如何拆成可运行结构。</p>
+            <p class="section-note">面向流程 Owner，展示现有流程进入 ACEHarness 的配置路径。</p>
           </div>
-          <h2>Workflow 编排结构</h2>
+          <h2>流程如何配置化</h2>
         </div>
 
         <div class="orchestration-grid">
           <div class="panel dark workflow-spec-card">
-            <h3>Workflow = 任务配置骨架</h3>
-            <p>把业务目标拆成阶段、步骤、角色、工具和运行策略。</p>
+            <h3>编排价值</h3>
+            <p>把散落在文档、会议、脚本和经验里的步骤，固化为团队共用的流程模板。</p>
             <div class="spec-lines">
-              <span><b>mode</b><em>phase-based / state-machine</em></span>
-              <span><b>states</b><em>阶段 / 转移 / 进入条件</em></span>
-              <span><b>steps</b><em>任务 / Agent / Skill / 子流程</em></span>
-              <span><b>context</b><em>工作区 / 数据 / MCP / 运行参数</em></span>
+              <span><b>一次定义</b><em>目标、输入、产出和上下文</em></span>
+              <span><b>按段拆解</b><em>阶段、状态、分支和转移条件</em></span>
+              <span><b>角色执行</b><em>Agent、Skill、工具和数据入口</em></span>
+              <span><b>参数复用</b><em>项目、场景、并发组和运行策略</em></span>
             </div>
           </div>
 
           <div class="runtime-flow" aria-label="Workflow 配置编排结构">
             <div class="runtime-step">
               <b>01 Scope</b>
-              <strong>定范围</strong>
-              <span>明确目标、输入、产出和上下文来源。</span>
-              <em>决定流程边界</em>
+              <strong>定义任务口径</strong>
+              <span>把一句需求整理成目标、输入、产出。</span>
+              <em>对应 Workflow</em>
             </div>
             <div class="runtime-step">
-              <b>02 Structure</b>
-              <strong>搭结构</strong>
-              <span>选择阶段式或状态机，定义状态和分支。</span>
-              <em>决定怎么流转</em>
+              <b>02 Stage</b>
+              <strong>拆成流程段</strong>
+              <span>按业务顺序或条件状态组织阶段。</span>
+              <em>对应 State / Phase</em>
             </div>
             <div class="runtime-step">
-              <b>03 Assign</b>
-              <strong>配步骤</strong>
-              <span>每个 Step 绑定任务、Agent、Skill 和执行后端。</span>
-              <em>决定谁做什么</em>
+              <b>03 Step</b>
+              <strong>分解执行动作</strong>
+              <span>每段拆成可执行 Step，可串行也可并行。</span>
+              <em>对应 Step / parallelGroup</em>
             </div>
             <div class="runtime-step">
-              <b>04 Compose</b>
-              <strong>嵌子流程</strong>
-              <span>复杂分支可拆成 subworkflow，被父流程调用。</span>
-              <em>决定如何复用</em>
+              <b>04 Role</b>
+              <strong>绑定角色能力</strong>
+              <span>Step 指定 Agent、Skill、MCP 和执行后端。</span>
+              <em>对应 Agent / Skill</em>
             </div>
             <div class="runtime-step">
-              <b>05 Runtime</b>
-              <strong>配运行</strong>
-              <span>设置引擎、并发组、输入继承和超时策略。</span>
-              <em>决定如何落地</em>
+              <b>05 Reuse</b>
+              <strong>参数化复用</strong>
+              <span>替换项目、数据源和运行参数即可迁移。</span>
+              <em>对应 context</em>
             </div>
           </div>
         </div>
 
         <div class="orchestration-details">
           <div class="orchestration-detail">
-            <strong>两种模式</strong>
-            <span>phase-based 适合顺序推进，state-machine 适合条件跳转。</span>
+            <strong>降低复述成本</strong>
+            <span>任务背景和交付口径进入模板，不再每次重新解释。</span>
           </div>
           <div class="orchestration-detail">
-            <strong>结构复用</strong>
-            <span>subworkflow 可以像普通 Step 一样接入父流程。</span>
+            <strong>稳定执行路径</strong>
+            <span>阶段、步骤和角色分工固定下来，减少临场发挥。</span>
           </div>
           <div class="orchestration-detail">
-            <strong>并发分支</strong>
-            <span>parallelGroup 将多个 Step 作为一组调度。</span>
+            <strong>支持复杂拆分</strong>
+            <span>子流程、并发组和状态机承载多分支任务。</span>
           </div>
           <div class="orchestration-detail">
-            <strong>上下文注入</strong>
-            <span>requirements、skills、MCP 和工作区随步骤传递。</span>
+            <strong>便于横向复制</strong>
+            <span>保留流程骨架，替换参数即可迁移到新场景。</span>
           </div>
         </div>
       </div>
