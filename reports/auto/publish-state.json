@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21 18:07:11",
+  "generated_at": "2026-07-23 14:52:27",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -69,11 +69,11 @@
         "assets/qcc-ice-cases/case-4.png",
         "assets/qcc-ice-cases/case-5.png"
       ],
-      "sha256": "74ae0ce897dcff641885b9f5a6f25d5451a63612272060d7eb7da03e0672cd01",
+      "sha256": "5a5397bf3774370a60a9c733e17172b7e3913c1fdd2ad2a58271faa894b14855",
       "slug": "qcc-cangjie-compiler-ice-topic-goal-review",
       "source_name": "qcc_cangjie_compiler_ice_topic_goal_review.html",
       "title": "QCC主题及目标评审 - 提升仓颉 ICE 首轮信息完整率",
-      "updated_at": "2026-07-02 11:33:46"
+      "updated_at": "2026-07-23 14:52:27"
     },
     "季度民主生活会_策划案.html": {
       "sha256": "800eef5a9897d01165fc0673af2474d56c96fbc0134f7ce917156bd5966af76b",
