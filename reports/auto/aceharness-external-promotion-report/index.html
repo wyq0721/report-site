@@ -1196,19 +1196,11 @@
         padding-bottom: 14px;
       }
 
-      .orchestration-grid {
+      .ui-evidence-layout {
         grid-template-columns: 1fr;
       }
 
-      .runtime-flow {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .runtime-step::after {
-        display: none;
-      }
-
-      .orchestration-details {
+      .ui-principle-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -1262,13 +1254,18 @@
         padding-top: 46px;
       }
 
-      .runtime-flow,
-      .orchestration-details {
+      .ui-principle-strip {
         grid-template-columns: 1fr;
       }
 
-      .spec-lines span {
+      .ui-callout {
         grid-template-columns: 1fr;
+      }
+
+      .ui-pin {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
       }
 
       .value-list,
@@ -1333,7 +1330,7 @@
       <nav class="nav" aria-label="页面导航">
         <a href="#positioning">产品定位</a>
         <a href="#transformation">流程升级</a>
-        <a href="#orchestration">编排细节</a>
+        <a href="#ui-evidence">界面实证</a>
         <a href="#finance">可信流程</a>
         <a href="#capabilities">能力底座</a>
         <a href="#comparison">行业对比</a>
@@ -1434,78 +1431,67 @@
       </div>
     </section>
 
-    <section id="orchestration">
+    <section id="ui-evidence">
       <div class="shell">
         <div class="section-head">
           <div>
-            <div class="kicker">Orchestration</div>
-            <p class="section-note">面向流程 Owner，展示现有流程进入 ACEHarness 的配置路径。</p>
+            <div class="kicker">Product UI</div>
+            <p class="section-note">用真实工作台说明设计理念和功能落点。</p>
           </div>
-          <h2>流程如何配置化</h2>
+          <h2>从界面看协同底座</h2>
         </div>
 
-        <div class="orchestration-grid">
-          <div class="panel dark workflow-spec-card">
-            <h3>编排价值</h3>
-            <p>把散落在文档、会议、脚本和经验里的步骤，固化为团队共用的流程模板。</p>
-            <div class="spec-lines">
-              <span><b>一次定义</b><em>目标、输入、产出和上下文</em></span>
-              <span><b>按段拆解</b><em>阶段、状态、分支和转移条件</em></span>
-              <span><b>角色执行</b><em>Agent、Skill、工具和数据入口</em></span>
-              <span><b>参数复用</b><em>项目、场景、并发组和运行策略</em></span>
-            </div>
-          </div>
+        <div class="ui-evidence-layout">
+          <figure class="ui-shot-card" aria-label="ACEHarness 工作台界面截图标注">
+            <img src="assets/aceharness-ui-workbench.jpg" alt="ACEHarness 工作台界面截图">
+            <span class="ui-pin p1">1</span>
+            <span class="ui-pin p2">2</span>
+            <span class="ui-pin p3">3</span>
+            <span class="ui-pin p4">4</span>
+            <span class="ui-pin p5">5</span>
+          </figure>
 
-          <div class="runtime-flow" aria-label="Workflow 配置编排结构">
-            <div class="runtime-step">
-              <b>01 Scope</b>
-              <strong>定义任务口径</strong>
-              <span>把一句需求整理成目标、输入、产出。</span>
-              <em>对应 Workflow</em>
+          <div class="ui-callouts">
+            <div class="ui-callout">
+              <b>01</b>
+              <strong>统一工作入口</strong>
+              <p>工作流、Agent、Skill/MCP、模型、运行记录和知识管理集中在左侧导航。</p>
             </div>
-            <div class="runtime-step">
-              <b>02 Stage</b>
-              <strong>拆成流程段</strong>
-              <span>按业务顺序或条件状态组织阶段。</span>
-              <em>对应 State / Phase</em>
+            <div class="ui-callout">
+              <b>02</b>
+              <strong>会话承接任务</strong>
+              <p>对话列表保留需求上下文，任务可以从会话继续进入 workflow 或 agent。</p>
             </div>
-            <div class="runtime-step">
-              <b>03 Step</b>
-              <strong>分解执行动作</strong>
-              <span>每段拆成可执行 Step，可串行也可并行。</span>
-              <em>对应 Step / parallelGroup</em>
+            <div class="ui-callout">
+              <b>03</b>
+              <strong>能力目录可见</strong>
+              <p>工作流、Agent、模型、Skill、运行状态和历史作为可访问能力入口呈现。</p>
             </div>
-            <div class="runtime-step">
-              <b>04 Role</b>
-              <strong>绑定角色能力</strong>
-              <span>Step 指定 Agent、Skill、MCP 和执行后端。</span>
-              <em>对应 Agent / Skill</em>
+            <div class="ui-callout">
+              <b>04</b>
+              <strong>创建与运行闭环</strong>
+              <p>创建工作流、创建 Agent、启动运行放在同一操作区，减少跨系统跳转。</p>
             </div>
-            <div class="runtime-step">
-              <b>05 Reuse</b>
-              <strong>参数化复用</strong>
-              <span>替换项目、数据源和运行参数即可迁移。</span>
-              <em>对应 context</em>
+            <div class="ui-callout">
+              <b>05</b>
+              <strong>协作与沉淀出口</strong>
+              <p>微信 Bot、Notebook 和运行历史把外部协作、过程记录和复盘串起来。</p>
             </div>
           </div>
         </div>
 
-        <div class="orchestration-details">
-          <div class="orchestration-detail">
-            <strong>降低复述成本</strong>
-            <span>任务背景和交付口径进入模板，不再每次重新解释。</span>
+        <div class="ui-principle-strip">
+          <div class="ui-principle">
+            <strong>设计理念</strong>
+            <span>不是单一聊天框，而是把对话、配置、执行和复盘放进一条操作路径。</span>
           </div>
-          <div class="orchestration-detail">
-            <strong>稳定执行路径</strong>
-            <span>阶段、步骤和角色分工固定下来，减少临场发挥。</span>
+          <div class="ui-principle">
+            <strong>功能实现</strong>
+            <span>前端入口直接对应后端工作流、Agent、Skill/MCP、模型和运行状态能力。</span>
           </div>
-          <div class="orchestration-detail">
-            <strong>支持复杂拆分</strong>
-            <span>子流程、并发组和状态机承载多分支任务。</span>
-          </div>
-          <div class="orchestration-detail">
-            <strong>便于横向复制</strong>
-            <span>保留流程骨架，替换参数即可迁移到新场景。</span>
+          <div class="ui-principle">
+            <strong>展示价值</strong>
+            <span>客户能看到 ACEHarness 已有工作台形态，而不是停留在概念层描述。</span>
           </div>
         </div>
       </div>
