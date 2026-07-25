@@ -1573,73 +1573,53 @@
         <div class="section-head">
           <div>
             <div class="kicker">Workflow Design</div>
-            <p class="section-note">把 SOP 变成可运行模板，而不是把每一步写进提示词。</p>
+            <p class="section-note">真实设计工作台展示 Workflow 如何从流程图变成可运行配置。</p>
           </div>
-          <h2>Workflow 如何编排</h2>
+          <h2>界面中的流程编排</h2>
         </div>
 
-        <div class="workflow-orch-layout">
-          <div class="orch-principle">
-            <h3>一个 Workflow 模板，回答四个问题</h3>
-            <p>编排的重点不是多写几段提示词，而是把任务口径、流程骨架、执行角色和运行参数拆开管理。</p>
-            <div class="orch-chain" aria-label="Workflow 编排四层结构">
-              <div class="orch-node">
-                <b>01</b>
-                <div>
-                  <strong>任务口径</strong>
-                  <span>明确输入字段、目标、范围和期望产出。</span>
-                  <em>context / taskInput</em>
-                </div>
-              </div>
-              <div class="orch-node">
-                <b>02</b>
-                <div>
-                  <strong>流程骨架</strong>
-                  <span>按阶段或状态组织步骤，并定义通过、补充、返回的路径。</span>
-                  <em>states / phases / transitions</em>
-                </div>
-              </div>
-              <div class="orch-node">
-                <b>03</b>
-                <div>
-                  <strong>执行绑定</strong>
-                  <span>每个动作绑定 Agent、角色和任务说明，复杂动作可接子流程或并行组。</span>
-                  <em>step -> agent / role / task</em>
-                </div>
-              </div>
-              <div class="orch-node">
-                <b>04</b>
-                <div>
-                  <strong>运行参数</strong>
-                  <span>替换项目目录、数据源、模型和渠道后，同一模板可迁移到新场景。</span>
-                  <em>projectRoot / workspaceMode</em>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="workflow-ui-layout">
+          <figure class="workflow-shot-card" aria-label="ACEHarness 工作流设计工作台截图标注">
+            <img src="assets/aceharness-workflow-design-ui.jpg" alt="ACEHarness 工作流设计工作台截图">
+            <span class="workflow-pin p1">1</span>
+            <span class="workflow-pin p2">2</span>
+            <span class="workflow-pin p3">3</span>
+            <span class="workflow-pin p4">4</span>
+            <span class="workflow-pin p5">5</span>
+          </figure>
 
-          <div class="orch-case">
-            <h3>以内置缺陷修复模板为例</h3>
-            <p>一条问题修复任务被拆成五个状态，每个状态内再由不同 Agent 负责执行、挑战和裁决。</p>
-            <div class="state-strip" aria-label="缺陷修复状态流">
-              <div class="state-pill"><strong>复现</strong><span>建立稳定、最小复现场景</span></div>
-              <div class="state-pill"><strong>定位</strong><span>收敛根因和影响范围</span></div>
-              <div class="state-pill"><strong>修复</strong><span>实施最小修复并审查</span></div>
-              <div class="state-pill"><strong>验证</strong><span>回归、边界和风险确认</span></div>
-              <div class="state-pill"><strong>完成</strong><span>沉淀根因、修复和证据</span></div>
+          <div>
+            <div class="workflow-callouts">
+              <div class="workflow-callout">
+                <b>01</b>
+                <strong>状态流</strong>
+                <p>把复杂任务拆成可追踪阶段，明确当前状态和下一步。</p>
+              </div>
+              <div class="workflow-callout">
+                <b>02</b>
+                <strong>状态属性</strong>
+                <p>为每个阶段配置初始、终止、自循环和人工审查规则。</p>
+              </div>
+              <div class="workflow-callout">
+                <b>03</b>
+                <strong>执行步骤</strong>
+                <p>把阶段内动作绑定到 Agent、角色、任务说明和工具调用。</p>
+              </div>
+              <div class="workflow-callout">
+                <b>04</b>
+                <strong>转移规则</strong>
+                <p>用通过、条件通过和失败路径控制任务流向。</p>
+              </div>
+              <div class="workflow-callout">
+                <b>05</b>
+                <strong>配置分离</strong>
+                <p>执行参数独立管理，模板结构可以迁移到新项目。</p>
+              </div>
             </div>
-            <div class="role-row" aria-label="状态内角色分工">
-              <div class="role-chip">Defender 执行</div>
-              <div class="role-chip">Attacker 挑战</div>
-              <div class="role-chip">Judge 裁决</div>
-            </div>
-            <pre class="yaml-snippet">mode: state-machine
-states: 复现 -> 定位 -> 修复 -> 验证 -> 完成
-step: agent + role + task
-transition: verdict -> next state</pre>
-            <div class="orch-case-note">
-              <strong>运行读法</strong>
-              <span>状态决定任务进展到哪一步；角色决定谁来完成动作；verdict 决定通过、补充还是返回上一步。</span>
+            <div class="workflow-proof-line" aria-label="编排工作台价值">
+              <span>流程可视化</span>
+              <span>角色可绑定</span>
+              <span>模板可迁移</span>
             </div>
           </div>
         </div>
