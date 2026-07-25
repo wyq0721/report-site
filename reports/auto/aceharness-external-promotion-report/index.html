@@ -732,22 +732,15 @@
       white-space: pre-wrap;
     }
 
-    .orch-outcomes {
+    .orch-case-note {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .orch-outcome {
-      min-height: 86px;
       padding: 15px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.74);
+      border-radius: 8px;
+      background: #f7faf3;
     }
 
-    .orch-outcome strong {
+    .orch-case-note strong {
       display: block;
       margin-bottom: 7px;
       color: #172018;
@@ -755,7 +748,7 @@
       font-weight: 900;
     }
 
-    .orch-outcome span {
+    .orch-case-note span {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.38;
@@ -1369,10 +1362,6 @@
         grid-template-columns: 1fr;
       }
 
-      .orch-outcomes {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
       .value-list,
       .route-grid,
       .timeline,
@@ -1434,8 +1423,7 @@
       }
 
       .state-strip,
-      .role-row,
-      .orch-outcomes {
+      .role-row {
         grid-template-columns: 1fr;
       }
 
@@ -1724,14 +1712,11 @@
 states: 复现 -> 定位 -> 修复 -> 验证 -> 完成
 step: agent + role + task
 transition: verdict -> next state</pre>
+            <div class="orch-case-note">
+              <strong>运行读法</strong>
+              <span>状态决定任务进展到哪一步；角色决定谁来完成动作；verdict 决定通过、补充还是返回上一步。</span>
+            </div>
           </div>
-        </div>
-
-        <div class="orch-outcomes">
-          <div class="orch-outcome"><strong>流程可保存</strong><span>从一次任务沉淀为团队模板。</span></div>
-          <div class="orch-outcome"><strong>角色可替换</strong><span>同一节点可绑定不同 Agent 能力。</span></div>
-          <div class="orch-outcome"><strong>任务可拆分</strong><span>支持子流程、并行组和多阶段任务。</span></div>
-          <div class="orch-outcome"><strong>场景可迁移</strong><span>换输入和环境参数即可复用。</span></div>
         </div>
       </div>
     </section>
