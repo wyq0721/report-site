@@ -567,6 +567,200 @@
       line-height: 1.45;
     }
 
+    .workflow-orch-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .orch-principle {
+      display: grid;
+      gap: 12px;
+      min-height: 430px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: #172018;
+      color: #f4fff0;
+      box-shadow: var(--shadow);
+    }
+
+    .orch-principle h3,
+    .orch-case h3 {
+      font-size: 24px;
+      line-height: 1.18;
+      font-weight: 950;
+    }
+
+    .orch-principle > p {
+      max-width: 680px;
+      color: rgba(244, 255, 240, 0.74);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .orch-chain {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .orch-node {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 10px 12px;
+      align-items: start;
+      padding: 13px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(244, 255, 240, 0.12);
+    }
+
+    .orch-node b {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--green);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .orch-node strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+      font-size: 17px;
+      line-height: 1.22;
+      font-weight: 900;
+    }
+
+    .orch-node span {
+      color: rgba(244, 255, 240, 0.72);
+      font-size: 13px;
+      line-height: 1.42;
+    }
+
+    .orch-node em {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(244, 255, 240, 0.14);
+      color: rgba(244, 255, 240, 0.86);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 850;
+    }
+
+    .orch-case {
+      display: grid;
+      align-content: start;
+      gap: 14px;
+      min-height: 430px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+    }
+
+    .orch-case > p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.48;
+    }
+
+    .state-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .state-pill {
+      min-height: 78px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7faf3;
+    }
+
+    .state-pill strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #172018;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .state-pill span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.32;
+    }
+
+    .role-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .role-chip {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(15, 139, 98, 0.1);
+      color: #0a6e50;
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .yaml-snippet {
+      margin: 0;
+      padding: 14px;
+      border-radius: 8px;
+      background: #101811;
+      color: #e8f5e8;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.5;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+
+    .orch-outcomes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .orch-outcome {
+      min-height: 86px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .orch-outcome strong {
+      display: block;
+      margin-bottom: 7px;
+      color: #172018;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .orch-outcome span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.38;
+    }
+
     .proof-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1171,6 +1365,14 @@
         grid-template-columns: 1fr;
       }
 
+      .workflow-orch-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .orch-outcomes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .value-list,
       .route-grid,
       .timeline,
@@ -1229,6 +1431,12 @@
         width: 22px;
         height: 22px;
         font-size: 11px;
+      }
+
+      .state-strip,
+      .role-row,
+      .orch-outcomes {
+        grid-template-columns: 1fr;
       }
 
       .value-list,
@@ -1294,6 +1502,7 @@
         <a href="#positioning">产品定位</a>
         <a href="#transformation">流程升级</a>
         <a href="#ui-evidence">界面实证</a>
+        <a href="#workflow-orchestration">流程编排</a>
         <a href="#finance">可信流程</a>
         <a href="#capabilities">能力底座</a>
         <a href="#comparison">行业对比</a>
@@ -1443,6 +1652,87 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <section id="workflow-orchestration">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Workflow Design</div>
+            <p class="section-note">把 SOP 变成可运行模板，而不是把每一步写进提示词。</p>
+          </div>
+          <h2>Workflow 如何编排</h2>
+        </div>
+
+        <div class="workflow-orch-layout">
+          <div class="orch-principle">
+            <h3>一个 Workflow 模板，回答四个问题</h3>
+            <p>编排的重点不是多写几段提示词，而是把任务口径、流程骨架、执行角色和运行参数拆开管理。</p>
+            <div class="orch-chain" aria-label="Workflow 编排四层结构">
+              <div class="orch-node">
+                <b>01</b>
+                <div>
+                  <strong>任务口径</strong>
+                  <span>明确输入字段、目标、范围和期望产出。</span>
+                  <em>context / taskInput</em>
+                </div>
+              </div>
+              <div class="orch-node">
+                <b>02</b>
+                <div>
+                  <strong>流程骨架</strong>
+                  <span>按阶段或状态组织步骤，并定义通过、补充、返回的路径。</span>
+                  <em>states / phases / transitions</em>
+                </div>
+              </div>
+              <div class="orch-node">
+                <b>03</b>
+                <div>
+                  <strong>执行绑定</strong>
+                  <span>每个动作绑定 Agent、角色和任务说明，复杂动作可接子流程或并行组。</span>
+                  <em>step -> agent / role / task</em>
+                </div>
+              </div>
+              <div class="orch-node">
+                <b>04</b>
+                <div>
+                  <strong>运行参数</strong>
+                  <span>替换项目目录、数据源、模型和渠道后，同一模板可迁移到新场景。</span>
+                  <em>projectRoot / workspaceMode</em>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="orch-case">
+            <h3>以内置缺陷修复模板为例</h3>
+            <p>一条问题修复任务被拆成五个状态，每个状态内再由不同 Agent 负责执行、挑战和裁决。</p>
+            <div class="state-strip" aria-label="缺陷修复状态流">
+              <div class="state-pill"><strong>复现</strong><span>建立稳定、最小复现场景</span></div>
+              <div class="state-pill"><strong>定位</strong><span>收敛根因和影响范围</span></div>
+              <div class="state-pill"><strong>修复</strong><span>实施最小修复并审查</span></div>
+              <div class="state-pill"><strong>验证</strong><span>回归、边界和风险确认</span></div>
+              <div class="state-pill"><strong>完成</strong><span>沉淀根因、修复和证据</span></div>
+            </div>
+            <div class="role-row" aria-label="状态内角色分工">
+              <div class="role-chip">Defender 执行</div>
+              <div class="role-chip">Attacker 挑战</div>
+              <div class="role-chip">Judge 裁决</div>
+            </div>
+            <pre class="yaml-snippet">mode: state-machine
+states: 复现 -> 定位 -> 修复 -> 验证 -> 完成
+step: agent + role + task
+transition: verdict -> next state</pre>
+          </div>
+        </div>
+
+        <div class="orch-outcomes">
+          <div class="orch-outcome"><strong>流程可保存</strong><span>从一次任务沉淀为团队模板。</span></div>
+          <div class="orch-outcome"><strong>角色可替换</strong><span>同一节点可绑定不同 Agent 能力。</span></div>
+          <div class="orch-outcome"><strong>任务可拆分</strong><span>支持子流程、并行组和多阶段任务。</span></div>
+          <div class="orch-outcome"><strong>场景可迁移</strong><span>换输入和环境参数即可复用。</span></div>
+        </div>
       </div>
     </section>
 
