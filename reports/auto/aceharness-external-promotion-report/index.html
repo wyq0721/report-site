@@ -1781,59 +1781,42 @@
           </div>
         </div>
 
-        <div class="layer-diagram story-flow" aria-label="ACEHarness 可信流程层级图">
-          <div class="layer-node">
-            <b>Workflow</b>
-            <span>定义任务模板</span>
-            <em>目标 / 输入 / 产出</em>
-            <small class="layer-example">财经：预算预测<br>研发：ICE 修复</small>
-          </div>
-          <div class="layer-node">
-            <b>State / Phase</b>
-            <span>管理流程阶段</span>
-            <em>阶段 / 门禁 / 回退</em>
-            <small class="layer-example">财经：收数/复核<br>研发：复现/验证</small>
-          </div>
-          <div class="layer-node">
-            <b>Step / Subworkflow</b>
-            <span>拆出执行动作</span>
-            <em>动作 / 子流程 / 重跑</em>
-            <small class="layer-example">财经：对账/解释<br>研发：测试/diff</small>
-          </div>
-          <div class="layer-node">
-            <b>Agent</b>
-            <span>承担专业分工</span>
-            <em>分析 / 执行 / 裁决</em>
-            <small class="layer-example">财经：分析/审计<br>研发：挑战/裁决</small>
-          </div>
-          <div class="layer-node">
-            <b>Skill</b>
-            <span>封装方法工具</span>
-            <em>规则 / 口径 / 工具</em>
-            <small class="layer-example">财经：制度/数据<br>研发：构建/检视</small>
-          </div>
-          <div class="layer-node">
-            <b>Evidence</b>
-            <span>形成证据链</span>
-            <em>日志 / 审批 / 快照</em>
-            <small class="layer-example">财经：审批留痕<br>研发：Git baseline</small>
-          </div>
-        </div>
-
-        <div class="scenario-lanes" aria-label="同一套层级的业务场景串联">
-          <div class="scenario-lane">
-            <strong class="lane-title">财经链路</strong>
-            <span>月结 / 预算 / 费用审核</span>
-            <span>口径 / 数据 / 规则</span>
-            <span>分析 / 复核 / 审批</span>
-            <span>可信、可追溯、可审计</span>
-          </div>
-          <div class="scenario-lane">
-            <strong class="lane-title">研发工程链路</strong>
-            <span>ICE 修复 / SDK 迁移 / 审查</span>
-            <span>复现 / 根因 / 修复</span>
-            <span>测试 / diff / 评审</span>
-            <span>可回退、可重跑、可验证</span>
+        <div class="product-evidence-layout">
+          <figure class="product-evidence-shot" aria-label="ACEHarness 运行记录截图标注">
+            <img src="assets/aceharness-run-history-ui.jpg" alt="ACEHarness 运行记录界面截图">
+            <span class="product-pin run-pin p1">1</span>
+            <span class="product-pin run-pin p2">2</span>
+            <span class="product-pin run-pin p3">3</span>
+            <span class="product-pin run-pin p4">4</span>
+          </figure>
+          <div>
+            <div class="product-evidence-points">
+              <div class="product-evidence-point">
+                <b>01</b>
+                <strong>运行清单</strong>
+                <p>每次流程运行都有名称、用户、日期和进度，不再只留在聊天里。</p>
+              </div>
+              <div class="product-evidence-point">
+                <b>02</b>
+                <strong>状态与阶段</strong>
+                <p>已完成、已停止、人工审查等状态直接暴露流程卡点。</p>
+              </div>
+              <div class="product-evidence-point">
+                <b>03</b>
+                <strong>时间与进度</strong>
+                <p>按运行日期和完成度复盘效率、返工和异常节点。</p>
+              </div>
+              <div class="product-evidence-point">
+                <b>04</b>
+                <strong>追溯入口</strong>
+                <p>从运行记录进入工作台，继续查看日志、上下文和产出。</p>
+              </div>
+            </div>
+            <div class="evidence-result-strip" aria-label="运行记录支撑的可信交付目标">
+              <span>可追溯</span>
+              <span>可复盘</span>
+              <span>可审计</span>
+            </div>
           </div>
         </div>
 
