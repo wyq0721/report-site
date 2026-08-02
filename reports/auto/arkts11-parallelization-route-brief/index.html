@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArkTS 1.1 动态编译并行化路线汇报</title>
+<style>
+  :root {
+    --text: #1c1b19;
+    --text-2: #55524c;
+    --text-3: #8a867e;
+    --surface-0: #ffffff;
+    --surface-1: #faf9f7;
+    --surface-2: #f3f1ec;
+    --border: #e2ded6;
+    --border-strong: #cac4b8;
+    --border-stronger: #9a948a;
+    --accent: #2f5fa8;
+    --accent-bg: #eaf1fb;
+    --danger-bg: #fdeceb;
+    --danger-line: #d9a9a4;
+    --ok-line: #9db6d8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto;
+    padding: 40px 44px 64px;
+    max-width: 940px;
+    background: var(--surface-0);
+    color: var(--text);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14.5px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+  header.doc {
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 14px;
+    margin-bottom: 28px;
+  }
+  h1 { font-size: 25px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .meta { font-size: 12.5px; color: var(--text-3); line-height: 1.6; }
+  .meta code { background: var(--surface-2); padding: 1px 5px; border-radius: 3px; font-size: 11.5px; }
+  h2 {
+    font-size: 18px;
+    margin: 40px 0 14px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  h3 { font-size: 15px; margin: 26px 0 10px; color: var(--text); }
+  p { margin: 10px 0; }
+  strong { font-weight: 650; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 18px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--surface-2); font-weight: 620; white-space: nowrap; }
+  td.n, th.n { text-align: right; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: var(--surface-1); }
+  tr.hl td { background: var(--accent-bg); }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-bg);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+    page-break-inside: avoid;
+  }
+  .callout.warn { border-left-color: #c2564c; background: var(--danger-bg); }
+  .callout p { margin: 4px 0; }
+  ul, ol { margin: 10px 0; padding-left: 22px; }
+  li { margin: 5px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px;
+         background: var(--surface-2); padding: 1px 5px; border-radius: 3px; }
+  figure { margin: 20px 0 24px; page-break-inside: avoid; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 12px; color: var(--text-3); margin-top: 8px; text-align: center; }
+  footer.doc {
+    margin-top: 44px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-3); line-height: 1.65;
+  }
+  @media print {
+    body { padding: 0; font-size: 10.5pt; max-width: none; }
+    h2 { page-break-after: avoid; }
+    h3 { page-break-after: avoid; }
+    .callout, figure, table { page-break-inside: avoid; }
+    @page { margin: 16mm 14mm; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc">
+  <h1>ArkTS 1.1 动态编译并行化路线汇报</h1>
+  <div class="meta">
+    2026-08-02 ｜ 冻结检查点：<code>typescript-go@df146787</code>、<code>ets2bundle@5e52a36</code>、<code>third_party_typescript@5cff7e993</code>
+  </div>
+</header>
+
+<div class="callout">
+  <p style="font-size:15px"><strong>结论先行：可行性已经证明，收益尚未验证。</strong></p>
+  <p>Native 能否替代 legacy 产出同样结果 —— <strong>已证明</strong>（strict 诊断、emit 产物两项完成）；Native 内部并行是否有效、能否被 Node 主链遮蔽 —— <strong>已证明</strong>。</p>
+  <p>替换后端到端快多少、内存涨多少 —— <strong>两项均未知</strong>，因为至今没有删除任何 legacy 工作。<strong>E1 是从"可行"跨到"有收益"的第一步。</strong></p>
+</div>
+
+<h2>一、收益池：改什么才有意义</h2>
+
+<p>clean 全量基线 <strong>18,874 ms</strong>，峰值 RSS 2,232 MB（17 次真实构建，产物全部等价）。阶段名取自 Hvigor / compiler Trace：</p>
+
+<table>
+  <thead><tr><th>阶段</th><th>阶段内容</th><th class="n">中位数</th><th class="n">占比</th><th>判断</th></tr></thead>
+  <tbody>
+    <tr><td><code>etsChecker</code></td><td>Program 构造 + TypeScript 语义诊断 + ArkTS 规则</td><td class="n">5,294 ms</td><td class="n"><strong>28.05%</strong></td><td>主收益池</td></tr>
+    <tr><td><code>etsTransform</code></td><td>逐文件 rollup hook；其中 <code>tsProgramEmit</code> 占 4,155 ms</td><td class="n">4,609 ms</td><td class="n"><strong>24.42%</strong></td><td>主收益池</td></tr>
+    <tr><td><code>writeSourceFiles</code></td><td>Transform 产出的 JS/SourceMap 落盘为 es2abc 输入（含 OHM URL 改写、混淆写盘）</td><td class="n">1,410 ms</td><td class="n">7.47%</td><td>次要</td></tr>
+    <tr><td><code>es2abc</code></td><td>字节码后端，已用 12 file threads</td><td class="n">819 ms</td><td class="n">4.34%</td><td><strong>排除</strong>：归零也不足 5%</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Checker + emit 合计 50.06%</strong>，是唯一值得结构性改造的区域。Amdahl 上限：该范围加速 2/4/8 倍对应 1.33/1.60/1.78×（仅判断收益池大小，非收益预测）。</p>
+
+<p>Linter 关键会话 3,085 ms 内部：非严格语义诊断 2,217 ms、严格 470 ms、<strong>自定义 ArkTS 规则仅 274 ms</strong> —— 这条数据否决了"只移植 113 条 ArkTS 规则"的方案，覆盖不到 9%。</p>
+
+<h2>二、路线推导：A → B → C</h2>
+
+<p>三条路线不是并列尝试，而是一条被约束逐步逼出来的链：</p>
+
+<figure>
+<svg viewBox="0 0 780 512" xmlns="http://www.w3.org/2000/svg" role="img"
+     style="font-family: ui-sans-serif, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<title>ArkTS 1.1 并行化三条路线的推导链</title>
+<desc>从并行 Checker 出发，A 因 V8 对象图不可跨 isolate 复制被否决，B 因散点读取收益池仅 0.250% 被否决，两者交集推出唯一出口是换运行时，即 C。</desc>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M 0 1 L 9 5 L 0 9 z" fill="#9a948a"/>
+</marker>
+</defs>
+
+<rect x="40" y="14" width="700" height="42" rx="6" fill="#f3f1ec" stroke="#cac4b8"/>
+<text x="390" y="40" text-anchor="middle" font-size="13.5" font-weight="600" fill="#1c1b19">起点：clean 全量 18,874 ms　—　Checker 28.05% ＋ emit 22.01% ＝ 50.06% 收益池</text>
+<line x1="390" y1="56" x2="390" y2="72" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="40" y="76" width="228" height="68" rx="6" fill="#faf9f7" stroke="#e2ded6"/>
+<text x="56" y="103" font-size="13" font-weight="600" fill="#1c1b19">A｜JS 隔离副本 CheckerPool</text>
+<text x="56" y="124" font-size="12" fill="#55524c">N 个 isolate 各复制 Program/AST</text>
+<line x1="270" y1="110" x2="286" y2="110" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="288" y="76" width="228" height="68" rx="6" fill="#faf9f7" stroke="#e2ded6"/>
+<text x="304" y="103" font-size="13" fill="#1c1b19">V8 对象图不可跨 isolate</text>
+<text x="304" y="124" font-size="12" fill="#55524c">轻任务 RSS 已 +53.8% / +70.8%</text>
+<line x1="518" y1="110" x2="534" y2="110" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="536" y="76" width="204" height="68" rx="6" fill="#fdeceb" stroke="#d9a9a4"/>
+<text x="552" y="103" font-size="13" font-weight="600" fill="#1c1b19">✕ No-Go</text>
+<text x="552" y="124" font-size="12" fill="#55524c">内存 N 倍放大</text>
+
+<line x1="390" y1="144" x2="390" y2="158" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="390" y="177" text-anchor="middle" font-size="12.5" fill="#2f5fa8">⇒ 问题出在对象所有权模型，不是并行度不够</text>
+<line x1="390" y1="184" x2="390" y2="198" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="40" y="202" width="228" height="68" rx="6" fill="#faf9f7" stroke="#e2ded6"/>
+<text x="56" y="229" font-size="13" font-weight="600" fill="#1c1b19">B｜Checker-free Node Worker</text>
+<text x="56" y="250" font-size="12" fill="#55524c">只并行不碰 Checker 的工作</text>
+<line x1="270" y1="236" x2="286" y2="236" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="288" y="202" width="228" height="68" rx="6" fill="#faf9f7" stroke="#e2ded6"/>
+<text x="304" y="229" font-size="13" fill="#1c1b19">散点读取实测 0.250%</text>
+<text x="304" y="250" font-size="12" fill="#55524c">43,701 次 / 合计 41.2 ms</text>
+<line x1="518" y1="236" x2="534" y2="236" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="536" y="202" width="204" height="68" rx="6" fill="#fdeceb" stroke="#d9a9a4"/>
+<text x="552" y="229" font-size="13" font-weight="600" fill="#1c1b19">✕ 收益池不成立</text>
+<text x="552" y="250" font-size="12" fill="#55524c">端到端 −0.3% ～ −1.5%</text>
+
+<line x1="390" y1="270" x2="390" y2="284" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="390" y="303" text-anchor="middle" font-size="12.5" fill="#2f5fa8">⇒ 收益必须来自整体替换 Checker，散点迁移不成立</text>
+<text x="390" y="322" text-anchor="middle" font-size="11.5" fill="#8a867e">（副产物：拆出 Linter 3,085 ms ＝ TS 语义诊断 2,687 ＋ ArkTS 规则 274）</text>
+<line x1="390" y1="329" x2="390" y2="343" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="120" y="347" width="540" height="52" rx="6" fill="#f3f1ec" stroke="#cac4b8" stroke-dasharray="4 3"/>
+<text x="390" y="370" text-anchor="middle" font-size="13" font-weight="600" fill="#1c1b19">不能复制对象（A）　∧　不能绕开对象（B）</text>
+<text x="390" y="390" text-anchor="middle" font-size="12.5" fill="#55524c">⟹ 唯一出口：换一个能真正共享对象的运行时</text>
+<line x1="390" y1="399" x2="390" y2="415" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+
+<rect x="40" y="419" width="228" height="68" rx="6" fill="#eaf1fb" stroke="#9db6d8"/>
+<text x="56" y="446" font-size="13" font-weight="600" fill="#1c1b19">C｜TSGO Native Frontend</text>
+<text x="56" y="467" font-size="12" fill="#55524c">1 份共享 AST ＋ N 私有 Checker</text>
+<line x1="270" y1="453" x2="286" y2="453" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="288" y="419" width="228" height="68" rx="6" fill="#eaf1fb" stroke="#9db6d8"/>
+<text x="304" y="446" font-size="13" fill="#1c1b19">Checker 1.660× / emit 2.698×</text>
+<text x="304" y="467" font-size="12" fill="#55524c">1→4 Checker 内存仅 +7.4%</text>
+<line x1="518" y1="453" x2="534" y2="453" stroke="#9a948a" stroke-width="1.5" marker-end="url(#ar)"/>
+<rect x="536" y="419" width="204" height="68" rx="6" fill="#eaf1fb" stroke="#9db6d8"/>
+<text x="552" y="446" font-size="13" font-weight="600" fill="#1c1b19">✓ 主线</text>
+<text x="552" y="467" font-size="12" fill="#55524c">收益池 28.05% → 50.06%</text>
+
+<rect x="40" y="497" width="10" height="10" rx="2" fill="#fdeceb" stroke="#d9a9a4"/>
+<text x="56" y="506" font-size="11.5" fill="#8a867e">已否决</text>
+<rect x="112" y="497" width="10" height="10" rx="2" fill="#eaf1fb" stroke="#9db6d8"/>
+<text x="128" y="506" font-size="11.5" fill="#8a867e">主线</text>
+<text x="740" y="506" text-anchor="end" font-size="11.5" fill="#8a867e">每行：方案 → 阻断事实 / 实测 → 结论</text>
+</svg>
+<figcaption>三条路线的推导链：每行为「方案 → 阻断事实 / 实测 → 结论」，中间两处为推论，菱形为 A 与 B 的交集</figcaption>
+</figure>
+
+<p><strong>B 的工程资产没有作废，只是降级定位</strong>：SemanticFactTable（现 v11）、显式文件上下文、ProgramEpoch、确定性 Reducer、shadow/consume/fallback 三模式、fail-closed 整轮回退 —— 现在是 C 与 legacy Transform 之间的<strong>迁移 ABI</strong>，M5b-1f 就跑在这套设施上。</p>
+
+<h2>三、主线 C：替换进度一览</h2>
+
+<p>这条路线的本质是<strong>逐项删除 legacy 工作</strong>，所以进度只需看一张表：每项工作值多少时间、等价性验证到哪一步、是否已经真正删除。</p>
+
+<table>
+  <thead><tr>
+    <th>所属阶段<br><span style="font-weight:400;color:var(--text-3)">（第一节）</span></th>
+    <th>计划删除的 legacy 工作</th><th class="n">耗时 p50</th><th class="n">占端到端</th>
+    <th>等价性验证（能不能替换）</th><th class="n">已删除？</th><th class="n">兑现阶段</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td rowspan="4" style="vertical-align:middle"><code>etsChecker</code><br><span style="color:var(--text-3)">5,294 ms<br>28.05%</span></td>
+      <td>① Program 构造</td><td class="n">1,801 ms</td><td class="n">9.5%</td>
+      <td>— 无独立验证项，取决于消费者是否全部迁移</td>
+      <td class="n">✕</td><td class="n">E3</td>
+    </tr>
+    <tr>
+      <td>② non-strict 语义诊断</td><td class="n">2,217 ms</td><td class="n">11.7%</td>
+      <td>◐ 部分　raw 5 条正例全中，来源覆盖 0/3</td>
+      <td class="n">✕</td><td class="n">E2</td>
+    </tr>
+    <tr class="hl">
+      <td><strong>③ strict 语义诊断</strong></td><td class="n">470 ms</td><td class="n">2.5%</td>
+      <td><strong>✅ 已完成</strong>　647/647 文件，TP=321 / FP=0 / FN=0</td>
+      <td class="n"><strong>✕</strong></td><td class="n"><strong>E1（下一步）</strong></td>
+    </tr>
+    <tr>
+      <td>④ ArkTS 自定义规则</td><td class="n">274 ms</td><td class="n">1.5%</td>
+      <td>◐ 极少　规则 1/113</td>
+      <td class="n">✕</td><td class="n">E2</td>
+    </tr>
+    <tr style="background:var(--surface-2)">
+      <td colspan="2"><em>小计：已列入清单 / 该阶段总量</em></td>
+      <td class="n"><strong>4,762</strong> / 5,294 ms</td><td class="n">覆盖 90%</td>
+      <td colspan="3" style="color:var(--text-3)">余 532 ms 为 <code>collectAllFiles</code> / <code>traverseProgramSourceFiles</code> / <code>processBuildHap</code>，暂不在清单</td>
+    </tr>
+    <tr>
+      <td style="vertical-align:middle"><code>etsTransform</code><br><span style="color:var(--text-3)">4,609 ms<br>24.42%</span></td>
+      <td>⑤ TypeScript emit（<code>tsProgramEmit</code>）</td><td class="n">4,155 ms</td><td class="n">22.0%</td>
+      <td><strong>✅ 已完成</strong>　AST 2888/2888、es2abc 语义汇编一致、SourceMap 门禁通过</td>
+      <td class="n">✕</td><td class="n">E3</td>
+    </tr>
+    <tr style="background:var(--surface-2)">
+      <td colspan="2"><em>小计：已列入清单 / 该阶段总量</em></td>
+      <td class="n"><strong>4,155</strong> / 4,609 ms</td><td class="n">覆盖 90%</td>
+      <td colspan="3" style="color:var(--text-3)">余 454 ms 为 rollup hook 自身开销（<code>validateEts</code>、缓存判定、writeFile 回调）</td>
+    </tr>
+    <tr style="border-top:2px solid var(--border-strong)">
+      <td><strong>合计</strong></td><td><strong>两个主收益池</strong></td>
+      <td class="n"><strong>8,917 ms</strong></td><td class="n"><strong>47.2%</strong></td>
+      <td>2 项完成 / 2 项部分 / 1 项待定</td>
+      <td class="n"><strong>0 ms</strong></td><td class="n">—</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="font-size:12.5px;color:var(--text-3)">
+第一节的 <code>etsChecker</code> 28.05% ＋ <code>etsTransform</code> 中的 <code>tsProgramEmit</code> 22.01% ＝ 50.06% 收益池，对应本表 8,917 ms / 47.2%（差额为两阶段各约 10% 的非删除项）。①～⑤ 为构建中的实际执行顺序。
+</p>
+
+<div class="callout warn">
+  <p><strong>一句话读表：能替换的已经证明能替换，但"已删除"一列全是 ✕，所以端到端收益为 0。</strong></p>
+  <p>当前 Native 的 378.8 ms 全部是额外成本（双跑 +2.66%）。<strong>E1 是第一次真正删除 legacy 工作的实验</strong>，也是收益能否成立的第一个决定性验证。</p>
+</div>
+
+<p style="font-size:12.5px;color:var(--text-3)">
+表中「等价性验证」为 L2 口径 —— 产物与诊断按稳定身份逐项比对（运行时 AST、es2abc 函数体、SourceMap 逐段解码、TP/FP/FN），只证明<em>可以</em>替换，不证明替换后有多快；真实收益须由同一 Hvigor clean 构建内 control / shadow / consume / <strong>skip</strong> 交错的 L3 实验给出，当前只做到 shadow。Linter 三项子耗时取自 <code>ArkTSLinterTimePrinter</code> 那轮（CompileArkTS 16,502 ms），占比为近似。禁止把 legacy 全链 18,806 ms ÷ Native 影子 365 ms 当作加速比。
+</p>
+
+<h3>并行度选择：3 Checker 是拐点</h3>
+
+<table>
+  <thead><tr>
+    <th class="n">Checker 数</th><th class="n">Wall p50</th><th class="n">相对 1</th>
+    <th class="n">峰值 RSS</th><th class="n">RSS 增量</th><th class="n">边际效率</th>
+  </tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td class="n">452.7 ms</td><td class="n">1.000×</td><td class="n">422.5 MB</td><td class="n">—</td><td class="n">—</td></tr>
+    <tr><td class="n">2</td><td class="n">329.4 ms</td><td class="n">1.374×（−27.2%）</td><td class="n">436.9 MB</td><td class="n">+3.4%</td><td class="n">8.6 ms/MB</td></tr>
+    <tr class="hl"><td class="n"><strong>3</strong></td><td class="n">288.2 ms</td><td class="n"><strong>1.571×（−36.3%）</strong></td><td class="n">443.2 MB</td><td class="n"><strong>+4.9%</strong></td><td class="n">6.5 ms/MB</td></tr>
+    <tr><td class="n">4</td><td class="n">272.8 ms</td><td class="n">1.660×（−39.7%）</td><td class="n">453.6 MB</td><td class="n">+7.4%</td><td class="n"><strong>1.5 ms/MB</strong></td></tr>
+  </tbody>
+</table>
+
+<p>3→4 只再省 15.4 ms 却要多花 10.4 MB，边际效率断崖式下降，因此 <strong>3 Checker 为推荐默认</strong>。并行收益主要来自 non-strict check（1→3 为 2.55×）；叠加首条 ArkTS 规则后曲线未被破坏（相对 control 仅 −0.78% wall、+0.58% RSS，噪声内）。</p>
+
+<div class="callout warn">
+  <p><strong>限定</strong>：上表 RSS 只是 Native 进程自身。过渡期 Node Program 与 Native Program 并存，<strong>双前端峰值尚未采到</strong>（沙箱禁 <code>ps</code>），正式门禁"替换态 RSS ≤ legacy+10%"目前无法验证。</p>
+</div>
+
+<h2>四、里程碑、待批资源与决策点</h2>
+
+<h3>4.1　里程碑：每一步删掉什么、值多少</h3>
+
+<table>
+  <thead><tr><th class="n">阶段</th><th>删除的 legacy 工作</th><th class="n">累计毛收益</th><th>前置条件</th></tr></thead>
+  <tbody>
+    <tr class="hl">
+      <td class="n"><strong>E1</strong><br><span style="color:var(--text-3)">下一步</span></td>
+      <td>③ strict 语义诊断</td>
+      <td class="n"><strong>470 ms<br>≈ 2.5%</strong></td>
+      <td>冻结 M5b-1f；把 Native 结果提前到 Linter 边界前交付</td>
+    </tr>
+    <tr>
+      <td class="n"><strong>E2</strong></td>
+      <td>完整 <code>runArkTSLinter</code>（②③④）</td>
+      <td class="n">≈ 3.0 s<br>≈ 16%</td>
+      <td>non-strict 语义 + 113 条 ArkTS 规则全部等价</td>
+    </tr>
+    <tr>
+      <td class="n"><strong>E3</strong></td>
+      <td>＋① Program 构造　＋⑤ TypeScript emit</td>
+      <td class="n">≈ 8.9 s<br>≈ 47%</td>
+      <td>Native transform / emit 接管全部 Program 消费者</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout warn">
+  <p><strong>「毛收益」不等于净收益。</strong>它只是阶段耗时上限，实际还要扣掉 Native 未被 Node 主链遮蔽的尾部。E1 另有一项特殊风险：strict 与 non-strict 共享惰性类型缓存，strict 一旦关闭，原本由它承担的部分共享成本会转移到 non-strict，<strong>净收益可能明显小于 470 ms</strong>。</p>
+  <p>因此建议以<strong>「Trace 中 strict 阶段是否真的消失」</strong>作为 E1 的成败判据，而不是以 2.5% 这个数字作为路线存废依据。</p>
+</div>
+
+<h3>4.2　需要批准的资源</h3>
+
+<table>
+  <thead><tr><th>资源</th><th>阻塞什么</th><th class="n">最晚需要</th></tr></thead>
+  <tbody>
+    <tr class="hl"><td><strong>只读进程表采样权限</strong></td>
+      <td><strong>硬阻塞</strong> —— 替换态 RSS 无法采样，"≤ legacy+10%"这条正式切换门禁<strong>永远过不了</strong>，与路线选择无关</td>
+      <td class="n">E1</td></tr>
+    <tr><td>Git 写入审批额度</td>
+      <td>M5b-1f 无法冻结（12 项兼容门禁已过，仅差此项），后续改动只能继续堆在同一未提交 diff 上</td>
+      <td class="n">立即</td></tr>
+    <tr><td>真机 <code>hdc</code> 设备 ＋ 一个真实业务工程</td>
+      <td>设备断点 / 单步 / 异常栈验证；以及用非模板工程复核 Mock 上的 <code>complete=true</code> 是否过拟合</td>
+      <td class="n">E2</td></tr>
+  </tbody>
+</table>
+
+<h3>4.3　正式切换门禁（不放宽）</h3>
+
+<p>Checker clean 端到端 <strong>≥15%</strong>；Checker＋emit <strong>≥25%</strong>；替换态峰值 RSS <strong>≤ legacy+10%</strong>；诊断全等或有审批差异账本；JS 按字节一致且 SourceMap 通过设备调试验证；<code>checkers=1/2/3/4</code> 结果一致；任何协议 / epoch / SDK / 事实缺失均整轮回退 legacy；影子模式先跑真实工程与 CI 矩阵，再开放默认开关。</p>
+
+<h3>4.4　请决策层拍板</h3>
+
+<ol>
+  <li><strong>批准 4.2 的三项资源</strong> —— 其中第一项是硬阻塞：拿不到它，无论走哪条路线都无法通过正式切换门禁。</li>
+  <li><strong>默认并行度定为 3 Checker</strong>（+4.9% 内存换 36.3% 前端加速）；是否为高配机型保留 4 Checker 自适应，需结合低内存机型策略一并决定。</li>
+  <li><strong>认可以「机制事实」而非「首个数字」作为 E1 判据</strong> —— 见 4.1 说明。</li>
+</ol>
+
+<p style="font-size:12.5px;color:var(--text-3)">
+过程质量说明：实验推进中已发生并纠正三次归因事故（包络计时冒充 self time、混合版本基线产生假诊断、raw 与 observable 诊断混淆），对应的口径禁令已固化进实验协议 —— 调用次数与诊断条数均不作耗时代理，Go GC 堆不等价于进程树 RSS，跨口径数值不得相除或相乘。
+</p>
+
+<footer class="doc">
+  适用边界：24 GiB / 12 核单机、macOS、Debug 单 HAP、ESMODULE、生成的大型 Stage Mock（2888 文件），不代表具体业务仓，不外推 Release / HSP / 多模块 / 真机。本报告只讨论 clean 全量场景；增量场景的持久 Checker 状态复用另议。详版见 <code>docs/arkts11-parallelization-route-review.md</code>。
+</footer>
+
+</body>
+</html>

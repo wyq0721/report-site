@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25 16:53:18",
+  "generated_at": "2026-08-02 21:29:37",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -37,6 +37,14 @@
       "source_name": "ai-native-aar.html",
       "title": "AI-Native 开发负向经验复盘（AAR）",
       "updated_at": "2026-07-13 15:36:09"
+    },
+    "arkts11-parallelization-route-brief.html": {
+      "assets": [],
+      "sha256": "5c4d4ea82a09059ae391788d7fdcf2a6a60e5d55848503c3cf98eeff5b3a7cf7",
+      "slug": "arkts11-parallelization-route-brief",
+      "source_name": "arkts11-parallelization-route-brief.html",
+      "title": "ArkTS 1.1 动态编译并行化路线汇报",
+      "updated_at": "2026-08-02 21:29:37"
     },
     "cangjie-codegen-error-analysis.html": {
       "sha256": "c05fad9649ea23d152a6a950641db145f4b517e521f15537828eaabc6e386199",
