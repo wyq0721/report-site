@@ -1,0 +1,18 @@
+reports/auto/index.html
+  h_1c4130738e87fa 34-38,95
+reports/auto/publish-state.json
+  h_1c4130738e87fa 2,91-98
+reports/auto/report-3615c52ef1/index.html
+  h_1c4130738e87fa 1-902
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "5bb4078bb09257f71f136628cb82619019fbe122",
+  "prompts": {},
+  "humans": {
+    "h_1c4130738e87fa": {
+      "author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
