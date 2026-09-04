@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="兼容性检测技术评审四条遗留意见的答复正式稿，含四页汇报材料与需求规格声明。">
+<title>评审四问答复素材</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --ground: #F2F5F6; --surface: #FFFFFF; --surface-2: #E9EEF0;
+  --ink: #16212B; --ink-2: #4C5D68; --ink-3: #5F7079;
+  --rule: #D5DEE2; --rule-strong: #B9C7CD;
+  --accent: #1C5E7A; --accent-soft: #DCEAF0;
+  --v-reject: #9B3B2E; --v-reject-soft: #F5E2DE;
+  --v-partial: #8A5C15; --v-partial-soft: #F6EBD9;
+  --v-build: #2A6650; --v-build-soft: #DEEDE6;
+  --v-d: #5A4A7A; --v-d-soft: #E9E4F2;
+  --f-sans: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
+  --measure: 76ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E1418; --surface: #151E23; --surface-2: #1C282E;
+    --ink: #E3EBEF; --ink-2: #9DAFB8; --ink-3: #8598A1;
+    --rule: #26343B; --rule-strong: #35474F;
+    --accent: #6DB6D1; --accent-soft: #17323E;
+    --v-reject: #E08977; --v-reject-soft: #3A211C;
+    --v-partial: #D9A75C; --v-partial-soft: #362A15;
+    --v-build: #74BFA1; --v-build-soft: #163027;
+    --v-d: #B0A0CE; --v-d-soft: #262036;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0E1418; --surface: #151E23; --surface-2: #1C282E;
+  --ink: #E3EBEF; --ink-2: #9DAFB8; --ink-3: #8598A1;
+  --rule: #26343B; --rule-strong: #35474F;
+  --accent: #6DB6D1; --accent-soft: #17323E;
+  --v-reject: #E08977; --v-reject-soft: #3A211C;
+  --v-partial: #D9A75C; --v-partial-soft: #362A15;
+  --v-build: #74BFA1; --v-build-soft: #163027;
+  --v-d: #B0A0CE; --v-d-soft: #262036;
+}
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font-family: var(--f-sans); font-size: 15px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1140px; margin: 0 auto; padding: 52px 28px 96px; }
+
+.masthead { border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+.eyebrow { font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.masthead h1 { font-size: clamp(28px, 4.5vw, 40px); line-height: 1.18; font-weight: 700; letter-spacing: -0.015em; margin: 10px 0 12px; text-wrap: balance; }
+.standfirst { max-width: var(--measure); color: var(--ink-2); margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); }
+.meta b { color: var(--ink-2); font-weight: 500; }
+
+.slide { margin-top: 64px; border-top: 1px solid var(--rule-strong); padding-top: 26px; }
+.slide-tag { display: inline-block; font-family: var(--f-mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 3px; }
+.slide h2 { font-size: clamp(21px, 2.8vw, 27px); font-weight: 600; line-height: 1.32; letter-spacing: -0.01em; margin: 14px 0 6px; text-wrap: balance; }
+.slide .sub { color: var(--ink-2); font-size: 14.5px; margin: 0 0 8px; max-width: var(--measure); }
+
+.figbox { background: #FFFFFF; border: 1px solid var(--rule); border-radius: 5px; padding: 14px; margin: 22px 0 10px; overflow-x: auto; }
+.figbox svg { display: block; width: 100%; height: auto; min-width: 780px; }
+.figcap { font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-3); margin: 0 0 26px; }
+.figcap b { color: var(--ink-2); font-weight: 500; }
+
+h3 { font-size: 12px; font-family: var(--f-mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin: 30px 0 12px; padding-bottom: 7px; border-bottom: 1px solid var(--rule); }
+p { max-width: var(--measure); }
+ul, ol { max-width: var(--measure); padding-left: 20px; margin: 12px 0; }
+li { margin-bottom: 8px; }
+li::marker { color: var(--ink-3); }
+code, .mono { font-family: var(--f-mono); font-size: 0.88em; background: var(--surface-2); padding: 1px 5px; border-radius: 3px; word-break: break-word; }
+strong { font-weight: 600; }
+
+.tw { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); margin: 14px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 560px; }
+th { text-align: left; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3); padding: 11px 14px; border-bottom: 1px solid var(--rule-strong); white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.6; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.path { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); }
+.tag { font-family: var(--f-mono); font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 3px; white-space: nowrap; }
+.tag.have { background: var(--v-build-soft); color: var(--v-build); }
+.tag.gap { background: var(--v-reject-soft); color: var(--v-reject); }
+.tag.part { background: var(--v-partial-soft); color: var(--v-partial); }
+.tag.d { background: var(--v-d-soft); color: var(--v-d); }
+
+.spec { border: 1px solid var(--accent); border-left: 4px solid var(--accent); background: var(--surface); padding: 18px 22px; margin: 18px 0; max-width: none; }
+.spec .lbl { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); font-weight: 600; display: block; margin-bottom: 12px; }
+.spec p { margin: 0 0 11px; font-size: 14px; line-height: 1.85; max-width: none; }
+.spec p:last-child { margin-bottom: 0; }
+
+.callout { border-left: 3px solid var(--v-partial); background: var(--v-partial-soft); padding: 14px 18px; margin: 20px 0; max-width: var(--measure); }
+.callout p { margin: 0; font-size: 14px; }
+.callout .lbl { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--v-partial); display: block; margin-bottom: 6px; font-weight: 600; }
+
+footer { margin-top: 64px; padding-top: 18px; border-top: 2px solid var(--ink); font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-3); line-height: 1.8; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<style>
+  /* 独立文件补充：基础重置 + 打印样式 */
+  html { color-scheme: light dark; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+
+  @media print {
+    :root {
+      --ground:#FFFFFF; --surface:#FFFFFF; --surface-2:#F0F3F4;
+      --ink:#16212B; --ink-2:#3C4C56; --ink-3:#4E5F68;
+      --rule:#C9D4D9; --rule-strong:#A9B8BF;
+      --accent:#14495E; --accent-soft:#E6F0F4;
+      --v-reject:#8A3327; --v-reject-soft:#F7E8E4;
+      --v-partial:#7A5012; --v-partial-soft:#F8EFDF;
+      --v-build:#235544; --v-build-soft:#E4F0EA;
+      --v-d:#4C3E68; --v-d-soft:#EEEAF5;
+    }
+    body { background:#fff; font-size: 10.5pt; }
+    .wrap { max-width: none; padding: 0; }
+    .slide { break-before: page; page-break-before: always; margin-top: 0; padding-top: 8mm; border-top: none; }
+    .masthead + section.slide { break-before: auto; page-break-before: auto; }
+    .figbox { break-inside: avoid; page-break-inside: avoid; border-color:#C9D4D9; }
+    .figbox svg { min-width: 0; }
+    .spec, .callout { break-inside: avoid; page-break-inside: avoid; }
+    tr, li { break-inside: avoid; page-break-inside: avoid; }
+    h2, h3 { break-after: avoid; page-break-after: avoid; }
+    footer { break-before: avoid; page-break-before: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+
+  @page { size: A4 landscape; margin: 12mm; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <span class="eyebrow">技术评审 · 遗留问题答复 · 正式稿</span>
+  <h1>评审四问答复素材</h1>
+  <p class="standfirst">四页汇报材料，每页含一张主图与对应讲稿。图片已导出为 PNG 与 SVG 两种格式，可直接置入 PPT；三段需求规格声明可直接粘贴进 SR 需求描述。</p>
+  <div class="meta">
+    <span><b>数据核查</b> 2026-09-03 / 09-04</span>
+    <span><b>后台</b> 只读核查，未做写操作</span>
+    <span><b>图片</b> PNG（2 倍图）＋ SVG（矢量）</span>
+    <span><b>状态</b> 经独立审计复核后修订</span>
+  </div>
+</header>
+
+<!-- ============ 第 1 页 ============ -->
+<section class="slide">
+  <span class="slide-tag">第 1 页</span>
+  <h2>「多设备同一接口」场景的处理结论</h2>
+  <p class="sub">设备类型级已有官方对照表，纳入支持；产品机型级无数据源，明确不支持并写入规格</p>
+
+  <div class="figbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif">
+  <rect width="1200" height="700" fill="#FFFFFF"/>
+
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#16212B">「多设备同一接口」场景：判据落点分析</text>
+  <text x="40" y="76" font-size="15" fill="#5F7079">该场景含两层判据：设备类型级已有官方对照表可判；产品机型级无数据源，不纳入本期</text>
+
+  <!-- 证据边界之内 -->
+  <rect x="40" y="108" width="600" height="404" rx="8" fill="#F2F5F6" stroke="#1C5E7A" stroke-width="2"/>
+  <text x="62" y="138" font-size="16" font-weight="700" fill="#1C5E7A">检测证据边界之内　·　本期支持</text>
+  <text x="62" y="160" font-size="12.5" fill="#5F7079">PR diff ＋ 63 个纳入索引的镜像源码仓 ＋ 339 万条索引</text>
+
+  <g>
+    <rect x="62" y="176" width="556" height="66" rx="4" fill="#FFFFFF" stroke="#2A6650" stroke-width="1.5"/>
+    <rect x="62" y="176" width="4" height="66" fill="#2A6650"/>
+    <text x="82" y="202" font-size="15" font-weight="600" fill="#16212B">设备类型 → SysCap 官方对照表</text>
+    <text x="82" y="226" font-size="11.5" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">device-define/*.json · 6 类设备 · 每类 185–233 条能力</text>
+    <rect x="500" y="192" width="100" height="24" rx="3" fill="#DEEDE6"/>
+    <text x="550" y="209" font-size="12" font-weight="600" fill="#2A6650" text-anchor="middle">可判定</text>
+  </g>
+
+  <g>
+    <rect x="62" y="250" width="556" height="66" rx="4" fill="#FFFFFF" stroke="#D5DEE2"/>
+    <rect x="62" y="250" width="4" height="66" fill="#2A6650"/>
+    <text x="82" y="276" font-size="15" font-weight="600" fill="#16212B">@syscap 能力标注</text>
+    <text x="82" y="300" font-size="11.5" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">126,048 处标注行 · 已有成文规则与查询入口</text>
+    <rect x="500" y="266" width="100" height="24" rx="3" fill="#DEEDE6"/>
+    <text x="550" y="283" font-size="12" font-weight="600" fill="#2A6650" text-anchor="middle">可判定</text>
+  </g>
+
+  <g>
+    <rect x="62" y="324" width="556" height="66" rx="4" fill="#FFFFFF" stroke="#D5DEE2"/>
+    <rect x="62" y="324" width="4" height="66" fill="#8A5C15"/>
+    <text x="82" y="350" font-size="15" font-weight="600" fill="#16212B">deviceTypes 设备类型声明</text>
+    <text x="82" y="374" font-size="11.5" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">518 / 518 个 module.json5 全覆盖（值待抽取）</text>
+    <rect x="470" y="340" width="130" height="24" rx="3" fill="#F6EBD9"/>
+    <text x="535" y="357" font-size="12" font-weight="600" fill="#8A5C15" text-anchor="middle">可判定 · 待补抽取</text>
+  </g>
+
+  <g>
+    <rect x="62" y="398" width="556" height="66" rx="4" fill="#FFFFFF" stroke="#D5DEE2"/>
+    <rect x="62" y="398" width="4" height="66" fill="#2A6650"/>
+    <text x="82" y="424" font-size="15" font-weight="600" fill="#16212B">条件编译平台视图 @When</text>
+    <text x="82" y="448" font-size="11.5" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">801 条 · 全为构建期条件，无机型维度</text>
+    <rect x="500" y="414" width="100" height="24" rx="3" fill="#DEEDE6"/>
+    <text x="550" y="431" font-size="12" font-weight="600" fill="#2A6650" text-anchor="middle">可判定</text>
+  </g>
+
+  <text x="62" y="490" font-size="13" fill="#2A6650" font-weight="600">↑ 覆盖「接口在某类设备上是否可见」，含手机 / 平板 / 穿戴 / TV / 2in1 差异</text>
+
+  <!-- 断链 -->
+  <line x1="750" y1="310" x2="672" y2="310" stroke="#9B3B2E" stroke-width="2" stroke-dasharray="6 5"/>
+  <polygon points="660,310 674,304 674,316" fill="#9B3B2E"/>
+  <circle cx="711" cy="310" r="15" fill="#FFFFFF" stroke="#9B3B2E" stroke-width="2"/>
+  <path d="M705 304 L717 316 M717 304 L705 316" stroke="#9B3B2E" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="711" y="351" font-size="12.5" font-weight="600" fill="#9B3B2E" text-anchor="middle">无数据源</text>
+  <text x="711" y="369" font-size="11.5" fill="#5F7079" text-anchor="middle">无法取证</text>
+
+  <!-- 边界之外 -->
+  <rect x="760" y="108" width="400" height="404" rx="8" fill="#FDF6F5" stroke="#9B3B2E" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="782" y="138" font-size="16" font-weight="700" fill="#9B3B2E">边界之外　·　本期不支持</text>
+  <text x="782" y="160" font-size="12.5" fill="#5F7079">仅指同一设备类型内的产品机型差异</text>
+
+  <rect x="782" y="176" width="356" height="288" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+  <text x="802" y="204" font-size="15" font-weight="600" fill="#16212B">产品机型级硬件能力差异</text>
+  <text x="802" y="232" font-size="13" fill="#4C5D68">评审示例的严格读法：同为手机，</text>
+  <text x="802" y="253" font-size="13" fill="#4C5D68">A 机型有 NFC，B 机型没有</text>
+  <line x1="802" y1="272" x2="1118" y2="272" stroke="#E8CFC9"/>
+  <text x="802" y="298" font-size="13" fill="#9B3B2E">✕　无机型级 SysCap 实例化数据</text>
+  <text x="802" y="324" font-size="13" fill="#9B3B2E">✕　该数据不随 PR 变更</text>
+  <text x="802" y="350" font-size="13" fill="#4C5D68">官方对照表止于设备类型粒度，</text>
+  <text x="802" y="371" font-size="13" fill="#4C5D68">未细化到厂商具体产品机型；</text>
+  <text x="802" y="392" font-size="13" fill="#4C5D68">同类型内各机型的实际能力集</text>
+  <text x="802" y="413" font-size="13" fill="#4C5D68">由厂商 ROM 决定，不公开发布</text>
+  <line x1="802" y1="430" x2="1118" y2="430" stroke="#E8CFC9"/>
+  <text x="802" y="452" font-size="12.5" fill="#5F7079">若同为「手机 vs 穿戴」，属左侧可判范围</text>
+
+  <!-- 结论 -->
+  <rect x="40" y="540" width="1120" height="116" rx="6" fill="#16212B"/>
+  <text x="66" y="576" font-size="16" font-weight="700" fill="#FFFFFF">结论：设备类型级可判并已纳入；产品机型级判据无数据源，强判只能靠猜测，必然误报</text>
+  <text x="66" y="608" font-size="14" fill="#9DAFB8">需求规格中显式声明：本期<tspan fill="#E08977" font-weight="600">不支持「产品机型级硬件能力差异」检测</tspan>；支持范围为设备类型级可见性契约（SysCap 标注、deviceTypes、平台视图）</text>
+  <text x="66" y="636" font-size="13" fill="#778A94">若后续能提供机型级 SysCap 实例化数据，可作为独立需求另行评估立项</text>
+</svg></div>
+  <p class="figcap"><b>配图</b>　p1-multi-device-scope.png　（1200 × 700，2 倍图 2400 × 1400）</p>
+
+  <h3>讲稿一：先拆场景，判据分两层且粒度不同</h3>
+  <p>评审提出的「多设备同一接口」，按粒度可以拆成两层。<strong>这一步必须先讲清楚</strong>，否则容易被理解成整个场景都做不了：</p>
+  <ul>
+    <li><strong>设备类型级（手机 / 平板 / 穿戴 / TV / 2in1 / 轻穿戴）</strong>：SDK 中有官方对照表 <code>interface_sdk-js/api/device-define/*.json</code>，六类设备各自枚举支持的最小系统能力集（每类 185–233 条 SysCap）。该表已随源码镜像并已入索引。<strong>这一层本期支持</strong>。</li>
+    <li><strong>产品机型级（同为手机的 A 机型与 B 机型）</strong>：官方对照表止于设备类型粒度，未细化到厂商具体产品机型。同类型内各机型的实际能力集由厂商 ROM 决定，不公开发布。<strong>这一层本期不支持</strong>。</li>
+  </ul>
+  <p>评审举的 NFC 例子，按严格读法（同为手机的两个机型）落在第二层。若实际指的是「手机有、穿戴没有」这类跨设备类型差异，则落在第一层，<strong>我们现在就能检</strong>。</p>
+
+  <h3>讲稿二：不支持产品机型级的三条理由</h3>
+  <ol>
+    <li><strong>官方数据止于设备类型粒度。</strong>SDK 提供的是「设备类型 → 能力集」映射，没有「产品机型 → 能力集」这一层。这是数据本身的粒度上限，不是检索没做到。</li>
+    <li><strong>机型级能力不随 PR 变更。</strong>它由厂商 ROM 在出厂时确定，与代码仓的任何提交无关。而兼容性结论的一等证据边界是当前 PR 的真实改动，因此无论 PR 怎么变，都取不到这个判据。</li>
+    <li><strong>无可替代的取证路径。</strong>在缺数据的前提下强判，只能退化为模型推测。系统现行护栏要求证据不足时给保守结论，强判必然产生误报，直接冲击 SR2 的准确率目标。</li>
+  </ol>
+
+  <h3>讲稿三：支持与不支持的分界（防止被追问时含糊）</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>判据</th><th>载体与规模</th><th>本期结论</th></tr></thead>
+      <tbody>
+        <tr><td>设备类型 → SysCap 官方对照表</td><td class="path">device-define/*.json · 6 类设备 · 每类 185–233 条能力</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td><code>@syscap</code> 系统能力标注变更</td><td class="path">126,048 标注行 · 已有成文规则与查询入口</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td><code>deviceTypes</code> 设备类型声明收缩</td><td class="path">518 / 518 个 module.json5 全覆盖</td><td><span class="tag part">支持（需补抽取器）</span></td></tr>
+        <tr><td><code>@When</code> 平台可见性收缩</td><td class="path">801 条 · 全为构建期条件，无机型维度</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td>产品机型级硬件能力差异</td><td class="path">无机型级能力实例化数据</td><td><span class="tag gap">不支持</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>需求规格声明（可直接粘贴进 SR 需求描述）</h3>
+  <div class="spec">
+    <span class="lbl">【设备维度支持范围声明】</span>
+    <p>本需求的 API 兼容性检测基于 PR 代码变更进行静态分析，检测依据限定于代码仓内容与 PR diff 范围。</p>
+    <p><strong>（一）支持范围。</strong>设备相关的检测限于以下三项声明侧契约：接口 SystemCapability 系统能力标注的变更；应用配置 <code>module.json5</code> 中 <code>deviceTypes</code> 设备类型声明的收缩；条件编译导致的平台可见性收缩。判定粒度为<strong>设备类型级</strong>（手机、平板、穿戴、轻穿戴、TV、2in1），依据为 SDK 中随版本发布的设备类型能力对照表。</p>
+    <p><strong>（二）不支持范围。</strong>产品机型级硬件能力差异检测，即同一设备类型内不同厂商产品机型之间，因硬件配置差异（如 NFC、UWB 等）导致的接口可用性不同。原因是官方能力对照表止于设备类型粒度，机型级能力集由厂商 ROM 决定且不公开发布，亦不随 PR 变更，检测系统无取证途径。</p>
+    <p><strong>（三）后续演进。</strong>若能够提供产品机型级的 SystemCapability 实例化数据，机型级能力差异检测可作为独立需求另行评估立项。</p>
+  </div>
+</section>
+
+<!-- ============ 第 2 页 ============ -->
+<section class="slide">
+  <span class="slide-tag">第 2 页</span>
+  <h2>检测能力全景：四类场景与支持规格</h2>
+  <p class="sub">以白名单与黑名单方式，明确每类场景的检测逻辑、证据支撑与建设状态</p>
+
+  <div class="figbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1760 900" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif">
+  <rect width="1760" height="900" fill="#FFFFFF"/>
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <polygon points="0,0 9,4.5 0,9" fill="#1C5E7A"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#16212B">API 兼容性检测能力全景：四类场景与支持规格</text>
+  <text x="40" y="76" font-size="15" fill="#5F7079">按「调用方如何依赖契约」划分场景，每类给出检测逻辑、证据支撑与建设状态；不支持项以黑名单显式声明</text>
+
+  <!-- 取证流水线 -->
+  <rect x="40" y="100" width="1680" height="72" rx="6" fill="#F2F5F6" stroke="#D5DEE2"/>
+  <text x="58" y="126" font-size="12" font-weight="700" fill="#5F7079" letter-spacing="1">统 一 取 证 前 置 流 水 线</text>
+  <g font-size="13.5" fill="#16212B">
+    <rect x="58" y="134" width="200" height="26" rx="3" fill="#FFFFFF" stroke="#B9C7CD"/>
+    <text x="158" y="152" text-anchor="middle">① PR 链接（唯一输入）</text>
+    <line x1="266" y1="147" x2="292" y2="147" stroke="#1C5E7A" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="300" y="134" width="200" height="26" rx="3" fill="#FFFFFF" stroke="#B9C7CD"/>
+    <text x="400" y="152" text-anchor="middle">② 固化 diff 证据边界</text>
+    <line x1="508" y1="147" x2="534" y2="147" stroke="#1C5E7A" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="542" y="134" width="214" height="26" rx="3" fill="#FFFFFF" stroke="#B9C7CD"/>
+    <text x="649" y="152" text-anchor="middle">③ diff_events 事件分类</text>
+    <line x1="764" y1="147" x2="790" y2="147" stroke="#1C5E7A" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="798" y="134" width="200" height="26" rx="3" fill="#FFFFFF" stroke="#B9C7CD"/>
+    <text x="898" y="152" text-anchor="middle">④ 按命中维度路由</text>
+    <line x1="1006" y1="147" x2="1032" y2="147" stroke="#1C5E7A" stroke-width="1.6" marker-end="url(#ar)"/>
+    <rect x="1040" y="134" width="662" height="26" rx="3" fill="#DCEAF0" stroke="#1C5E7A"/>
+    <text x="1371" y="152" text-anchor="middle" font-weight="600" fill="#1C5E7A">分流至下列四类场景（可并行）</text>
+  </g>
+
+  <!-- ============ A ============ -->
+  <rect x="40" y="196" width="400" height="470" rx="6" fill="#FFFFFF" stroke="#2A6650" stroke-width="1.5"/>
+  <rect x="40" y="196" width="400" height="58" rx="6" fill="#2A6650"/>
+  <rect x="40" y="242" width="400" height="12" fill="#2A6650"/>
+  <text x="58" y="224" font-size="16.5" font-weight="700" fill="#FFFFFF">A｜直接符号依赖</text>
+  <text x="58" y="244" font-size="11.5" fill="#C7E0D5">显式函数调用 / 链接消费　·　已建成</text>
+
+  <g font-size="13">
+    <text x="58" y="284" font-weight="600" fill="#16212B">.cj 公开 API 声明</text>
+    <text x="58" y="304" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">cj_decl_index 45,552 · 规则 p01–p10</text>
+    <line x1="58" y1="316" x2="422" y2="316" stroke="#E4EAEC"/>
+    <text x="58" y="340" font-weight="600" fill="#16212B">C/C++ 头文件 · ABI · 布局</text>
+    <text x="58" y="360" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">abi_layout_fingerprint 109,918</text>
+    <line x1="58" y1="372" x2="422" y2="372" stroke="#E4EAEC"/>
+    <text x="58" y="396" font-weight="600" fill="#16212B">mangling · 调用约定</text>
+    <text x="58" y="416" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">knowledge/contracts 契约表</text>
+    <line x1="58" y1="428" x2="422" y2="428" stroke="#E4EAEC"/>
+    <text x="58" y="452" font-weight="600" fill="#16212B">FFI · NAPI · ANI 符号</text>
+    <text x="58" y="472" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">ffi_native_index 14,950</text>
+    <line x1="58" y1="484" x2="422" y2="484" stroke="#E4EAEC"/>
+    <text x="58" y="508" font-weight="600" fill="#16212B">公开契约面 · 虚表继承面</text>
+    <text x="58" y="528" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">public_contract_index 12,328</text>
+  </g>
+  <rect x="56" y="550" width="368" height="100" rx="4" fill="#F2F7F5" stroke="#C7E0D5"/>
+  <text x="70" y="574" font-size="11.5" font-weight="700" fill="#2A6650">检测逻辑</text>
+  <text x="70" y="597" font-size="12" fill="#16212B">符号级 diff → 关系图定位调用方</text>
+  <text x="70" y="619" font-size="12" fill="#16212B">→ 组合 head 下判断是否已适配</text>
+  <text x="70" y="640" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">consumer_relation 241,409 边</text>
+
+  <!-- ============ B ============ -->
+  <rect x="460" y="196" width="400" height="470" rx="6" fill="#FFFFFF" stroke="#8A5C15" stroke-width="1.5"/>
+  <rect x="460" y="196" width="400" height="58" rx="6" fill="#8A5C15"/>
+  <rect x="460" y="242" width="400" height="12" fill="#8A5C15"/>
+  <text x="478" y="224" font-size="16.5" font-weight="700" fill="#FFFFFF">B｜非直接符号依赖</text>
+  <text x="478" y="244" font-size="11.5" fill="#F0E0C4">消息 / 协议 / 产物消费　·　部分待建</text>
+
+  <g font-size="13">
+    <text x="478" y="284" font-weight="600" fill="#16212B">IPC · Parcel 序列化格式</text>
+    <text x="478" y="304" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">wire_format 764 条 · 四类混用核对规则</text>
+    <line x1="478" y1="316" x2="842" y2="316" stroke="#E4EAEC"/>
+    <text x="478" y="340" font-weight="600" fill="#16212B">消息 · 事件契约</text>
+    <text x="478" y="360" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">CommonEvent / emitter / EventHub</text>
+    <rect x="746" y="326" width="96" height="22" rx="3" fill="#F6EBD9"/>
+    <text x="794" y="342" font-size="11" font-weight="600" fill="#8A5C15" text-anchor="middle">本期新建</text>
+    <line x1="478" y1="372" x2="842" y2="372" stroke="#E4EAEC"/>
+    <text x="478" y="396" font-weight="600" fill="#16212B">工具输出 · 生成物契约</text>
+    <text x="478" y="416" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">build_option_index 2,130</text>
+    <line x1="478" y1="428" x2="842" y2="428" stroke="#E4EAEC"/>
+    <text x="478" y="452" font-weight="600" fill="#16212B">配置键 · 环境变量 · CLI</text>
+    <text x="478" y="472" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">env_var_contract_index 1,187</text>
+    <line x1="478" y1="484" x2="842" y2="484" stroke="#E4EAEC"/>
+    <text x="478" y="508" font-weight="600" fill="#16212B">文档契约漂移</text>
+    <text x="478" y="528" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">document_coverage_index 3,419</text>
+  </g>
+  <rect x="476" y="550" width="368" height="100" rx="4" fill="#FBF6EE" stroke="#EBDCC2"/>
+  <text x="490" y="574" font-size="11.5" font-weight="700" fill="#8A5C15">检测逻辑（三层）</text>
+  <text x="490" y="596" font-size="12" fill="#16212B">L1 结构锚点：主题名 / 字段 / 顺序</text>
+  <text x="490" y="618" font-size="12" fill="#16212B">L2 语义锚点：取值域 / 单位 / 时序</text>
+  <text x="490" y="640" font-size="12" fill="#16212B">L3 消费者核验：订阅方残留 → 判定</text>
+
+  <!-- ============ C ============ -->
+  <rect x="880" y="196" width="400" height="470" rx="6" fill="#FFFFFF" stroke="#1C5E7A" stroke-width="1.5"/>
+  <rect x="880" y="196" width="400" height="58" rx="6" fill="#1C5E7A"/>
+  <rect x="880" y="242" width="400" height="12" fill="#1C5E7A"/>
+  <text x="898" y="224" font-size="16.5" font-weight="700" fill="#FFFFFF">C｜部署与可见性</text>
+  <text x="898" y="244" font-size="11.5" fill="#C5DEE8">接口「在哪里可用」　·　部分待建</text>
+
+  <g font-size="13">
+    <text x="898" y="284" font-weight="600" fill="#16212B">SysCap 系统能力声明</text>
+    <text x="898" y="304" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">126,048 标注行 · 已有规则与查询入口</text>
+    <line x1="898" y1="316" x2="1262" y2="316" stroke="#E4EAEC"/>
+    <text x="898" y="340" font-weight="600" fill="#16212B">设备类型 → 能力对照表</text>
+    <text x="898" y="360" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">device-define/*.json · 6 类设备</text>
+    <line x1="898" y1="372" x2="1262" y2="372" stroke="#E4EAEC"/>
+    <text x="898" y="396" font-weight="600" fill="#16212B">deviceTypes 设备类型声明</text>
+    <text x="898" y="416" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">518 / 518 个 module.json5</text>
+    <rect x="1166" y="382" width="96" height="22" rx="3" fill="#F6EBD9"/>
+    <text x="1214" y="398" font-size="11" font-weight="600" fill="#8A5C15" text-anchor="middle">待建抽取</text>
+    <line x1="898" y1="428" x2="1262" y2="428" stroke="#E4EAEC"/>
+    <text x="898" y="452" font-weight="600" fill="#16212B">条件编译平台视图 · SDK 布局</text>
+    <text x="898" y="472" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">801 · sdk_packaging 108,441</text>
+    <line x1="898" y1="484" x2="1262" y2="484" stroke="#E4EAEC"/>
+    <text x="898" y="508" font-weight="600" fill="#16212B">ROM 侧与应用侧混合部署</text>
+    <text x="898" y="528" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">rom_deployment_contracts</text>
+  </g>
+  <rect x="896" y="550" width="368" height="100" rx="4" fill="#F1F6F8" stroke="#C5DEE8"/>
+  <text x="910" y="574" font-size="11.5" font-weight="700" fill="#1C5E7A">检测逻辑</text>
+  <text x="910" y="597" font-size="12" fill="#16212B">可见性集合比对：旧可见集 ⊇ 新可见集</text>
+  <text x="910" y="619" font-size="12" fill="#16212B">收缩即破坏，粒度到设备类型</text>
+  <text x="910" y="640" font-size="11" fill="#5F7079">不涉及产品机型级硬件能力（见第 1 页）</text>
+
+  <!-- ============ D ============ -->
+  <rect x="1300" y="196" width="400" height="470" rx="6" fill="#FFFFFF" stroke="#5A4A7A" stroke-width="1.5"/>
+  <rect x="1300" y="196" width="400" height="58" rx="6" fill="#5A4A7A"/>
+  <rect x="1300" y="242" width="400" height="12" fill="#5A4A7A"/>
+  <text x="1318" y="224" font-size="16.5" font-weight="700" fill="#FFFFFF">D｜访问前置与版本</text>
+  <text x="1318" y="244" font-size="11.5" fill="#D6CEE6">调用「需满足什么条件」　·　已建成</text>
+
+  <g font-size="13">
+    <text x="1318" y="284" font-weight="600" fill="#16212B">权限声明收紧</text>
+    <text x="1318" y="304" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">permission_check 17,404 · 最大单一证据类</text>
+    <line x1="1318" y1="316" x2="1682" y2="316" stroke="#E4EAEC"/>
+    <text x="1318" y="340" font-weight="600" fill="#16212B">@permission 标注变更</text>
+    <text x="1318" y="360" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">11,341 标注行</text>
+    <line x1="1318" y1="372" x2="1682" y2="372" stroke="#E4EAEC"/>
+    <text x="1318" y="396" font-weight="600" fill="#16212B">API 版本门控 @since</text>
+    <text x="1318" y="416" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">113,018 标注行</text>
+    <line x1="1318" y1="428" x2="1682" y2="428" stroke="#E4EAEC"/>
+    <text x="1318" y="452" font-weight="600" fill="#16212B">废弃与迁移承诺 @deprecated</text>
+    <text x="1318" y="472" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">6,563 标注行</text>
+    <line x1="1318" y1="484" x2="1682" y2="484" stroke="#E4EAEC"/>
+    <text x="1318" y="508" font-weight="600" fill="#16212B">错误码与异常契约</text>
+    <text x="1318" y="528" font-size="11" fill="#5F7079" font-family="'IBM Plex Mono',ui-monospace,monospace">error_code 355 · exception_message 1,184</text>
+  </g>
+  <rect x="1316" y="550" width="368" height="100" rx="4" fill="#F4F2F8" stroke="#D6CEE6"/>
+  <text x="1330" y="574" font-size="11.5" font-weight="700" fill="#5A4A7A">检测逻辑</text>
+  <text x="1330" y="597" font-size="12" fill="#16212B">前置条件收紧比对：旧调用在新版本下</text>
+  <text x="1330" y="619" font-size="12" fill="#16212B">是否仍满足权限 / 版本 / 能力前置，</text>
+  <text x="1330" y="640" font-size="12" fill="#16212B">以及失败语义是否保持</text>
+
+  <!-- 黑名单 -->
+  <rect x="40" y="694" width="1680" height="118" rx="6" fill="#FDF6F5" stroke="#9B3B2E" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="60" y="722" font-size="14.5" font-weight="700" fill="#9B3B2E">黑名单｜不支持的场景（3 项）</text>
+  <text x="1216" y="722" font-size="14.5" font-weight="700" fill="#9B3B2E">不支持的输入（1 项）</text>
+  <line x1="1196" y1="706" x2="1196" y2="800" stroke="#E8CFC9" stroke-width="1.5"/>
+
+  <g font-size="12.5">
+    <rect x="60" y="736" width="360" height="60" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="76" y="758" font-weight="600" fill="#16212B">① 产品机型级硬件能力差异</text>
+    <text x="76" y="780" fill="#5F7079">无机型级能力实例化数据（详见第 1 页）</text>
+
+    <rect x="438" y="736" width="360" height="60" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="454" y="758" font-weight="600" fill="#16212B">② 无锚点的纯语义漂移</text>
+    <text x="454" y="780" fill="#5F7079">同名同格式同时序，且无消费方证据</text>
+
+    <rect x="816" y="736" width="360" height="60" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="832" y="758" font-weight="600" fill="#16212B">③ 运行时性能绝对值</text>
+    <text x="832" y="780" fill="#5F7079">需真机基准环境，非静态可判</text>
+
+    <rect x="1216" y="736" width="484" height="60" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="1232" y="758" font-weight="600" fill="#16212B">④ 自然语言 / API 设计稿 / 接口清单</text>
+    <text x="1232" y="780" fill="#5F7079">无对应实现，结论不可约束、不可复核（详见第 3 页）</text>
+  </g>
+
+  <!-- 出站 -->
+  <rect x="40" y="830" width="1680" height="44" rx="4" fill="#16212B"/>
+  <text x="60" y="858" font-size="13.5" fill="#FFFFFF">四类场景结论汇聚 → 统一出站校验（不兼容结论的证据路径必须命中当前 PR 的真实改动，否则拒绝）→ 四字段 JSON 输出至门禁评论区</text>
+</svg></div>
+  <p class="figcap"><b>配图</b>　p2-detection-design.png　（1760 × 900，2 倍图 3520 × 1800）</p>
+
+  <h3>讲稿一：分类依据是「调用方如何依赖契约」</h3>
+  <p>兼容性破坏的本质是「调用方依赖的契约变了」。因此场景应按<strong>依赖方式</strong>划分，而不是按语言或组件划分。据此得到四类：</p>
+  <ul>
+    <li><strong>A　直接符号依赖</strong>：通过显式函数调用或链接消费，契约载体是符号本身。<span class="tag have">已建成</span></li>
+    <li><strong>B　非直接符号依赖</strong>：通过消息、协议、产物消费，代码里没有对被改方的符号引用。这正是评审提到的「通过消息消费而非显式函数调用」。<span class="tag part">部分待建</span></li>
+    <li><strong>C　部署与可见性</strong>：契约是「在哪里可用」而非「怎么调用」。<span class="tag part">部分待建</span></li>
+    <li><strong>D　访问前置与版本</strong>：契约是「调用需满足什么条件」——权限、API 版本、废弃状态、失败语义。<span class="tag have">已建成</span></li>
+  </ul>
+  <p><strong>关于「除这两类外是否还有其他场景」：有，而且是两类。</strong>C 类（第 1 页讨论的多设备同一接口即属此类）与 D 类都不属于直接／非直接符号依赖——D 类尤其容易被忽略：权限收紧既不是签名变化，也不是消息消费，而是<strong>调用前置条件</strong>变了，旧调用方代码一行不改也会失败。</p>
+
+  <h3>讲稿二：白名单——支持的规格与对应解决方案</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>类</th><th>支持的契约面</th><th>解决方案</th><th class="num">证据支撑</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="5" style="vertical-align:middle;"><strong>A</strong></td><td>.cj 公开 API 声明</td><td>声明级规则比对（p01–p10 分片规则集）</td><td class="num">45,552</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>C/C++ 头文件 · ABI · 布局</td><td>布局指纹比对</td><td class="num">109,918</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>mangling · 调用约定</td><td>契约表规则匹配</td><td class="num">契约表</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>FFI · NAPI · ANI 符号</td><td>native 符号索引比对</td><td class="num">14,950</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>公开契约面 · 虚表继承面</td><td>消费者关系图残留判定</td><td class="num">12,328</td><td><span class="tag have">已建成</span></td></tr>
+
+        <tr><td rowspan="5" style="vertical-align:middle;"><strong>B</strong></td><td>IPC · Parcel 序列化格式</td><td>四类混用核对（新旧客户端 × 新旧服务）</td><td class="num">wire_format 764</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td><strong>消息 · 事件契约</strong></td><td><strong>三层检测（见讲稿三）</strong></td><td class="num">语料已具备</td><td><span class="tag gap">本期新建</span></td></tr>
+        <tr><td>工具输出 · 生成物契约</td><td>输入输出回放比对</td><td class="num">2,130</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>配置键 · 环境变量 · CLI</td><td>契约索引比对</td><td class="num">1,187</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>文档契约漂移</td><td>覆盖面判定＋同步性校验</td><td class="num">3,419</td><td><span class="tag have">已建成</span></td></tr>
+
+        <tr><td rowspan="5" style="vertical-align:middle;"><strong>C</strong></td><td>SysCap 系统能力声明</td><td>可见性集合比对</td><td class="num">126,048</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>设备类型 → 能力对照表</td><td>设备类型可见集比对</td><td class="num">6 类设备</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>deviceTypes 设备类型声明</td><td>数组收缩检测</td><td class="num">518 / 518</td><td><span class="tag part">待建抽取</span></td></tr>
+        <tr><td>条件编译平台视图 · SDK 布局</td><td>平台视图展开＋打包索引比对</td><td class="num">801 / 108,441</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>ROM 侧与应用侧混合部署</td><td>三段证据链（部署契约＋固化路径＋版本门控）</td><td class="num">契约表</td><td><span class="tag have">已建成</span></td></tr>
+
+        <tr><td rowspan="4" style="vertical-align:middle;"><strong>D</strong></td><td>权限声明收紧</td><td>调用前置条件比对</td><td class="num">17,404</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td><code>@permission</code> 标注变更</td><td>标注级 diff＋文档同步校验</td><td class="num">11,341</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>API 版本门控 <code>@since</code> · 废弃承诺 <code>@deprecated</code></td><td>版本契约比对</td><td class="num">113,018 / 6,563</td><td><span class="tag have">已建成</span></td></tr>
+        <tr><td>错误码与异常契约</td><td>失败语义比对</td><td class="num">355 / 1,184</td><td><span class="tag have">已建成</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:13px;color:var(--ink-3);">证据支撑列为对应索引的记录条数或标注行数，用于说明该契约面已有结构化数据可查；不同索引之间存在重叠，不可相加。</p>
+
+  <h3>讲稿三：B 类新建能力的三层检测逻辑</h3>
+  <p>「格式不变、语义变化」是评审关注的核心难点。做法是<strong>不去理解语义，而是盯住可观测的语义锚点</strong>：</p>
+  <ol>
+    <li><strong>L1 结构锚点</strong>（自动判定，误报低）：抽取消息契约卡片——主题名／事件名常量、payload 字段名与类型、必填可选；建立发布方与订阅方的配对关系。主题改名、字段删除、类型变更、必填字段新增，直接判破坏。</li>
+    <li><strong>L2 语义锚点</strong>（触发深查）：取值域变化（状态码含义改变）、单位量纲变化（ms→s、B→KB）、触发时序与次数变化（每次触发改为节流触发）、触发条件收窄放宽、错误分支变化（静默失败改为发送错误事件）。这些锚点全部落在 diff 内的常量与条件上，可复用现有事件分类机制触发。</li>
+    <li><strong>L3 消费者核验</strong>（定级而非直判）：命中锚点后，用订阅关系找出全部消费方，判断是否已在本 PR 组合中同步适配。有残留订阅方则判不兼容；无残留则降为高风险并输出补证清单。</li>
+  </ol>
+
+  <h3>讲稿四：黑名单——明确不支持的场景与输入</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>类别</th><th>不支持项</th><th>原因</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3" style="vertical-align:middle;">不支持的<strong>场景</strong></td><td>① 产品机型级硬件能力差异</td><td>无机型级能力实例化数据，判据不随 PR 变更（详见第 1 页）</td></tr>
+        <tr><td>② 无锚点的纯语义漂移</td><td>主题名、格式、字段、时序、触发条件全不变，仅业务含义改变，且无消费方证据。此时静态分析无任何可观测差异</td></tr>
+        <tr><td>③ 运行时性能绝对值</td><td>需真机基准环境与对照测试，非静态可判。仅在 diff 出现明显复杂度或资源模式变化时作为风险提示</td></tr>
+        <tr><td>不支持的<strong>输入</strong></td><td>④ 自然语言 / API 设计稿 / 接口清单</td><td>无对应实现，结论不可约束、不可复核（详见第 3 页）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>需求规格声明（可直接粘贴进 SR 需求描述）</h3>
+  <div class="spec">
+    <span class="lbl">【检测能力边界声明】</span>
+    <p><strong>（一）非直接符号依赖场景的承诺边界。</strong>本需求支持检出<strong>锚点可观测</strong>的契约与语义变化，包括消息主题与事件名、payload 字段与类型、字段顺序、取值域、单位量纲、触发时序与条件、错误分支等可在代码变更中观测到的锚点。对于主题名、数据格式、字段定义、触发时序、触发条件均未改变，仅业务语义发生变化，且无消费方适配证据的纯语义漂移，本需求不支持检出。</p>
+    <p><strong>（二）运行时性能。</strong>本需求不支持对运行时性能绝对值（耗时、内存、功耗的具体数值）的检测与判定，该类判定需真机基准环境与对照测试支撑。当代码变更中出现算法复杂度、资源申请模式、同步异步模型等明显变化时，作为风险提示输出，不作为兼容性结论的独立判定依据。</p>
+  </div>
+</section>
+
+<!-- ============ 第 3 页 ============ -->
+<section class="slide">
+  <span class="slide-tag">第 3 页</span>
+  <h2>输入规格与流程联动机制</h2>
+  <p class="sub">检测输入限定为 PR 链接一类；设计态不作为支持场景，联动通过规则前移实现</p>
+
+  <div class="figbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 760" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif">
+  <rect width="1300" height="760" fill="#FFFFFF"/>
+  <defs>
+    <marker id="a2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <polygon points="0,0 9,4.5 0,9" fill="#1C5E7A"/>
+    </marker>
+    <marker id="a3" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <polygon points="0,0 9,4.5 0,9" fill="#8A5C15"/>
+    </marker>
+  </defs>
+
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#16212B">输入规格与流程联动机制</text>
+  <text x="40" y="76" font-size="15" fill="#5F7079">检测输入严格限定为一类；「在设计阶段起效果」通过规则前移与流程联动实现，而非扩大输入类型</text>
+
+  <!-- 支持的输入 -->
+  <rect x="40" y="104" width="608" height="228" rx="6" fill="#FFFFFF" stroke="#2A6650" stroke-width="1.8"/>
+  <rect x="40" y="104" width="608" height="42" rx="6" fill="#2A6650"/>
+  <rect x="40" y="134" width="608" height="12" fill="#2A6650"/>
+  <text x="60" y="132" font-size="16" font-weight="700" fill="#FFFFFF">✓　支持的输入：仅 PR 链接一类</text>
+
+  <g font-size="13.5" fill="#16212B">
+    <rect x="60" y="162" width="180" height="52" rx="4" fill="#F2F7F5" stroke="#C7E0D5"/>
+    <text x="150" y="184" text-anchor="middle" font-weight="600">单 PR</text>
+    <text x="150" y="204" text-anchor="middle" font-size="11.5" fill="#5F7079">最小检测单元</text>
+
+    <rect x="254" y="162" width="180" height="52" rx="4" fill="#F2F7F5" stroke="#C7E0D5"/>
+    <text x="344" y="184" text-anchor="middle" font-weight="600">多 PR 组合</text>
+    <text x="344" y="204" text-anchor="middle" font-size="11.5" fill="#5F7079">跨仓联动按组合 head 判</text>
+
+    <rect x="448" y="162" width="180" height="52" rx="4" fill="#F2F7F5" stroke="#C7E0D5"/>
+    <text x="538" y="184" text-anchor="middle" font-weight="600">关联 PR 扩展</text>
+    <text x="538" y="204" text-anchor="middle" font-size="11.5" fill="#5F7079">平台试算后并入</text>
+  </g>
+
+  <text x="60" y="248" font-size="13" font-weight="600" fill="#2A6650">之所以只支持这一类，因为它同时满足三个可约束条件：</text>
+  <text x="60" y="274" font-size="13" fill="#16212B">① 有确定的 diff 范围　→　结论有明确证据边界，可被出站校验强制回连</text>
+  <text x="60" y="298" font-size="13" fill="#16212B">② 有已落地的实现　　→　可反查真实源码、消费方、文档，而非依赖描述</text>
+  <text x="60" y="322" font-size="13" fill="#16212B">③ 有稳定的唯一标识　→　可复盘、可重测、可纳入准确率统计口径</text>
+
+  <!-- 不支持的输入 -->
+  <rect x="672" y="104" width="588" height="228" rx="6" fill="#FDF6F5" stroke="#9B3B2E" stroke-width="1.8" stroke-dasharray="7 5"/>
+  <text x="692" y="134" font-size="16" font-weight="700" fill="#9B3B2E">✕　不支持的输入：设计态自然语言类</text>
+
+  <g font-size="13">
+    <rect x="692" y="152" width="176" height="44" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="780" y="179" text-anchor="middle" fill="#16212B">API 设计稿</text>
+    <rect x="884" y="152" width="176" height="44" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="972" y="179" text-anchor="middle" fill="#16212B">接口清单 / 变更表</text>
+    <rect x="1076" y="152" width="164" height="44" rx="4" fill="#FFFFFF" stroke="#E8CFC9"/>
+    <text x="1158" y="179" text-anchor="middle" fill="#16212B">自然语言描述</text>
+  </g>
+
+  <text x="692" y="230" font-size="13" font-weight="600" fill="#9B3B2E">不纳入的根本原因：无对应实现，结论无法被约束</text>
+  <text x="692" y="256" font-size="13" fill="#16212B">·　没有 diff，就没有证据边界，出站校验无从生效</text>
+  <text x="692" y="280" font-size="13" fill="#16212B">·　同一份描述可对应多种实现，结论不可复核、不可重测</text>
+  <text x="692" y="304" font-size="13" fill="#16212B">·　无法纳入准确率统计，会稀释 SR2 的可度量性</text>
+
+  <!-- 联动闭环 -->
+  <text x="40" y="376" font-size="16" font-weight="700" fill="#16212B">流程联动闭环：检测结论在六个流程节点之间流转</text>
+
+  <g>
+    <rect x="40" y="396" width="180" height="104" rx="5" fill="#F2F5F6" stroke="#B9C7CD"/>
+    <text x="130" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">① 编码阶段</text>
+    <text x="130" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">规则集对外发布</text>
+    <text x="130" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">作为设计自查清单</text>
+    <text x="130" y="490" font-size="11" fill="#8A5C15" text-anchor="middle">非检测入口</text>
+
+    <line x1="228" y1="448" x2="252" y2="448" stroke="#1C5E7A" stroke-width="1.8" marker-end="url(#a2)"/>
+
+    <rect x="248" y="396" width="180" height="104" rx="5" fill="#DCEAF0" stroke="#1C5E7A" stroke-width="1.5"/>
+    <text x="338" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">② PR 门禁检测</text>
+    <text x="338" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">唯一检测入口</text>
+    <text x="338" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">另人工提交 411 次</text>
+    <text x="338" y="490" font-size="11" fill="#1C5E7A" text-anchor="middle">门禁触发 2,540 次</text>
+
+    <line x1="436" y1="448" x2="460" y2="448" stroke="#1C5E7A" stroke-width="1.8" marker-end="url(#a2)"/>
+
+    <rect x="456" y="396" width="180" height="104" rx="5" fill="#F2F5F6" stroke="#B9C7CD"/>
+    <text x="546" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">③ 申请审批</text>
+    <text x="546" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">判不兼容则登记</text>
+    <text x="546" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">破坏性变更申请单</text>
+    <text x="546" y="490" font-size="11" fill="#1C5E7A" text-anchor="middle">不兼容 879 次</text>
+
+    <line x1="644" y1="448" x2="668" y2="448" stroke="#1C5E7A" stroke-width="1.8" marker-end="url(#a2)"/>
+
+    <rect x="664" y="396" width="180" height="104" rx="5" fill="#F2F5F6" stroke="#B9C7CD"/>
+    <text x="754" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">④ 审视闭环</text>
+    <text x="754" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">已完结申请触发</text>
+    <text x="754" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">结论改判为兼容</text>
+    <text x="754" y="490" font-size="11" fill="#1C5E7A" text-anchor="middle">实测 71 次</text>
+
+    <line x1="852" y1="448" x2="876" y2="448" stroke="#1C5E7A" stroke-width="1.8" marker-end="url(#a2)"/>
+
+    <rect x="872" y="396" width="180" height="104" rx="5" fill="#F2F5F6" stroke="#B9C7CD"/>
+    <text x="962" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">⑤ 后冒烟复测</text>
+    <text x="962" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">合入后按基线重测</text>
+    <text x="962" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">检出结论不一致</text>
+    <text x="962" y="490" font-size="11" fill="#1C5E7A" text-anchor="middle">682 次（含在总量内）</text>
+
+    <line x1="1060" y1="448" x2="1084" y2="448" stroke="#1C5E7A" stroke-width="1.8" marker-end="url(#a2)"/>
+
+    <rect x="1080" y="396" width="180" height="104" rx="5" fill="#FBF6EE" stroke="#8A5C15" stroke-width="1.5"/>
+    <text x="1170" y="424" font-size="13.5" font-weight="600" fill="#16212B" text-anchor="middle">⑥ 复盘与优化</text>
+    <text x="1170" y="448" font-size="11.5" fill="#5F7079" text-anchor="middle">不一致转质量待办</text>
+    <text x="1170" y="468" font-size="11.5" fill="#5F7079" text-anchor="middle">规则与知识库更新</text>
+    <text x="1170" y="490" font-size="11" fill="#8A5C15" text-anchor="middle">见第 4 页</text>
+  </g>
+
+  <!-- 回流箭头 -->
+  <path d="M1170 508 L1170 542 L130 542 L130 504" fill="none" stroke="#8A5C15" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#a3)"/>
+  <rect x="530" y="528" width="240" height="28" rx="3" fill="#FFFFFF"/>
+  <text x="650" y="547" font-size="12.5" font-weight="600" fill="#8A5C15" text-anchor="middle">规则与知识回流至设计自查清单</text>
+
+  <!-- 结论 -->
+  <rect x="40" y="586" width="1220" height="132" rx="6" fill="#16212B"/>
+  <text x="66" y="620" font-size="16" font-weight="700" fill="#FFFFFF">对评审意见「在检测前的 API 设计阶段也起到效果」的答复</text>
+  <text x="66" y="654" font-size="13.5" fill="#E3EBEF">采纳该目标，但实现路径不是把设计稿作为检测输入，而是<tspan fill="#6DB6D1" font-weight="600">规则前移</tspan>：把门禁中已验证生效的规则集与历史判例，固化为设计阶段可直接查阅的自查清单，</text>
+  <text x="66" y="678" font-size="13.5" fill="#E3EBEF">并在申请流程中支持破坏性变更的<tspan fill="#6DB6D1" font-weight="600">前置登记</tspan>。规则本身经过门禁实测校准，因此设计阶段拿到的是可信结论，而非对无实现描述的推测。</text>
+  <text x="66" y="704" font-size="13" fill="#9DAFB8">这样既满足「设计阶段起效果」，又不引入无法约束、无法度量的输入类型。</text>
+</svg></div>
+  <p class="figcap"><b>配图</b>　p3-input-spec-linkage.png　（1300 × 760，2 倍图 2600 × 1520）</p>
+
+  <h3>讲稿一：支持的输入只有一类</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>输入形态</th><th>说明</th><th>是否支持</th></tr></thead>
+      <tbody>
+        <tr><td>单 PR 链接</td><td>最小检测单元</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td>多 PR 组合</td><td>跨仓联动改动，按组合 head 判断调用方是否已同步适配</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td>关联 PR 扩展</td><td>平台按既定规则试算关联 PR 后并入同一分析集</td><td><span class="tag have">支持</span></td></tr>
+        <tr><td>API 设计稿 / 接口清单 / 自然语言描述</td><td>设计态输入，无对应实现</td><td><span class="tag gap">不支持</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>三种支持形态<strong>输入实体相同（都是 PR 链接）</strong>，区别只在分析集的组装方式。触发方式有两种：接入代码仓门禁自动触发，以及在平台上人工提交——两者走同一套检测逻辑。</p>
+
+  <h3>讲稿二：为什么只支持 PR 链接</h3>
+  <p>PR 链接同时满足三个「可约束」条件，这是它能作为检测输入的根本原因：</p>
+  <ol>
+    <li><strong>有确定的 diff 范围</strong>　→　结论有明确的证据边界，可被出站校验强制要求回连到真实改动，杜绝凭空推断。</li>
+    <li><strong>有已落地的实现</strong>　→　可反查真实源码、真实调用方、真实文档，而不是依赖对描述的理解。</li>
+    <li><strong>有稳定的唯一标识</strong>　→　可复盘、可重测、可纳入准确率统计口径。重测一致性本身也因此成为可度量的质量指标（见第 4 页的后冒烟数据）。</li>
+  </ol>
+
+  <h3>讲稿三：为什么设计态不作为支持场景</h3>
+  <p>设计稿与自然语言描述<strong>一条都不满足</strong>上述三个条件：</p>
+  <ul>
+    <li><strong>没有 diff，就没有证据边界</strong>。系统现有的出站校验要求不兼容结论的证据路径必须命中当前 PR 的真实改动，设计态输入下这套校验完全无从生效，结论质量失去唯一的兜底机制。</li>
+    <li><strong>同一份描述可对应多种实现</strong>。同样一句「新增一个查询接口」，不同实现的兼容性结论可能完全相反。结论既不可复核，也无法重测验证。</li>
+    <li><strong>无法纳入准确率统计</strong>。准确率按 PR 维度聚合，设计态输入没有 PR 主体，混入只会稀释 SR2 的可度量性。</li>
+  </ul>
+
+  <h3>讲稿四：那么「在设计阶段起效果」怎么实现</h3>
+  <p>评审这条意见的<strong>目标是对的，应当采纳</strong>；分歧只在实现路径。正确做法是<strong>规则前移，而不是扩大输入类型</strong>：</p>
+  <ul>
+    <li><strong>规则集对外发布，作为设计自查清单。</strong>门禁中已验证生效的规则集与历史判例，整理为开发者在设计阶段可直接查阅的清单。这些规则经过实测校准，设计阶段拿到的是可信结论，而不是对无实现描述的推测。</li>
+    <li><strong>申请流程支持前置登记。</strong>确定要做破坏性变更时，可在编码前先登记申请单，走审批流程，而不必等到门禁拦截。</li>
+    <li><strong>检测入口保持唯一。</strong>规则可以前移，但检测结论必须以真实实现为准。这样既满足「设计阶段起效果」，又不引入无法约束、无法度量的输入类型。</li>
+  </ul>
+
+  <h3>讲稿五：流程联动闭环（含实测数据）</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>节点</th><th>联动内容</th><th class="num">实测数据</th></tr></thead>
+      <tbody>
+        <tr><td>① 编码阶段</td><td>规则集作为设计自查清单（非检测入口）</td><td class="num">—</td></tr>
+        <tr><td>② PR 检测</td><td>门禁自动触发为主，保留人工提交入口</td><td class="num">门禁 2,540 次<br>人工 411 次</td></tr>
+        <tr><td>③ 申请审批</td><td>判定不兼容则登记破坏性变更申请单</td><td class="num">不兼容 879 次</td></tr>
+        <tr><td>④ 审视闭环</td><td>已完结申请触发结论改判为兼容</td><td class="num">71 次</td></tr>
+        <tr><td>⑤ 后冒烟复测</td><td>合入后按基线重测，检出结论不一致</td><td class="num">682 次</td></tr>
+        <tr><td>⑥ 复盘与优化</td><td>不一致转质量待办，规则与知识库更新后回流至①</td><td class="num">见第 4 页</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <span class="lbl">数据口径（避免被算成漏斗矛盾）</span>
+    <p>检测总量 3,681 次按来源拆分为：外部集成／CI 2,294 次、门禁 webhook 246 次、平台人工提交 411 次、<strong>后冒烟重测 726 次</strong>、白名单与桩重测 4 次。<strong>节点⑤的后冒烟重测本身也计入检测总量，不是额外增量</strong>；节点②的「门禁 2,540 次」为外部集成与 webhook 之和。按 PR 去重后为 1,295 个 PR／PR 组合。</p>
+  </div>
+
+  <h3>需求规格声明（可直接粘贴进 SR 需求描述）</h3>
+  <div class="spec">
+    <span class="lbl">【输入规格声明】</span>
+    <p><strong>（一）支持的检测输入。</strong>GitCode PR 链接，包括单个 PR、多个 PR 组成的跨仓联动组合，以及平台按既定规则试算后并入的关联 PR。支持接入代码仓门禁自动触发，同时保留平台人工提交入口；两种触发方式的输入形态一致，均为 PR 链接，走同一套检测逻辑。</p>
+    <p><strong>（二）不支持的检测输入。</strong>API 设计稿、接口变更清单、自然语言描述等设计态输入。原因是此类输入无对应的代码实现，不具备确定的变更范围与可反查的真实调用方，检测结论无法通过证据校验约束，亦无法复核、重测或纳入准确率统计。</p>
+    <p><strong>（三）与设计阶段的联动方式。</strong>通过规则前移实现——将门禁中已验证生效的兼容性规则集与历史判例，整理为设计阶段可查阅的自查清单；并支持破坏性变更在编码前于申请流程中前置登记。检测结论仍以真实代码实现为唯一依据。</p>
+  </div>
+</section>
+
+<!-- ============ 第 4 页 ============ -->
+<section class="slide">
+  <span class="slide-tag">第 4 页</span>
+  <h2>自优化机制：实测数据与四层闭环</h2>
+  <p class="sub">每一层设计动作，都对应一个已被现网数据证实的具体断点</p>
+
+  <div class="figbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800" font-family="'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif">
+  <rect width="1300" height="800" fill="#FFFFFF"/>
+
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#16212B">自优化机制：实测数据与四层闭环设计</text>
+  <text x="40" y="76" font-size="15" fill="#5F7079">每一层的设计动作，都对应一个已被现网数据证实的具体断点，而非预设的流程图</text>
+
+  <!-- 数据条 -->
+  <g>
+    <rect x="40" y="100" width="232" height="92" rx="5" fill="#F2F5F6" stroke="#D5DEE2"/>
+    <text x="156" y="140" font-size="30" font-weight="700" fill="#16212B" text-anchor="middle" font-family="'IBM Plex Mono',ui-monospace,monospace">3,681</text>
+    <text x="156" y="163" font-size="12.5" fill="#4C5D68" text-anchor="middle">已完成检测（次）</text>
+    <text x="156" y="182" font-size="11" fill="#778A94" text-anchor="middle">兼容 2,802 · 不兼容 879</text>
+
+    <rect x="287" y="100" width="232" height="92" rx="5" fill="#FDF6F5" stroke="#E8CFC9"/>
+    <text x="403" y="140" font-size="30" font-weight="700" fill="#9B3B2E" text-anchor="middle" font-family="'IBM Plex Mono',ui-monospace,monospace">6.0%</text>
+    <text x="403" y="163" font-size="12.5" fill="#4C5D68" text-anchor="middle">后冒烟结论不一致率</text>
+    <text x="403" y="182" font-size="11" fill="#778A94" text-anchor="middle">682 次重测中 41 条翻转</text>
+
+    <rect x="534" y="100" width="232" height="92" rx="5" fill="#FBF6EE" stroke="#EBDCC2"/>
+    <text x="650" y="140" font-size="30" font-weight="700" fill="#8A5C15" text-anchor="middle" font-family="'IBM Plex Mono',ui-monospace,monospace">0.73%</text>
+    <text x="650" y="163" font-size="12.5" fill="#4C5D68" text-anchor="middle">人工复核覆盖率</text>
+    <text x="650" y="182" font-size="11" fill="#778A94" text-anchor="middle">3,681 次中仅 27 次</text>
+
+    <rect x="781" y="100" width="232" height="92" rx="5" fill="#FDF6F5" stroke="#E8CFC9"/>
+    <text x="897" y="140" font-size="30" font-weight="700" fill="#9B3B2E" text-anchor="middle" font-family="'IBM Plex Mono',ui-monospace,monospace">5.8%</text>
+    <text x="897" y="163" font-size="12.5" fill="#4C5D68" text-anchor="middle">质量待办消化率</text>
+    <text x="897" y="182" font-size="11" fill="#778A94" text-anchor="middle">活跃待办 86 条仅归档 5 条</text>
+
+    <rect x="1028" y="100" width="232" height="92" rx="5" fill="#FDF6F5" stroke="#9B3B2E" stroke-width="1.5"/>
+    <text x="1144" y="140" font-size="30" font-weight="700" fill="#9B3B2E" text-anchor="middle" font-family="'IBM Plex Mono',ui-monospace,monospace">0</text>
+    <text x="1144" y="163" font-size="12.5" fill="#4C5D68" text-anchor="middle">回归看护集用例数</text>
+    <text x="1144" y="182" font-size="11" fill="#778A94" text-anchor="middle">evals 目录为空</text>
+  </g>
+
+  <!-- 层一 -->
+  <rect x="40" y="212" width="1220" height="100" rx="5" fill="#FFFFFF" stroke="#D5DEE2"/>
+  <rect x="40" y="212" width="6" height="100" fill="#1C5E7A"/>
+  <text x="66" y="244" font-size="15.5" font-weight="700" fill="#1C5E7A">层一　采集</text>
+  <text x="66" y="268" font-size="11.5" fill="#778A94">扩大反馈信号源</text>
+  <line x1="240" y1="228" x2="240" y2="296" stroke="#E4EAEC"/>
+  <text x="264" y="242" font-size="12.5" font-weight="600" fill="#9B3B2E">现状断点</text>
+  <text x="264" y="266" font-size="12.5" fill="#16212B">触发器集中在复盘侧，88% 落在结论不一致一类；</text>
+  <text x="264" y="288" font-size="12.5" fill="#16212B">后冒烟 41 条不一致与 27 条人工修正均未反哺</text>
+  <line x1="800" y1="228" x2="800" y2="296" stroke="#E4EAEC"/>
+  <text x="824" y="242" font-size="12.5" font-weight="600" fill="#2A6650">设计动作</text>
+  <text x="824" y="266" font-size="12.5" fill="#16212B">新增 4 类信号源（现有 1 类 → 共 5 类）：后冒烟不一致、</text>
+  <text x="824" y="288" font-size="12.5" fill="#16212B">人工修正、评论区误报反馈、影子模型分歧，并入同一队列</text>
+
+  <!-- 层二 -->
+  <rect x="40" y="322" width="1220" height="100" rx="5" fill="#FFFFFF" stroke="#D5DEE2"/>
+  <rect x="40" y="322" width="6" height="100" fill="#1C5E7A"/>
+  <text x="66" y="354" font-size="15.5" font-weight="700" fill="#1C5E7A">层二　标注</text>
+  <text x="66" y="378" font-size="11.5" fill="#778A94">让问题可分类统计</text>
+  <line x1="240" y1="338" x2="240" y2="406" stroke="#E4EAEC"/>
+  <text x="264" y="352" font-size="12.5" font-weight="600" fill="#9B3B2E">现状断点</text>
+  <text x="264" y="376" font-size="12.5" fill="#16212B">待办为叙述式模板，字段未结构化落库、无法聚合查询，</text>
+  <text x="264" y="398" font-size="12.5" fill="#16212B">且缺少「错判类型」分类维度，只能逐条处理</text>
+  <line x1="800" y1="338" x2="800" y2="406" stroke="#E4EAEC"/>
+  <text x="824" y="352" font-size="12.5" font-weight="600" fill="#2A6650">设计动作</text>
+  <text x="824" y="376" font-size="12.5" fill="#16212B">每条待办强制落三字段：期望结论、关键证据路径、</text>
+  <text x="824" y="398" font-size="12.5" fill="#16212B">错判类型（漏报 / 误报 / 证据不足 / 规则冲突）</text>
+
+  <!-- 层三 -->
+  <rect x="40" y="432" width="1220" height="100" rx="5" fill="#FDF6F5" stroke="#9B3B2E" stroke-width="1.5"/>
+  <rect x="40" y="432" width="6" height="100" fill="#9B3B2E"/>
+  <text x="66" y="464" font-size="15.5" font-weight="700" fill="#9B3B2E">层三　看护</text>
+  <text x="66" y="488" font-size="11.5" fill="#9B3B2E" font-weight="600">最高优先级</text>
+  <line x1="240" y1="448" x2="240" y2="516" stroke="#E8CFC9"/>
+  <text x="264" y="462" font-size="12.5" font-weight="600" fill="#9B3B2E">现状断点</text>
+  <text x="264" y="486" font-size="12.5" fill="#16212B">回归看护集为空目录，任何规则 / 索引 / 技能变更都无法</text>
+  <text x="264" y="508" font-size="12.5" fill="#16212B">验证是否变好，SR2 验收项「准确率看护测试」无载体</text>
+  <line x1="800" y1="448" x2="800" y2="516" stroke="#E8CFC9"/>
+  <text x="824" y="462" font-size="12.5" font-weight="600" fill="#2A6650">设计动作</text>
+  <text x="824" y="486" font-size="12.5" fill="#16212B">用三类真实样本建回归集，并设上线门槛：</text>
+  <text x="824" y="508" font-size="12.5" font-weight="600" fill="#9B3B2E">看护集通过率不下降，才允许同步生效</text>
+
+  <!-- 层四 -->
+  <rect x="40" y="542" width="1220" height="100" rx="5" fill="#FFFFFF" stroke="#D5DEE2"/>
+  <rect x="40" y="542" width="6" height="100" fill="#1C5E7A"/>
+  <text x="66" y="574" font-size="15.5" font-weight="700" fill="#1C5E7A">层四　度量</text>
+  <text x="66" y="598" font-size="11.5" fill="#778A94">让优化效果可证明</text>
+  <line x1="240" y1="558" x2="240" y2="626" stroke="#E4EAEC"/>
+  <text x="264" y="572" font-size="12.5" font-weight="600" fill="#9B3B2E">现状断点</text>
+  <text x="264" y="596" font-size="12.5" fill="#16212B">优化只记录「改了什么」，不记录「同类问题是否下降」；</text>
+  <text x="264" y="618" font-size="12.5" fill="#16212B">复盘产能远超优化产能，队列只进不出</text>
+  <line x1="800" y1="558" x2="800" y2="626" stroke="#E4EAEC"/>
+  <text x="824" y="572" font-size="12.5" font-weight="600" fill="#2A6650">设计动作</text>
+  <text x="824" y="596" font-size="12.5" fill="#16212B">四项指标常态化：准确率、消化率、复发率、看护通过率；</text>
+  <text x="824" y="618" font-size="12.5" fill="#16212B">按错判类型聚类合并同类待办，解决消化率断裂</text>
+
+  <!-- 底部 -->
+  <rect x="40" y="664" width="1220" height="104" rx="6" fill="#16212B"/>
+  <text x="66" y="698" font-size="15.5" font-weight="700" fill="#FFFFFF">闭环成立的判据：优化必须留下可验证的效果证据</text>
+  <text x="66" y="728" font-size="13.5" fill="#E3EBEF">每次优化须同时记录 before / after 的看护集通过率，<tspan fill="#6DB6D1" font-weight="600">无提升的优化不计为完成</tspan>——这是把「自优化」从「改过了」升级为「改好了」的唯一手段。</text>
+  <text x="66" y="754" font-size="12.5" fill="#9DAFB8">实现约束：看护集取材于历史结论，须与分析期检索路径物理隔离，避免历史结论被当作当次判定的证据或缓存。</text>
+</svg></div>
+  <p class="figcap"><b>配图</b>　p4-self-optimization.png　（1300 × 800，2 倍图 2600 × 1600）</p>
+
+  <h3>讲稿一：先摆已建成的部件</h3>
+  <p>自优化不是从零开始，目前已有七个部件在运行。汇报时先讲这一栏，避免评审误认为是纸面方案：</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>已建成部件</th><th>作用与运行情况</th></tr></thead>
+      <tbody>
+        <tr><td>后冒烟复测</td><td>候选筛选、基线快照、原样重测、不一致检出、补跑队列、人工确认闭环；已执行 71 批次</td></tr>
+        <tr><td>日志复盘</td><td>自动扫描检测日志生成质量待办；已执行 27 次（定时 20、手动 7）</td></tr>
+        <tr><td>质量优化</td><td>能力已建成并接入看板，但执行以人工离线为主，<strong>看板侧调度记录为 0</strong>——这正是层四要解决的产能断裂</td></tr>
+        <tr><td>调度与手动触发</td><td>复盘与优化均已接入看板，支持定时与手动执行</td></tr>
+        <tr><td>影子模型对照</td><td>同一请求并行多模型，产出分歧样本</td></tr>
+        <tr><td>人工修正与趋势统计</td><td>支持事后修正结论，并按时间维度统计准确率趋势</td></tr>
+        <tr><td>知识库增量重建</td><td>每日 00:00 定时按来源签名增量更新，输入未变则复用上版产物</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>讲稿二：实测数据暴露的五个断点</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>指标</th><th class="num">实测值</th><th>暴露的问题</th></tr></thead>
+      <tbody>
+        <tr><td>已完成检测</td><td class="num">3,681 次</td><td>基数（兼容 2,802 / 不兼容 879），去重后 1,295 个 PR／PR 组合</td></tr>
+        <tr><td>后冒烟结论不一致率</td><td class="num">6.0%</td><td>682 次有效重测中 41 条翻转，结论稳定性有明确缺口</td></tr>
+        <tr><td>人工复核覆盖率</td><td class="num">0.73%</td><td>3,681 次中仅 27 次被人工复核，最高质量的标注信号几乎未被采集</td></tr>
+        <tr><td>质量待办消化率</td><td class="num">5.8%</td><td>活跃待办 86 条仅归档 5 条，复盘自动而优化靠人工，队列只进不出</td></tr>
+        <tr><td>回归看护集用例数</td><td class="num">0</td><td>看护集为空目录，规则与索引变更无法验证是否变好</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">三项口径说明（必须主动先讲，不要等被问）</span>
+    <p><strong>6.0%</strong>：后冒烟候选按设计只选取「首次判定为兼容且已合入」的 PR，因此不一致方向必然是「兼容 → 不兼容」，这是筛选口径决定的，<strong>不是发现了系统性偏差</strong>。正确解读是：在已合入且首次判兼容的样本上，漏报率的一个下界估计。<br>
+    <strong>0.73% 及其结果</strong>：27 条人工复核中，21 条为「不兼容 → 兼容」的修正，5 条维持原判，1 条为「兼容 → 不兼容」。人工只在怀疑结论有误时才介入，故该样本的错判密度远高于总体，<strong>不可外推为准确率</strong>。它能证明的是：不兼容侧误报是当前主要失分方向——这也正是层三看护集优先建设的原因。<br>
+    <strong>5.8%</strong>：待办目录共 245 项，其中 159 项为含试点仓的历史待办，按既定规则已剔除出统计且未执行优化（目录留空壳），活跃待办为 86 条，其中已归档 5 条。</p>
+  </div>
+
+  <h3>讲稿三：四层闭环设计</h3>
+  <ol>
+    <li><strong>层一　采集</strong>——现有触发器集中在复盘侧，88% 落在「结论不一致」一类。新增四类信号源并入同一队列：后冒烟不一致（41 条现成数据）、人工修正（27 条最高质量标注）、门禁评论区的开发者误报反馈按钮、影子模型分歧样本，使信号源由 1 类扩至 5 类。</li>
+    <li><strong>层二　标注</strong>——现有待办为 Markdown 叙述式模板，已含命中问题、期望结论、参考日志路径，但<strong>字段未结构化落库、无法聚合查询，且缺少「错判类型」分类维度</strong>。需强制落库三个结构化字段：期望结论、关键证据路径、错判类型（漏报／误报／证据不足／规则冲突）。错判类型是按根因合并待办的唯一依据。</li>
+    <li><strong>层三　看护</strong>（最高优先级）——用「已归档待办＋人工修正＋后冒烟不一致」三类真实样本建立回归看护集，每条含输入 PR、期望结论、关键证据、易错点。配套上线门槛：<strong>任何规则、索引、技能变更，必须先跑看护集，通过率不下降才允许同步生效</strong>。</li>
+    <li><strong>层四　度量</strong>——四项指标常态化：准确率、消化率、复发率、看护集通过率。并规定每次优化必须记录 before / after 的看护集通过率，<strong>无提升的优化不计为完成</strong>。同时按错判类型聚类合并同类待办，解决消化率断裂。</li>
+  </ol>
+
+  <h3>讲稿四：实现约束（体现方案的严谨性）</h3>
+  <ul>
+    <li><strong>看护集必须与分析期检索路径物理隔离。</strong>系统现有护栏明确禁止历史结论作为当次判定的证据或缓存。看护集取材于历史结论，若被分析期检索命中，会把「质量看护」变成「结论缓存」，反而破坏检测独立性。</li>
+    <li><strong>待办限流须留例外通道。</strong>复盘是待办队列目前唯一的填充源，若因超阈值全量暂停，队列会彻底静默，期间发生的结论稳定性回退将无从发现。</li>
+    <li><strong>待办聚类的前提需先验证。</strong>错判类型字段尚未落地，「同类占比高」目前是假设。建议先抽样 20–30 条实测同类占比，再决定聚类合并的投入。</li>
+  </ul>
+
+  <div class="callout">
+    <span class="lbl">汇报前需补的一项数据</span>
+    <p>本页检测侧数据（3,681／6.0%／0.73%）取自本地看板库快照，窗口 <strong>2026-03-28 至 06-29</strong>；优化侧数据（5.8%／看护集为 0）取自后台运行时快照，时点为 <strong>2026-09-04</strong>。两组数据分属不同来源与窗口，<strong>不构成相互间的比例关系</strong>，汇报时应分组呈现。另建议从生产库按最新窗口取一次完整口径准确率（按 PR 去重、排除试点仓、排除无效结论、尊重人工修正）并说明分母定义——这是评审最可能追问的第一个数字。</p>
+  </div>
+</section>
+
+<footer>
+  数据来源与口径：索引条目总量取自行数统计；标注行命中数取自整行匹配，多索引间存在重叠、不可相加；待办数取自后台目录计数（含 159 项已按试点仓规则剔除统计的空壳目录，活跃待办 86 条）；检测次数、结论分布、人工修正、后冒烟数据取自本地看板库只读查询，窗口 2026-03-28 至 06-29。<br>
+  本材料经独立审计复核后修订，审计发现的必改项已逐条处置。核查过程未对远端环境做任何写操作，未修改本地看板库。
+</footer>
+
+</div>
+
+</body>
+</html>
