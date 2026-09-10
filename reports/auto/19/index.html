@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>技术委员会 19 项场景 · 技术可检性分析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&display=swap">
+<style>
+  /* 平台在发布 artifact 时注入的基线，本地需自行补齐 */
+  :root{color-scheme:light dark}
+  html,body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<style>
+:root{
+  --ink:#16191C; --paper:#F7F8F9; --card:#FFFFFF;
+  --blue:#1F4E79; --blue-soft:#DBE6EF; --blue-line:#A8C2D6;
+  --rust:#9B3B2E; --rust-soft:#F4E5E1; --rust-line:#D8B4AB;
+  --grey:#5C6670; --grey-soft:#E9ECEE;
+  --rule:#DBE0E4; --rule-soft:#EBEEF0; --shade:#F1F4F6;
+  --serif:"Noto Serif SC","Songti SC","SimSun",Georgia,serif;
+  --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+  --mono:"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#E6E9EC; --paper:#15181B; --card:#1C2024;
+    --blue:#7FB3D9; --blue-soft:#1E3345; --blue-line:#2F5A7A;
+    --rust:#D98E7F; --rust-soft:#3A2622; --rust-line:#6E4238;
+    --grey:#9AA4AE; --grey-soft:#262B30;
+    --rule:#2E343A; --rule-soft:#23282D; --shade:#1F2429;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E6E9EC; --paper:#15181B; --card:#1C2024;
+  --blue:#7FB3D9; --blue-soft:#1E3345; --blue-line:#2F5A7A;
+  --rust:#D98E7F; --rust-soft:#3A2622; --rust-line:#6E4238;
+  --grey:#9AA4AE; --grey-soft:#262B30;
+  --rule:#2E343A; --rule-soft:#23282D; --shade:#1F2429;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;margin:0}
+main{max-width:1060px;margin:0 auto;padding:32px 30px 90px}
+header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:20px}
+h1{font-family:var(--serif);font-weight:700;font-size:27px;margin:0 0 8px;line-height:1.3}
+.lede{color:var(--grey);font-size:13.5px;margin:0;max-width:78ch}
+.metabar{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--rule);margin-bottom:30px}
+.metabar div{flex:1 1 140px;padding:11px 15px 11px 0;border-right:1px solid var(--rule-soft)}
+.metabar div:last-child{border-right:0}
+.metabar dt{font-size:10.5px;letter-spacing:.1em;color:var(--grey);text-transform:uppercase;margin:0 0 3px}
+.metabar dd{margin:0;font-size:13px;font-weight:600}
+h2{font-family:var(--serif);font-weight:700;font-size:12.5px;letter-spacing:.14em;color:var(--blue);margin:44px 0 13px;padding-bottom:7px;border-bottom:2px solid var(--blue)}
+p{margin:9px 0;max-width:80ch}
+code,.m{font-family:var(--mono);font-size:12.1px;background:var(--grey-soft);padding:1px 5px;border-radius:2px;word-break:break-word}
+.tw{overflow-x:auto;margin:13px 0;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--card);min-width:560px}
+th{background:var(--shade);text-align:left;font-weight:700;font-size:11.5px;letter-spacing:.05em;color:var(--grey);padding:9px 12px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.6}
+tr:last-child td{border-bottom:0}
+td.k{font-weight:700;white-space:nowrap}
+td.num,th.num{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{border:1px solid var(--rule);background:var(--card);padding:14px 18px;margin:16px 0}
+.note.blue{border-color:var(--blue-line);background:var(--blue-soft)}
+.note.rust{border-color:var(--rust-line);background:var(--rust-soft)}
+.note h5{font-size:12.5px;font-weight:700;margin:0 0 6px;color:var(--blue);letter-spacing:.04em}
+.note.rust h5{color:var(--rust)}
+.note p:last-child{margin-bottom:0}
+
+/* 场景卡 */
+.sc{border:1px solid var(--rule);background:var(--card);margin:13px 0 0;border-left:4px solid var(--blue)}
+.sc.part{border-left-color:var(--blue-line)}
+.sc.no{border-left-color:var(--rust)}
+.sch{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;padding:10px 16px 8px;border-bottom:1px solid var(--rule-soft)}
+.sch .no{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--blue)}
+.sch .ti{font-family:var(--serif);font-weight:700;font-size:15px;flex:1 1 240px;line-height:1.4}
+.vd{font-size:12px;font-weight:700;padding:2.5px 9px;border-radius:2px;border:1px solid;white-space:nowrap;line-height:1.5}
+.v-yes{background:var(--blue-soft);color:var(--blue);border-color:var(--blue)}
+.v-part{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-line)}
+.v-no{background:var(--rust-soft);color:var(--rust);border-color:var(--rust-line)}
+.lim{font-size:12px;color:var(--grey);white-space:nowrap}
+.scb{padding:9px 16px 13px}
+.row{display:grid;grid-template-columns:56px 1fr;gap:9px;align-items:start;margin:6px 0;font-size:13px;line-height:1.62}
+.mk{font-size:11px;font-weight:700;padding:1.5px 0;border-radius:2px;text-align:center;line-height:1.6;border:1px solid;white-space:nowrap}
+.m-can{background:var(--blue-soft);color:var(--blue);border-color:var(--blue-line)}
+.m-cant{background:var(--rust-soft);color:var(--rust);border-color:var(--rust-line)}
+.rd{padding-top:1px}
+.cost{font-size:11.5px;color:var(--grey);font-weight:700}
+.why{margin-top:9px;padding-top:8px;border-top:1px solid var(--rule-soft);font-size:12.5px;color:var(--grey);line-height:1.6}
+.why b{color:var(--ink)}
+footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--rule);color:var(--grey);font-size:12.3px}
+@media (max-width:760px){ main{padding:24px 18px 70px} h1{font-size:22px} .row{grid-template-columns:50px 1fr} }
+</style>
+<style>
+@media print{
+  :root{color-scheme:light}
+  html,body{background:#fff!important;color:#111!important}
+  @page{size:A4;margin:14mm 12mm}
+  nav{display:none!important}
+  .wrap{display:block;max-width:none}
+  main{padding:0!important;max-width:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* 表格行、卡片、图元不跨页断裂 */
+  tr,.note,.srblock,.q,.stp,.bx,.c,.ph,.oneline,.lp{break-inside:avoid;page-break-inside:avoid}
+  .tw,.arch,.chart,table{break-inside:auto}
+  .grid{break-inside:avoid;page-break-inside:avoid}
+  h2.vol{break-before:page;page-break-before:always}
+  h2.vol:first-of-type{break-before:auto;page-break-before:auto}
+  h2,h3,h4,h5{break-after:avoid;page-break-after:avoid}
+  header{break-after:avoid}
+  a{color:inherit;text-decoration:none}
+  footer{break-before:avoid}
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>技术委员会 19 项场景　技术可检性分析</h1>
+  <p class="lede">本版<strong>不考虑需求范围裁剪</strong>，只回答：在「源码检测 + 仅鸿蒙 SDK 开源代码仓作为输入」下，<strong>技术上能否检出</strong>。每条直接给出能检出什么、检不出什么。</p>
+</header>
+
+<dl class="metabar">
+  <div><dt>方法论</dt><dd>源码静态检测</dd></div>
+  <div><dt>输入范围</dt><dd>63 个开源代码仓</dd></div>
+  <div><dt>判定结果</dt><dd>支持 3 · 部分支持 13 · 不支持 3</dd></div>
+  <div><dt>结论</dt><dd>16 条至少有一部分可检</dd></div>
+</dl>
+
+
+<h2>判 定 依 据</h2>
+
+<p>每条场景的可检性只取决于两个问题：</p>
+<div class="tw"><table>
+<thead><tr><th style="width:34%">问题</th><th>不满足时的后果</th></tr></thead>
+<tbody>
+<tr><td class="k">一、变更在不在我们能看到的代码里？</td><td>变更发生在扫描范围外的仓、或根本不在任何开源仓（伙伴应用、设备固件、第三方闭源组件）→ <strong>看不见，无从判定</strong></td></tr>
+<tr><td class="k">二、看见了，能不能判断它是不是破坏？</td><td>差异可见但缺少判据——机型能力数据不存在、性能数值无承诺、语义变化无任何锚点 → <strong>看得见，判不了</strong></td></tr>
+</tbody></table></div>
+
+<div class="note blue">
+<h5>一条贯穿全表的规律：契约层全覆盖，实现层看仓</h5>
+<p><strong>契约层</strong>：<span class="m">interface_sdk-js</span> 下 552 个 <span class="m">.d.ts</span> 涵盖全部 <span class="m">@ohos.*</span> API 声明与标注（<span class="m">@throws</span> 44,757 处、<span class="m">@returns</span> 8,967、<span class="m">@permission</span> 5,391）。<strong>任何能力域的 API 契约变化都能检出</strong>，与它的实现仓在不在范围无关。</p>
+<p><strong>实现层</strong>：只覆盖 63 个仓。<span class="m">third_party_*</span>（9 个）、<span class="m">llvm-project</span>、<span class="m">window_window_manager</span>、<span class="m">multimedia_av_codec</span> <strong>在范围内</strong>；<span class="m">arkweb</span>、<span class="m">ai_intelligentvoice</span>、<span class="m">audio_framework</span>、<span class="m">resourceschedule</span>、<span class="m">ability_runtime</span> <strong>不在</strong>。</p>
+<p>所以多数「部分支持」的形态是同一个：<strong>API 契约能检，内部实现看仓在不在。</strong></p>
+<p style="margin-top:11px;padding-top:9px;border-top:1px solid var(--blue-line);font-size:12.5px">
+<strong>范围的判定依据</strong>：以索引构建产物 <span class="m">compat_index_sources_manifest.json</span> 的 <span class="m">source_repos</span> 为准，共 <strong>63 个仓、53,922 个源文件</strong>被实际读取。磁盘上另有 <span class="m">cangjie_test</span> 目录未纳入索引。<br>
+另需注意：<span class="m">repo_baseline.csv</span> 只记录 46 个仓，<strong>它不是扫描范围</strong>，仅记录需跟踪 git 版本的仓子集，不可用作范围依据。<br>
+63 个仓中有 <strong>7 个 <span class="m">*_cangjie_wrapper</span> 仓被索引文件数为 0</strong>（空仓或未拉取内容），故有效仓约 56 个。</p>
+</div>
+
+
+<h2>逐 条 结 论</h2>
+
+<div class="sc part">
+<div class="sch"><span class="no">01</span><span class="ti">文件、图片、视频、音频等格式新增或变化</span><span class="vd v-part">部分支持</span><span class="lim">硬件依赖能力除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>格式声明变化</b>　<span class="m">enum ImageFormat</span>／<span class="m">CodecMimeType</span>／<span class="m">ContainerFormatType</span> 成员增删</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>入参格式白名单收窄</b>　编码 API 不再接受某格式，旧调用失败</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>编解码能力表变化</b>　<span class="m">multimedia_av_codec</span> 在扫描范围内，若支持能力以显式注册表存在，其增删可见　<span class="cost">成本高：需为能力表建语义模型</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>依赖硬件或闭源驱动的能力差异</b>　不在任何开源仓</div></div>
+<div class="why"><b>说明：</b>声明层判据明确。实现层因 av_codec 在范围内而<strong>技术可行</strong>，难点在能力表的语义建模，不在可见性。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">02</span><span class="ti">API、Picker 的入参、返回值取值范围、取值含义变化</span><span class="vd v-part">部分支持</span><span class="lim">无锚点的语义漂移除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>入参取值域收窄</b>　<span class="m">PhotoSelectOptions.maxSelectNumber</span> 上限由 500 降到 100</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>返回值取值范围变化</b>　返回枚举删除成员、数值边界收窄　<span class="cost">成本高：需数据流分析归纳取值域</span></div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>返回值取值含义变化</b>　URI 由绝对路径改为相对路径，类型仍是 string。<strong>差异不在类型上，但有三层锚点可判</strong>——见下表</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>三层锚点全落空的语义漂移</b>　该返回值无文档描述、无仓内消费方、无测试基线</div></div>
+
+<div class="tw" style="margin:11px 0 4px"><table>
+<thead><tr><th style="width:19%">锚点</th><th style="width:30%">形态</th><th>可用量核实</th></tr></thead>
+<tbody>
+<tr><td class="k">文档<br><span style="font-weight:400;color:var(--grey)">最强</span></td><td><span class="m">@returns</span> 中写明的格式语义</td><td><strong>8,967 处</strong>，确实带描述，如 <span class="m">@returns { string } Sandbox path of the Download directory</span></td></tr>
+<tr><td class="k">消费方</td><td>仓内调用点是否与实现同步适配</td><td>关系索引 241,409 条，但采样中直接调用 <span class="m">calls</span> 仅 2,214 条——<strong>覆盖稀疏，适合作加强证据不作主判据</strong></td></tr>
+<tr><td class="k">测试基线<br><span style="font-weight:400;color:var(--grey)">最硬</span></td><td>用例中固化的期望值</td><td>期望 URI 由 <span class="m">/data/xxx</span> 改为 <span class="m">./xxx</span> 即铁证</td></tr>
+</tbody></table></div>
+
+<div class="tw" style="margin:9px 0 4px"><table>
+<thead><tr><th style="width:52%">锚点命中情况</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td>文档同步改了／测试基线改了／仓内消费方同步适配</td><td><strong style="color:var(--rust)">判破坏</strong>——有证据表明语义确实变了</td></tr>
+<tr><td>实现改了，文档描述了格式但<strong>没改</strong></td><td><strong style="color:var(--rust)">判破坏</strong>——实现与公开承诺冲突</td></tr>
+<tr><td>实现改了，三层锚点均未命中</td><td>风险提示，不承诺检出</td></tr>
+</tbody></table></div>
+
+<div class="why"><b>说明：</b>判定语义变化不需要理解语义，只需找锚点。<b>不应一律判破坏</b>——返回值构造逻辑的改动大量只是重构，一律判破坏会使误报失控。<b>第二行反直觉但正确</b>：文档没跟着改反而判破坏，因为开发者按文档写的代码会出错。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">03</span><span class="ti">应用跳转入口的交互、规则、行为变化</span><span class="vd v-part">部分支持</span><span class="lim">系统匹配规则的仓不在范围</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>SDK 跳转 API 契约</b>　<span class="m">Want</span> 字段增删、<span class="m">UIAbility</span> 启动参数校验收紧、跳转 API 新增 <span class="m">@permission</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>系统隐式跳转匹配规则</b>　实现在 <span class="m">ability_runtime</span>，该仓不在扫描范围</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>应用侧 <span class="m">module.json5</span> 的 skills／actions／entities</b>　属应用工程，不在输入范围</div></div>
+<div class="why"><b>说明：</b>系统规则那部分的检不出<strong>不是方法论极限，是扫描范围问题</strong>——纳入 <span class="m">ability_runtime</span> 后即可见，但判定匹配集合是否收窄仍需建模匹配语义。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">04</span><span class="ti">API 能力涉及产品形态、硬件平台差异</span><span class="vd v-part">部分支持</span><span class="lim">产品机型级除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>设备类型级可用性</b>　<span class="m">@syscap</span> 经能力对照表反查可用设备类型集合，收缩即判破坏。对照表 6 个文件：default 233 条、tablet 226、2in1 222、wearable 200、tv 185、liteWearable 18</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>条件编译平台可见性</b>　<span class="m">@When[os != "Windows"]</span> 改为 <span class="m">@When[os == "Linux"]</span>，macOS 上声明消失　<span class="cost">成本高：判断集合是否收缩需布尔表达式蕴含求解</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>产品机型级差异</b>　同为 tablet，A 厂有 NFC、B 厂没有 → 机型级能力数据在 SDK 中不存在</div></div>
+<div class="why"><b>已复查是否存在替代锚点：</b>SDK 中<strong>无任何 <span class="m">@deviceType</span>／<span class="m">@model</span>／<span class="m">@product</span> 类标注</strong>，文档正文<strong>也不出现具体机型名</strong>。文档、消费方、基线三层锚点<strong>全部落空</strong>——这是少数几个连锚点都没有的场景，成因是数据不存在而非分析能力不足。<span class="m">car</span> 是合法 deviceTypes 取值但无对照表文件，同理不可判。</div>
+</div></div>
+
+<div class="sc">
+<div class="sch"><span class="no">05</span><span class="ti">已有开放能力的异常分支、DFX 行为变化</span><span class="vd v-yes">支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>异常与错误码契约</b>　<span class="m">@throws 401</span> 改为 <span class="m">@throws 13900001</span>、删除某条 <span class="m">@throws</span>、同一输入下抛出改变 → 有 44,757 处标注作文档化基线</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>日志与诊断输出</b>　hilog 标签／级别／字段变化。日志调用是具名函数、参数多为字面量，<strong>差异完全可见</strong>　<span class="cost">难点在判据：需以文档化协议、测试基线固化来界定「该输出是否被机器解析」，否则会把普通日志文案变化误判为破坏</span></div></div>
+<div class="why"><b>说明：</b>两部分技术上都可行。异常侧判据成熟，DFX 侧的挑战是<strong>判据设计</strong>而非差异抽取。</div>
+</div></div>
+
+<div class="sc">
+<div class="sch"><span class="no">06</span><span class="ti">Hilog 日志级别变化、Log 版本与 NoLog 版本行为差异</span><span class="vd v-yes">支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>日志级别变化</b>　<span class="m">HILOG_INFO</span> 降为 <span class="m">HILOG_DEBUG</span>　<span class="cost">判据同第 05 条 DFX 侧</span></div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>Log／NoLog 版本行为差异</b>　本质是条件编译问题。若日志语句内含副作用（如日志参数中调用了有状态的函数），两个版本行为会真实分叉，该模式可检出</div></div>
+<div class="why"><b>说明：</b>与第 05 条 DFX 侧共用同一套判据，两者应合并设计，不必分别立项。</div>
+</div></div>
+
+<div class="sc">
+<div class="sch"><span class="no">07</span><span class="ti">Kit 增加新功能时，对异常输入的兼容性影响</span><span class="vd v-yes">支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>失败变成功</b>　<span class="m">setMode(2)</span> 原本抛 <span class="m">InvalidParam</span>，新增 mode=2 后不再抛。判据是<strong>该异常有无 <span class="m">@throws</span> 标注</strong>——有＝被承诺的契约，改动判破坏；无＝未承诺的失败路径</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>新代码跑旧环境</b>　不是破坏，但判兼容须证明是 opt-in：<span class="m">@since</span>／<span class="m">@syscap</span>／版本门控／文档同步／<span class="m">canIUse</span> 运行时探测</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>伪装成新增的收紧</b>　新增功能顺带加了格式校验，原本合法的 input 被拒 → 前置条件收紧，直接判破坏</div></div>
+<div class="why"><b>说明：</b>三个方向判据均明确，是 19 条中<strong>技术确定性最高</strong>的一条。系统已有四道成熟挡板治理此类判定的常见误判形态。<strong>核心原则：新增不等于自动兼容</strong>，判兼容必须说出「旧路径未被收窄」。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">08</span><span class="ti">系统查杀机制和策略变化</span><span class="vd v-part">部分支持</span><span class="lim">查杀策略的仓不在范围</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>查杀相关 API 契约</b>　<span class="m">backgroundTaskManager.requestSuspendDelay</span> 新增 <span class="m">@permission</span>、<span class="m">@throws</span> 增加错误码、参数上限收窄</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>查杀策略实现</b>　内存压力下的优先级算法、后台驻留时长阈值 → 实现在 <span class="m">resourceschedule</span>／<span class="m">ability_runtime</span>，两仓均不在扫描范围</div></div>
+<div class="why"><b>说明：</b>若纳入这两个仓，阈值常量与策略代码的<strong>变更可见</strong>，但仍难判定——「阈值由 30s 改为 20s 是否构成破坏」需要知道多少应用依赖该时长，属运行时或现网数据范畴。</div>
+</div></div>
+
+<div class="sc no">
+<div class="sch"><span class="no">09</span><span class="ti">是否和伙伴的功能有冲突，影响伙伴的关系</span><span class="vd v-no">不支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>伙伴应用实现</b>　不在任何鸿蒙开源仓内。判定冲突需同时掌握双方实现，输入根本不具备</div></div>
+<div class="row"><span class="mk m-can">相邻可做</span><div class="rd">若伙伴依赖的是<strong>有文档的公开契约</strong>，该契约破坏本就在检测范围内——检出的是「契约被破坏」，谁受影响需业务侧对接</div></div>
+<div class="why"><b>说明：</b>这是<strong>输入不具备</strong>，扩大扫描范围也无法解决，除非伙伴代码开源并纳入。属方法论硬边界。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">10</span><span class="ti">是否敏感特性设计明确用户权限控制</span><span class="vd v-part">部分支持</span><span class="lim">但属另一个命题</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>完备性检查</b>　「新增敏感 API 是否声明了 <span class="m">@permission</span>」→ 静态完全可查，5,391 处标注可作基线与模式参考，<strong>成本低</strong></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>权限设计是否合理</b>　是否符合隐私规范、权限粒度是否恰当 → 属价值判断，无静态判据</div></div>
+<div class="why"><b>需注意：</b>完备性检查技术可行，但它回答的是「<b>新增设计是否合规</b>」，与本需求的「<b>变更是否破坏已有契约</b>」是两个命题。技术上可合并实现，产品上建议分开定义验收口径。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">11</span><span class="ti">是否权限开关设计影响应用正常使用场景</span><span class="vd v-part">部分支持</span><span class="lim">运行时降级表现除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>API 权限要求变化</b>　已有 API 新增 <span class="m">@permission</span>，或权限等级由 <span class="m">system_grant</span> 升为 <span class="m">user_grant</span> → 前置条件收紧，旧调用不再必然成功</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>用户关闭权限后的降级表现</b>　降级是否可接受 → 运行时行为与体验判断</div></div>
+<div class="why"><b>与第 10 条的区别：</b>本条是<strong>已有 API 的前置收紧</strong>（兼容性命题），第 10 条是<strong>新增特性的设计完备性</strong>（合规命题）。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">12</span><span class="ti">是否旋转策略变更影响兼容性</span><span class="vd v-part">部分支持</span><span class="lim">应用侧配置除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>旋转相关 API 契约</b>　<span class="m">@ohos.display</span> 中 <span class="m">Orientation</span> 枚举成员删除、旋转设置 API 新增 <span class="m">@throws</span></div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>系统旋转策略实现</b>　<span class="m">window_window_manager</span> <strong>在扫描范围内</strong>，策略代码变更可见　<span class="cost">成本高：判定「触发条件改变是否构成破坏」需建模界面行为语义</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>应用侧 <span class="m">module.json5</span> 的 orientation 配置</b>　应用工程不在输入范围</div></div>
+<div class="why"><b>说明：</b>本条比预期强——实现仓在范围内，<strong>差异可见</strong>，瓶颈在行为语义的判据设计，不在可见性。</div>
+</div></div>
+
+<div class="sc no">
+<div class="sch"><span class="no">13</span><span class="ti">是否在发布前对多设备类型进行充分的兼容性测试</span><span class="vd v-no">不支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>测试是否已执行、覆盖是否充分</b>　问的是流程执行事实，不是代码事实，源码中不存在对应差异</div></div>
+<div class="row"><span class="mk m-can">相邻可做</span><div class="rd">检测能输出「本次变更影响 tv、wearable 两类设备类型」，作为必测范围的确定依据——但验证不了测试有没有做</div></div>
+<div class="why"><b>说明：</b>这不是可检性问题，是<strong>命题错配</strong>。建议作为发布准出检查项，由检测提供「受影响设备类型清单」字段供其引用。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">14</span><span class="ti">是否性能优化后影响兼容性</span><span class="vd v-part">部分支持</span><span class="lim">性能数值除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>同步改异步等签名变化</b>　返回值由 <span class="m">T</span> 变为 <span class="m">Promise&lt;T&gt;</span> → 已是签名变更</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>性能特征的文档承诺变化</b>　SDK 中有 <strong>53 处</strong>性能特征描述，如 <span class="m">Creating a module context ... can be time-consuming</span>、<span class="m">Use the asynchronous version ... in non-blocking scenarios</span>。实现由非阻塞改阻塞而描述未同步＝契约漂移　<span class="cost">覆盖度低：53 处对 552 个声明文件，只能作补充锚点</span></div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>静态可见的性能模式变化</b>　引入新的 IPC 调用、循环嵌套层级变化、资源申请模式改变　<span class="cost">只能作风险提示：「复杂度上升多少算破坏」无静态判据</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>性能绝对数值</b>　耗时由 10ms 变 50ms、内存占用上升 → 需真机基准。文档说「time-consuming」不等于承诺了具体耗时</div></div>
+<div class="why"><b>需明确一个前提：</b><strong>性能劣化确实构成破坏性变更</strong>（它迫使开发者改代码或配置）。检不出的只是<strong>数值判定</strong>，不是「性能与兼容性无关」。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">15</span><span class="ti">是否安全策略变更影响兼容性</span><span class="vd v-part">部分支持</span><span class="lim">系统策略的仓不在范围</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>API 前置条件收紧</b>　加密 API 算法白名单移除 SHA1、新增签名校验前置、<span class="m">@permission</span> 变化</div></div>
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>加密库实现变更</b>　<span class="m">third_party_mbedtls</span> <strong>在扫描范围内</strong>，算法支持、默认套件的变更可见　<span class="cost">成本高：判定是否影响 SDK 对外契约需追踪从库 API 到公开 API 的调用链</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>系统沙箱规则、证书校验策略</b>　相关实现仓不在扫描范围</div></div>
+<div class="why"><b>建议评委细化：</b>「安全策略」覆盖面很广。凡最终落到 <strong>API 前置条件或异常契约</strong>的，判据都明确；落到系统策略的，取决于仓是否纳入。</div>
+</div></div>
+
+<div class="sc no">
+<div class="sch"><span class="no">16</span><span class="ti">是否在升级后影响应用的流畅性和稳定性</span><span class="vd v-no">不支持</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>流畅性与稳定性表现</b>　帧率下降、崩溃率上升 → 运行时观测量，源码静态分析无从判断</div></div>
+<div class="row"><span class="mk m-can">相邻可做</span><div class="rd">可静态识别的诱因（异常处理分支被移除、资源释放路径改变）本身可检出，但<strong>检出的是变更，不是稳定性影响</strong>——从变更到稳定性结论的因果链无法静态建立</div></div>
+<div class="why"><b>说明：</b>与第 14 条数值判定同源。这类问题需由性能与稳定性测试、现网监控回答；检测能提供变更清单作为归因线索。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">17</span><span class="ti">是否在工具链升级第三方组件后验证兼容性</span><span class="vd v-part">部分支持</span><span class="lim">未纳入仓的组件除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>已纳入范围的第三方组件</b>　<span class="m">llvm-project</span> 与 9 个 <span class="m">third_party_*</span> 仓（brotli／cares／curl／iptables／libwebsockets／lwip／mbedtls／nghttp2／wpa_supplicant）<strong>在扫描范围内</strong>，升级带来的源码差异<strong>完全可见</strong>　<span class="cost">成本高：判定「组件内部变化是否影响 SDK 对外契约」需借助消费者关系索引追踪调用链</span></div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>未纳入范围的组件</b>　以预编译库或 submodule 指针形式引入的，仓内仅体现为版本号变化</div></div>
+<div class="why"><b>此条为修正项：</b>初版判为不支持，理由是「第三方变更不在输入范围」。<strong>该判断不成立</strong>——第三方组件大量以 vendor 形式在仓内，变更完全可见。实际是<strong>技术可行、成本高</strong>。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">18</span><span class="ti">是否在升级 web 引擎后验证兼容性</span><span class="vd v-part">部分支持</span><span class="lim">引擎内部行为除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>ArkWeb 对外 API 契约</b>　<span class="m">@ohos.web.webview</span> 的参数、<span class="m">@throws</span>、<span class="m">@permission</span> 变动 → 契约层在 <span class="m">interface_sdk-js</span> 内</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>Web 引擎内部实现</b>　内核升级导致的渲染差异、JS 引擎行为变化、CSS 支持度变化 → <span class="m">arkweb</span> 仓不在扫描范围，且这类行为需运行时验证</div></div>
+<div class="why"><b>准确表述：</b>应说「支持 ArkWeb <strong>对外 API 契约</strong>变化的检测」，而非「支持 web 引擎升级的兼容性检测」。引擎行为一致性需由 Web 兼容性测试套件回答——<strong>即使纳入该仓也难以静态判定渲染差异</strong>。</div>
+</div></div>
+
+<div class="sc part">
+<div class="sch"><span class="no">19</span><span class="ti">语音唤醒功能与第三方应用播放逻辑是否冲突</span><span class="vd v-part">部分支持</span><span class="lim">冲突判定本身除外</span></div>
+<div class="scb">
+<div class="row"><span class="mk m-can">能检出</span><div class="rd"><b>语音唤醒 API 契约</b>　<span class="m">@ohos.ai.intelligentVoice</span> 的契约变化——但这回答不了「会不会与别人冲突」</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>语音唤醒与音频焦点实现</b>　<span class="m">ai_intelligentvoice</span>、<span class="m">audio_framework</span> 均不在扫描范围</div></div>
+<div class="row"><span class="mk m-cant">检不出</span><div class="rd"><b>第三方应用播放逻辑</b>　不在任何开源仓，与第 09 条同因</div></div>
+<div class="why"><b>说明：</b>即使纳入音频框架仓，<strong>冲突判定仍不可行</strong>——它需要第三方应用的实现与运行时焦点竞争模型，前者输入不具备，后者非静态可判。</div>
+</div></div>
+
+
+<h2>汇 总</h2>
+
+<div class="tw"><table>
+<thead><tr><th style="width:12%">判定</th><th class="num" style="width:7%">数量</th><th style="width:30%">条目</th><th>共同特征</th></tr></thead>
+<tbody>
+<tr><td class="k"><span class="vd v-yes">支持</span></td><td class="num">3</td><td class="num">05、06、07</td><td>变更完整体现在契约层与可见的实现层，判据明确</td></tr>
+<tr><td class="k"><span class="vd v-part">部分支持</span></td><td class="num">13</td><td class="num">01、02、03、04、08、10、11、12、14、15、17、18、19</td><td><strong>能力域横跨多层</strong>：API 契约能检，内部实现看仓在不在，运行时表现检不出。评审时须按「能检什么／检不出什么」两栏表述</td></tr>
+<tr><td class="k"><span class="vd v-no">不支持</span></td><td class="num">3</td><td class="num">09、13、16</td><td>输入不具备、命题错配、纯运行时表现</td></tr>
+</tbody></table></div>
+
+<div class="note blue">
+<h5>核心结论</h5>
+<p><strong>19 条中只有 3 条完全检不出</strong>——09 伙伴冲突、13 发布测试、16 流畅性稳定性。其余 16 条都至少有一部分技术可行。</p>
+<p>这与「本期能否交付」是两个问题。初版报告中判为不支持的 6 条，本版<strong>有 3 条修正</strong>：17（第三方组件在仓内可分析）、18 与 19 的契约层部分（在 <span class="m">interface_sdk-js</span> 内可检）。另修正 02 的返回值取值含义——原判检不出，复查后<strong>有文档／消费方／基线三层锚点可判</strong>。</p>
+</div>
+
+<div class="note rust">
+<h5>检不出的三类原因，只有一类无法解决</h5>
+<p><strong>一、代码拿不到</strong>（09、19 的冲突判定）——伙伴与第三方应用代码不开源，<strong>任何工程手段都解决不了</strong>。</p>
+<p><strong>二、代码里看不出来</strong>（02 无锚点语义、04 机型级、14／16 数值判定）——差异要么不存在，要么存在但无判据。<strong>需引入运行时数据或外部数据源</strong>，不属静态检测范畴。</p>
+<p><strong>三、仓不在扫描范围</strong>（03、08、15、18 的实现层）——<strong>这一类可解决</strong>：纳入对应代码仓即可见。是投入问题，不是技术极限。</p>
+<p>评审时区分这三类，比笼统说「不支持」更有信息量——「我们做不到」和「这需要扩大扫描范围」完全是两回事。</p>
+</div>
+
+
+<footer>
+<p>判定依据：方法论为源码静态检测，输入为 63 个鸿蒙开源代码仓（索引源仓清单 source_repos）。契约层覆盖度（552 个 API 声明文件、44,757 处 <span class="m">@throws</span>、8,967 处 <span class="m">@returns</span>、5,391 处 <span class="m">@permission</span>、53 处性能特征描述）、设备类型对照表条目数、各能力域实现仓的在范围情况，均来自对代码仓的只读核查，未对运行环境做任何写操作，评审可现场复核。</p>
+<p>本版不含需求范围裁剪判断——技术可行不代表本期交付。范围与优先级另行讨论。</p>
+</footer>
+
+</main>
+</body>
+</html>
