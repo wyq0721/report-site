@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10 17:26:40",
+  "generated_at": "2026-09-10 22:26:45",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -105,11 +105,11 @@
     },
     "技术委员会19项场景-技术可检性分析.html": {
       "assets": [],
-      "sha256": "12de72af7fe281a58f25a19196800123138ae05624943cb90bbcb69a15c387f6",
+      "sha256": "a69fcffe0045c40e34f02ad2a9d86c1dca10c2814fa0ff4d7f1815b875456179",
       "slug": "19",
       "source_name": "技术委员会19项场景-技术可检性分析.html",
       "title": "技术委员会 19 项场景 · 技术可检性分析",
-      "updated_at": "2026-09-10 17:26:40"
+      "updated_at": "2026-09-10 22:26:45"
     }
   }
 }

@@ -88,6 +88,12 @@ td.num,th.num{font-family:var(--mono);font-size:12px;font-variant-numeric:tabula
 .cost{font-size:11.5px;color:var(--grey);font-weight:700}
 .why{margin-top:9px;padding-top:8px;border-top:1px solid var(--rule-soft);font-size:12.5px;color:var(--grey);line-height:1.6}
 .why b{color:var(--ink)}
+/* 速查表 */
+table.quick td{font-size:12.7px;line-height:1.72}
+table.quick td.k{white-space:normal;font-size:12.8px;line-height:1.5}
+table.quick .y{color:var(--blue);font-weight:700;margin-right:4px}
+table.quick .n{color:var(--rust);font-weight:700;margin-right:4px}
+table.quick .vd{font-size:11.5px;padding:2px 7px}
 footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--rule);color:var(--grey);font-size:12.3px}
 @media (max-width:760px){ main{padding:24px 18px 70px} h1{font-size:22px} .row{grid-template-columns:50px 1fr} }
 </style>
@@ -357,6 +363,78 @@ footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--rule);color:v
 <p><strong>二、代码里看不出来</strong>（02 无锚点语义、04 机型级、14／16 数值判定）——差异要么不存在，要么存在但无判据。<strong>需引入运行时数据或外部数据源</strong>，不属静态检测范畴。</p>
 <p><strong>三、仓不在扫描范围</strong>（03、08、15、18 的实现层）——<strong>这一类可解决</strong>：纳入对应代码仓即可见。是投入问题，不是技术极限。</p>
 <p>评审时区分这三类，比笼统说「不支持」更有信息量——「我们做不到」和「这需要扩大扫描范围」完全是两回事。</p>
+</div>
+
+
+<h2>附 录 · 一 页 速 查</h2>
+
+<p>用日常说法举例，供快速对照。<strong style="color:var(--blue)">✓</strong> 表示能查出，<strong style="color:var(--rust)">✗</strong> 表示查不出。</p>
+
+<div class="tw"><table class="quick">
+<thead><tr><th class="num" style="width:32px">#</th><th style="width:20%">场景</th><th style="width:74px">结论</th><th>举例</th></tr></thead>
+<tbody>
+<tr><td class="num">01</td><td class="k">文件、图片、视频、音频格式变化</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> SDK 声明里不再支持 WebP 格式<br><span class="n">✗</span> 某款设备的芯片解不了 4K HDR</td></tr>
+
+<tr><td class="num">02</td><td class="k">入参、返回值的取值范围与含义变化</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 选图上限从 500 张降到 100 张<br><span class="y">✓</span> 返回的图片路径从绝对路径改成相对路径（文档或测试用例能佐证时）<br><span class="n">✗</span> 含义变了，但文档、用例、调用方都没留下痕迹</td></tr>
+
+<tr><td class="num">03</td><td class="k">应用跳转入口的交互、规则、行为变化</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 跳转接口多要了一个权限<br><span class="n">✗</span> 系统改了跳转匹配规则，原来能跳的现在跳不过去</td></tr>
+
+<tr><td class="num">04</td><td class="k">API 能力涉及产品形态、硬件平台差异</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 某接口从支持 6 类设备缩到 4 类，手表上用不了了<br><span class="n">✗</span> 同样是平板，A 厂机型有 NFC、B 厂没有</td></tr>
+
+<tr><td class="num">05</td><td class="k">已有开放能力的异常分支、DFX 行为变化</td><td><span class="vd v-yes">支持</span></td>
+<td><span class="y">✓</span> 原来传空值会报错，现在悄悄返回默认值<br><span class="y">✓</span> 错误码从 401 改成了 13900001</td></tr>
+
+<tr><td class="num">06</td><td class="k">Hilog 日志级别、Log 与 NoLog 版本差异</td><td><span class="vd v-yes">支持</span></td>
+<td><span class="y">✓</span> 日志级别从 INFO 降到 DEBUG，线上抓不到日志了</td></tr>
+
+<tr><td class="num">07</td><td class="k">Kit 新增功能对异常输入的影响</td><td><span class="vd v-yes">支持</span></td>
+<td><span class="y">✓</span> 新增功能后，原来会报错的参数现在不报错了<br><span class="y">✓</span> 新增功能顺手加了校验，把原来合法的输入拒了</td></tr>
+
+<tr><td class="num">08</td><td class="k">系统查杀机制和策略变化</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 申请后台任务的接口多要了一个权限<br><span class="n">✗</span> 系统把后台驻留时间从 30 秒改成 20 秒</td></tr>
+
+<tr><td class="num">09</td><td class="k">与伙伴功能是否冲突</td><td><span class="vd v-no">不支持</span></td>
+<td><span class="n">✗</span> 伙伴 App 用了个没写进文档的行为，这次改动把它弄坏了——伙伴代码我们看不到</td></tr>
+
+<tr><td class="num">10</td><td class="k">敏感特性是否明确用户权限控制</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 新增的敏感接口忘了声明权限<br><span class="n">✗</span> 这个权限设计得合不合理</td></tr>
+
+<tr><td class="num">11</td><td class="k">权限开关是否影响应用正常使用</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 原来不用权限的接口现在要权限了，老应用调用会失败<br><span class="n">✗</span> 用户关掉权限后，应用的降级表现好不好</td></tr>
+
+<tr><td class="num">12</td><td class="k">旋转策略变更是否影响兼容性</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 旋转设置接口的某个选项被删了<br><span class="n">✗</span> 系统改了在什么条件下自动转屏</td></tr>
+
+<tr><td class="num">13</td><td class="k">发布前是否对多设备类型充分测试</td><td><span class="vd v-no">不支持</span></td>
+<td><span class="n">✗</span> 测试到底做没做<br><span class="y">✓</span> 但能告诉你：这次改动影响 TV 和手表，这两类必须测</td></tr>
+
+<tr><td class="num">14</td><td class="k">性能优化是否影响兼容性</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 接口从同步改成异步了<br><span class="y">✓</span> 文档写着「不阻塞」，实现却改成阻塞了<br><span class="n">✗</span> 耗时从 10 毫秒变成 50 毫秒</td></tr>
+
+<tr><td class="num">15</td><td class="k">安全策略变更是否影响兼容性</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 加密接口不再支持 SHA1 了<br><span class="n">✗</span> 系统沙箱规则收紧，原来能读的文件读不了</td></tr>
+
+<tr><td class="num">16</td><td class="k">升级后是否影响流畅性和稳定性</td><td><span class="vd v-no">不支持</span></td>
+<td><span class="n">✗</span> 升级后卡不卡、会不会崩——这要靠真机测试和现网数据</td></tr>
+
+<tr><td class="num">17</td><td class="k">工具链升级第三方组件后的兼容性</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> curl 库升级后改了哪些代码（库源码在仓里）<br><span class="n">✗</span> 但要判断「这改动会不会影响 SDK 对外接口」，需顺着调用链追，成本高</td></tr>
+
+<tr><td class="num">18</td><td class="k">升级 web 引擎后的兼容性</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> Web 接口的参数变了<br><span class="n">✗</span> 换了内核后，网页渲染有什么不一样</td></tr>
+
+<tr><td class="num">19</td><td class="k">语音唤醒与第三方播放是否冲突</td><td><span class="vd v-part">部分支持</span></td>
+<td><span class="y">✓</span> 语音唤醒接口本身变了<br><span class="n">✗</span> 语音唤醒会不会打断第三方音乐播放</td></tr>
+</tbody></table></div>
+
+<div class="note blue">
+<h5>看这张表时请注意</h5>
+<p><strong>「部分支持」占 13 条，都是同一个形态</strong>：接口层面的变化能查出，系统内部策略与运行时表现查不出。汇报时若只说「支持」，听众会以为整个能力域都覆盖了。</p>
+<p><strong>三条「不支持」的原因不同</strong>：09 是代码拿不到，13 是问的不是代码的事，16 是要靠真机数据。只有 09 属于无论怎么投入都解决不了的。</p>
 </div>
 
 
