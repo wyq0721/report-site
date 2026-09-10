@@ -1,0 +1,19 @@
+reports/auto/19/index.html
+  s_58a4ee515f88ef::t_408c2b38139745 91-96,369-440
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "1f429204ced5cb8f9fd07c63ace99c0128a04cfc",
+  "prompts": {},
+  "sessions": {
+    "s_58a4ee515f88ef": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbf146f0-eca4-43be-b407-8a188999b347",
+        "model": "claude-opus-5"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
