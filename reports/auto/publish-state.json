@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10 22:26:45",
+  "generated_at": "2026-09-16 15:06:36",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -52,6 +52,14 @@
       "source_name": "cangjie-codegen-error-analysis.html",
       "title": "仓颉代码生成：错误分析与常见错误清单",
       "updated_at": "2026-06-23 21:16:01"
+    },
+    "feature-modal-type-baseline-report.html": {
+      "assets": [],
+      "sha256": "56c0488b161501a7f1b0df8b0554fb20d82131944247eb4a5583a06f1c388898",
+      "slug": "feature-modal-type-baseline-report",
+      "source_name": "feature-modal-type-baseline-report.html",
+      "title": "feature/modal-type 跨 6 仓从各自 main baseline 分叉，随后仅合入两组 PR",
+      "updated_at": "2026-09-16 15:06:36"
     },
     "issue3128_rootcause_industry_report.html": {
       "sha256": "d8a6b568fc168682d6061efd149c5f00d0b59df98eab35a4b2ca43f666dd18ed",
