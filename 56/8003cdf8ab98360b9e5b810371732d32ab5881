@@ -1,0 +1,19 @@
+reports/auto/feature-modal-type-review-tracking/index.html
+  s_11256a5d4992b6::t_6df2122af61533 1-558
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "568003cdf8ab98360b9e5b810371732d32ab5881",
+  "prompts": {},
+  "sessions": {
+    "s_11256a5d4992b6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ada888fe-b5e5-44f7-b2b0-693346c16d10",
+        "model": "claude-opus-5"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
