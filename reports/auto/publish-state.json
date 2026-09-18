@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16 15:06:36",
+  "generated_at": "2026-09-18 12:28:35",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -60,6 +60,14 @@
       "source_name": "feature-modal-type-baseline-report.html",
       "title": "feature/modal-type 跨 6 仓从各自 main baseline 分叉，随后仅合入两组 PR",
       "updated_at": "2026-09-16 15:06:36"
+    },
+    "feature-modal-type-review-tracking.html": {
+      "assets": [],
+      "sha256": "5a0a068b245a80a52693a2bdcffb8f14f3477ccf04ab6dcd68fb4207e5cfb974",
+      "slug": "feature-modal-type-review-tracking",
+      "source_name": "feature-modal-type-review-tracking.html",
+      "title": "modal 检视闭环追踪",
+      "updated_at": "2026-09-18 12:28:35"
     },
     "issue3128_rootcause_industry_report.html": {
       "sha256": "d8a6b568fc168682d6061efd149c5f00d0b59df98eab35a4b2ca43f666dd18ed",
