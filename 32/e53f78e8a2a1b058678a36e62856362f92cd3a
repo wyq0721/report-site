@@ -1,0 +1,19 @@
+reports/auto/docs-task-list/index.html
+  s_fbb32eab338fcf::t_94f73c3a5f2f50 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "32e53f78e8a2a1b058678a36e62856362f92cd3a",
+  "prompts": {},
+  "sessions": {
+    "s_fbb32eab338fcf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e716e44-56d9-48c4-b40b-6ab3b0216571",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
