@@ -1,0 +1,19 @@
+reports/auto/report-c20b8769db/index.html
+  s_8d554270331e15::t_e53220db7ed670 1-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d183e634ba033401fc8e0a93eefe147db68c1265",
+  "prompts": {},
+  "sessions": {
+    "s_8d554270331e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a471-043a-7f20-8e14-62e0bc9d489c",
+        "model": "gpt-6.1-terra"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
