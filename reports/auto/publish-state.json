@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07 14:20:50",
+  "generated_at": "2026-11-12 19:43:43",
   "reports": {
     "ACEHarness-UX优化方向与界面稿.html": {
       "assets": [],
@@ -137,11 +137,11 @@
     },
     "整体可交互报告.html": {
       "assets": [],
-      "sha256": "c20b8769db398b5c84b950cde47aad096bdbaf4db3e3a1ac188c5d8685b3c43b",
+      "sha256": "b690db2f32065db54340053e43e7b42381c25bc7d6de42d971597b1037d1d48c",
       "slug": "report-c20b8769db",
       "source_name": "整体可交互报告.html",
-      "title": "订单刷新 · 双版本内存对比",
-      "updated_at": "2026-11-07 14:20:50"
+      "title": "订单刷新 · 三版本内存对比",
+      "updated_at": "2026-11-12 19:43:43"
     }
   }
 }
