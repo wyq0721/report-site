@@ -1,0 +1,19 @@
+reports/auto/report-c20b8769db/index.html
+  s_8d554270331e15::t_1866b345303cea 8,14,19,21,25,64-108,110-144,146-237,239-249,251-257,259-264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9ef45e5a427ce29e280acfd2f5c8e960fd02e599",
+  "prompts": {},
+  "sessions": {
+    "s_8d554270331e15": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a471-043a-7f20-8e14-62e0bc9d489c",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "wyq1213 <wangyinqiang2@huawei.com>"
+    }
+  }
+}
